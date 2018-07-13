@@ -1,9 +1,6 @@
 <template>
   <div id="app">
-    <el-container id="app">
-      <router-view/>
-    </el-container>
-
+    <router-view/>
   </div>
 </template>
 
@@ -14,8 +11,4 @@ export default {
 </script>
 
 <style type="scss" scoped>
-html,
-style,#app {
-  height: 100%;
-}
 </style>
