@@ -7,14 +7,17 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/assets/scss/vars.scss'
 import '@/assets/scss/main.scss'
-//  import axios '@/assets/script/axios'
+import store from '@/store'
+import fly from '@/utils/fly.config'
+
 Vue.config.productionTip = false
-//  Vue.prototype.$axios = axios
+Vue.prototype.$fly = fly
 Vue.use(ElementUI)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
