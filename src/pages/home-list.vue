@@ -20,7 +20,7 @@
         <el-table-column prop="createDate" label="操作" width="200" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="toState(scope.row,'edit')">编辑</el-button>
-            <el-button type="danger" size="mini" @click="toState(scope.row,'delate')">删除</el-button>
+            <el-button type="danger" size="mini" @click="del(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -60,6 +60,22 @@ export default {
           }
         })
       }
+    },
+    del (row) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$fly.delete(`${api.propertyId}${row.pkId}`).then(() => {
+          this.$message({
+            type: 'success',
+            duration: 2000,
+            message: '删除成功!'
+          })
+        })
+      }).catch(() => {
+      })
     },
     search () {
       this.params.page = 0
