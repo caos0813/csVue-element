@@ -9,9 +9,9 @@
           <el-input v-if="item.propertyName.istable===false" v-model="item.value" type="textarea" autosize></el-input>
           <!-- <Table size="large" :columns="item.table.columns" :data="data1"></Table> -->
           <el-table :header-row-class-name="setHeaderRow" size="small" border stripe v-else :data="item.tableData.tbody" style="width: 100%">
-            <el-table-column align="center" :prop="`key${index}`" :label="item.title" v-for="(item,index) in item.tableData.thead" :key="index">
+            <el-table-column :render-header="rendHeader" align="center" :prop="`key${index}`" :label="item.title" v-for="(item,index) in item.tableData.thead" :key="index">
               <template slot-scope="scope ">
-                <el-input size="mini" clearable v-if="scope.row[index]" v-model="scope.row[index]" ></el-input>
+                <el-input size="mini" clearable v-if="scope.row[index]" v-model="scope.row[index]"></el-input>
               </template>
             </el-table-column>
           </el-table>
@@ -36,6 +36,19 @@ export default {
   methods: {
     setHeaderRow () {
       return 'thead'
+    },
+    rendHeader (h) {
+      // return h('el-button', {
+      //   domProps: {
+      //     innerText: '添加'
+      //   },
+      //   props: {
+      //     text: '12',
+      //     children: '1',
+      //     size: 'mini',
+      //     type: 'info'
+      //   }
+      // })
     },
     onSubmit () {
       let params = {
