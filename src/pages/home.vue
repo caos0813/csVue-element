@@ -67,17 +67,18 @@ export default {
       page: 0,
       size: 100
     }).then(data => {
-      console.log(data)
       this.listData = data._embedded.propertyGroup
-      /* this.$router.replace({
-        name: 'home-list',
-        params: {
-          id: this.listData[0].pkId
-        },
-        query: {
-          name: this.listData[0].name
-        }
-      }) */
+      if (this.$route.name === 'home') {
+        this.$router.replace({
+          name: 'home-list',
+          params: {
+            id: this.listData[0].pkId
+          },
+          query: {
+            name: this.listData[0].name
+          }
+        })
+      }
     })
   }
 }

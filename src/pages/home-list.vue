@@ -1,9 +1,9 @@
 <template>
   <div class="page">
     <div class="tools-wrap">
-      <el-upload class="upload-demo" name="files" accept=".csv" :action="uploadUrl" :data="uploadData" :on-success="uploadSuccess" :on-error="uploadError" :show-file-list="false">
-        <el-button type="primary" size="small">
-          <i class="el-icon-upload el-icon--right"></i>导入</el-button>
+      <el-upload disabled  class="upload-demo" name="files" accept=".csv" :action="uploadUrl" :data="uploadData" :on-success="uploadSuccess" :on-error="uploadError" :show-file-list="false">
+        <el-button type="primary" size="small" >
+          <i class="el-icon-upload el-icon--right" ></i>导入</el-button>
       </el-upload>
       <form @submit="search">
         <el-input placeholder="请输入搜索关键字" type="search" v-model="params.name " size="small "></el-input>
