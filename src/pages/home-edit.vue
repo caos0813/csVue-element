@@ -5,8 +5,9 @@
     </div>
     <div class="form-wrap">
       <el-form label-position="right" label-width="200px">
-        <el-form-item :label="item.name" v-for="(item,index) in infoData.propertyValues" :key="index">
-          <el-input v-model="item.value" type="textarea" autosize></el-input>
+        <el-form-item :label="item.propertyName.name" v-for="(item,index) in infoData.propertyValues" :key="index">
+          <el-input v-if="item.propertyName.istable===false" v-model="item.value" type="textarea" autosize></el-input>
+          <!-- <Table size="large" :columns="item.table.columns" :data="data1"></Table> -->
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">确定</el-button>
@@ -28,9 +29,31 @@ export default {
   methods: {
     onSubmit () {
       let params = {
-        id: this.$route.params.id
+        id: this.$route.params.id.toString(),
+        propertyValues: []
       }
-      params.propertyValues = JSON.parse(JSON.stringify(this.infoData.propertyValues))
+      this.infoData.propertyValues.forEach((item, index) => {
+        if (item.id !== null) {
+          if (item.value instanceof Array) {
+            item.value = JSON.stringify(item.value)
+          }
+          params.propertyValues.push(
+            {
+              'id': item.id,
+              'value': item.value
+            }
+          )
+        } else {
+          params.propertyValues.push(
+            {
+              'value': item.value,
+              'propertyName': {
+                id: item.propertyName.id
+              }
+            }
+          )
+        }
+      })
       this.$fly.post(api.property, params).then(data => {
         this.$message({
           message: '修改成功',
@@ -39,6 +62,21 @@ export default {
         })
         this.$router.go(-1)
       })
+    },
+    getTableData (obj) {
+      let item
+      let arr = []
+      for (item of obj) {
+        let params = {
+          title: item.key
+        }
+        item.value.forEach((ceil, index) => {
+          params[`key_${index}`] = ceil.key
+        })
+        arr.push(params)
+      }
+      console.log(arr)
+      return arr
     },
     setBreadData: function () {
       let { name, params, query } = this.$route
@@ -52,6 +90,17 @@ export default {
     console.log('created')
     this.setBreadData()
     this.$fly.get(`${api.propertySearch}${this.$route.params.id}`).then(data => {
+      data.propertyValues[4].propertyName.istable = true
+      data.propertyValues.forEach((item, index) => {
+        if (item.propertyName.istable) {
+          if (item.value !== null) {
+            item.value = JSON.parse(item.value)
+          } else {
+            item.value = []
+          }
+          item.tableData = this.getTableData(item.value)
+        }
+      })
       this.infoData = data
     })
   }

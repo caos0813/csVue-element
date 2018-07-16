@@ -13,10 +13,12 @@ export default new Router({
     },
     {
       path: '/login',
+      name: 'login',
       component: Login
     },
     {
       path: '/home',
+      name: 'home',
       component: Home,
       children: [{
         path: 'list/:id',
