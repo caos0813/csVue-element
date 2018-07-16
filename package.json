@@ -5,7 +5,7 @@
   "author": "zhan <448401921@qq.com>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --inline --progress  --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "dist": "node config/dist.server.js",
     "lint": "eslint --ext .js,.vue src",

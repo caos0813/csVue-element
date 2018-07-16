@@ -48,7 +48,7 @@ export default {
       this.$store.commit('SET_BREAD_DATA', data)
     }
   },
-  created () {
+  activated () {
     console.log('created')
     this.setBreadData()
     this.$fly.get(`${api.propertySearch}${this.$route.params.id}`).then(data => {

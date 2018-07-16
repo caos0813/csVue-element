@@ -31,7 +31,9 @@
           </el-breadcrumb>
         </div>
         <transition name="el-fade-in">
-          <router-view></router-view>
+          <keep-alive>
+            <router-view></router-view>
+          </keep-alive>
         </transition>
       </el-main>
     </el-container>
@@ -67,15 +69,15 @@ export default {
     }).then(data => {
       console.log(data)
       this.listData = data._embedded.propertyGroup
-      this.$router.replace({
+      /* this.$router.replace({
         name: 'home-list',
         params: {
           id: this.listData[0].pkId
         },
         query: {
-          id: this.listData[0].name
+          name: this.listData[0].name
         }
-      })
+      }) */
     })
   }
 }
