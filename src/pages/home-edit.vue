@@ -8,6 +8,13 @@
         <el-form-item :label="item.propertyName.name" v-for="(item,index) in infoData.propertyValues" :key="index">
           <el-input v-if="item.propertyName.istable===false" v-model="item.value" type="textarea" autosize></el-input>
           <!-- <Table size="large" :columns="item.table.columns" :data="data1"></Table> -->
+          <el-table :header-row-class-name="setHeaderRow" size="small" border stripe v-else :data="item.tableData.tbody" style="width: 100%">
+            <el-table-column align="center" :prop="`key${index}`" :label="item.title" v-for="(item,index) in item.tableData.thead" :key="index">
+              <template slot-scope="scope ">
+                <el-input size="mini" clearable v-if="scope.row[index]" v-model="scope.row[index]" ></el-input>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">确定</el-button>
@@ -27,6 +34,9 @@ export default {
     }
   },
   methods: {
+    setHeaderRow () {
+      return 'thead'
+    },
     onSubmit () {
       let params = {
         id: this.$route.params.id.toString(),
@@ -64,19 +74,21 @@ export default {
       })
     },
     getTableData (obj) {
-      let item
-      let arr = []
-      for (item of obj) {
-        let params = {
-          title: item.key
-        }
-        item.value.forEach((ceil, index) => {
-          params[`key_${index}`] = ceil.key
-        })
-        arr.push(params)
+      let tableData = {
+        thead: [],
+        tbody: []
       }
-      console.log(arr)
-      return arr
+      for (let index = 0; index < obj.length; index++) {
+        let item = obj[index]
+        tableData.thead.push({
+          title: item.key
+        })
+        item.value.forEach((ceil, i) => {
+          let a = tableData.tbody[i] = tableData.tbody[i] || {}
+          a[index] = ceil.key
+        })
+      }
+      return tableData
     },
     setBreadData: function () {
       let { name, params, query } = this.$route
@@ -124,6 +136,16 @@ export default {
       color: $dark;
       padding: 8px 15px;
       min-height: 40px !important;
+    }
+  }
+  /deep/ .el-table__header {
+    .thead,
+    .thead th {
+      background: #f1f1f1;
+      font-weight: bold;
+      color: #111;
+      font-size: 15px;
+      padding: 3px 0;
     }
   }
 }
