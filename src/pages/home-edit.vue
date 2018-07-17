@@ -8,7 +8,10 @@
         <el-form-item :label="item.propertyName.name" v-for="(item,pIndex) in propertyValues" :class="item.propertyName.istable===true?'child-item':''" :key="pIndex">
           <el-input v-if="item.propertyName.istable===false" v-model="item.value" type="textarea" autosize @blur="blur"></el-input>
           <div v-else>
-            <el-form-item :label="ceil.key" v-for="(ceil,index) in item.value" :key="index">
+            <el-form-item  v-for="(ceil,index) in item.value" :key="index">
+              <slot name="label">
+                <el-input v-model="ceil.key" @blur="blur"></el-input>
+              </slot>
               <el-input v-model="ceil.text" type="textarea" autosize @blur="blur"></el-input>
             </el-form-item>
           </div>
@@ -22,7 +25,7 @@
   </div>
 </template>
 <script>
-import { api, isEmpty } from '@/utils'
+import { api } from '@/utils'
 export default {
   data () {
     return {
@@ -43,19 +46,16 @@ export default {
       let propertyValues = JSON.parse(JSON.stringify(this.propertyValues))
       propertyValues.forEach((item, index) => {
         if (item.id !== null) {
-          if (item.value instanceof Array) {
-            item.value = JSON.stringify(item.value)
-          }
           params.propertyValues.push(
             {
               'id': item.id,
-              'value': item.value
+              'value': this.setData(item)
             }
           )
         } else {
           params.propertyValues.push(
             {
-              'value': item.value,
+              'value': this.setData(item),
               'propertyName': {
                 id: item.propertyName.id
               }
@@ -84,14 +84,13 @@ export default {
         try {
           data.value.forEach((ceil, index) => {
             let arr = ceil.text.split('、')
-            ceil.value = []
+            let arr2 = []
             arr.forEach(child => {
-              if (!isEmpty(child)) {
-                ceil.value.push({
-                  key: child
-                })
-              }
+              arr2.push({
+                key: child
+              })
             })
+            ceil.value = JSON.stringify(arr2)
           })
         } catch (err) {
 
