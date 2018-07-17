@@ -5,16 +5,13 @@
     </div>
     <div class="form-wrap">
       <el-form label-position="right" label-width="200px">
-        <el-form-item :label="item.propertyName.name" v-for="(item,index) in infoData.propertyValues" :key="index">
-          <el-input v-if="item.propertyName.istable===false" v-model="item.value" type="textarea" autosize></el-input>
-          <!-- <Table size="large" :columns="item.table.columns" :data="data1"></Table> -->
-          <el-table :header-row-class-name="setHeaderRow" size="small" border stripe v-else :data="item.tableData.tbody" style="width: 100%">
-            <el-table-column :render-header="rendHeader" align="center" :prop="`key${index}`" :label="item.title" v-for="(item,index) in item.tableData.thead" :key="index">
-              <template slot-scope="scope ">
-                <el-input size="mini" clearable v-if="scope.row[index]" v-model="scope.row[index]"></el-input>
-              </template>
-            </el-table-column>
-          </el-table>
+        <el-form-item :label="item.propertyName.name" v-for="(item,pIndex) in propertyValues" :class="item.propertyName.istable===true?'child-item':''" :key="pIndex">
+          <el-input v-if="item.propertyName.istable===false" v-model="item.value" type="textarea" autosize @blur="blur"></el-input>
+          <div v-else>
+            <el-form-item :label="ceil.key" v-for="(ceil,index) in item.value" :key="index">
+              <el-input v-model="ceil.text" type="textarea" autosize @blur="blur"></el-input>
+            </el-form-item>
+          </div>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">确定</el-button>
@@ -25,37 +22,25 @@
   </div>
 </template>
 <script>
-import { api } from '@/utils'
+import { api, isEmpty } from '@/utils'
 export default {
   data () {
     return {
       labelPosition: 'right',
+      propertyValues: [],
       infoData: {}
     }
   },
   methods: {
-    setHeaderRow () {
-      return 'thead'
-    },
-    rendHeader (h) {
-      // return h('el-button', {
-      //   domProps: {
-      //     innerText: '添加'
-      //   },
-      //   props: {
-      //     text: '12',
-      //     children: '1',
-      //     size: 'mini',
-      //     type: 'info'
-      //   }
-      // })
+    blur () {
+
     },
     onSubmit () {
       let params = {
         id: this.$route.params.id.toString(),
         propertyValues: []
       }
-      this.infoData.propertyValues.forEach((item, index) => {
+      this.propertyValues.forEach((item, index) => {
         if (item.id !== null) {
           if (item.value instanceof Array) {
             item.value = JSON.stringify(item.value)
@@ -86,47 +71,69 @@ export default {
         this.$router.go(-1)
       })
     },
-    getTableData (obj) {
-      let tableData = {
-        thead: [],
-        tbody: []
-      }
-      for (let index = 0; index < obj.length; index++) {
-        let item = obj[index]
-        tableData.thead.push({
-          title: item.key
-        })
-        item.value.forEach((ceil, i) => {
-          let a = tableData.tbody[i] = tableData.tbody[i] || {}
-          a[index] = ceil.key
-        })
-      }
-      return tableData
-    },
     setBreadData: function () {
       let { name, params, query } = this.$route
       let data = [...this.$store.state.breadData, {
         name, params, query
       }]
       this.$store.commit('SET_BREAD_DATA', data)
+    },
+    setData (data) {
+      let propertyValues = JSON.parse(JSON.stringify(data))
+      for (let item of propertyValues) {
+        if (item.propertyName.istable === true) {
+          try {
+            item.value.forEach((ceil, index) => {
+              let arr = ceil.text.split('、')
+              ceil.value = []
+              arr.forEach(child => {
+                if (!isEmpty(child)) {
+                  ceil.value.push({
+                    key: child
+                  })
+                }
+              })
+            })
+          } catch (err) {
+
+          }
+        }
+      }
+      return propertyValues
+    },
+    initData (data) {
+      let propertyValues = JSON.parse(JSON.stringify(data))
+      for (let item of propertyValues) {
+        if (item.propertyName.istable === true) {
+          try {
+            item.value = JSON.parse(item.value)
+            item.value.forEach(ceil => {
+              let text = ''
+              let len = ceil.value.length
+              ceil.value.forEach((child, i) => {
+                if (i !== len) {
+                  text += child.key + '、'
+                } else {
+                  text += child.key
+                }
+              })
+              ceil.text = text
+            })
+          } catch (err) {
+          }
+        }
+      }
+      return propertyValues
     }
   },
   activated () {
-    console.log('created')
     this.setBreadData()
     this.$fly.get(`${api.propertySearch}${this.$route.params.id}`).then(data => {
+      this.infoData = {
+        name: data.name
+      }
       data.propertyValues[4].propertyName.istable = true
-      data.propertyValues.forEach((item, index) => {
-        if (item.propertyName.istable) {
-          if (item.value !== null) {
-            item.value = JSON.parse(item.value)
-          } else {
-            item.value = []
-          }
-          item.tableData = this.getTableData(item.value)
-        }
-      })
-      this.infoData = data
+      this.propertyValues = this.initData(data.propertyValues)
     })
   }
 }
@@ -138,11 +145,15 @@ export default {
 .page {
   box-shadow: 0 1px 5px #ddd;
 }
+.table-wrap {
+  .el-button {
+    margin-bottom: 5px;
+  }
+}
 .form-wrap {
   padding: 30px;
   /deep/ .el-form {
-    width: 70%;
-    .el-form-item__label {
+    > .el-form-item__label {
       color: #999;
     }
     .el-textarea__inner {
@@ -151,14 +162,22 @@ export default {
       min-height: 40px !important;
     }
   }
-  /deep/ .el-table__header {
-    .thead,
-    .thead th {
-      background: #f1f1f1;
-      font-weight: bold;
-      color: #111;
-      font-size: 15px;
-      padding: 3px 0;
+}
+.child-item {
+  /deep/ {
+    > .el-form-item__label {
+      font-size: 16px;
+      color: #222;
+    }
+    > .el-form-item__content {
+      border: 1px dashed #ddd;
+      clear: both;
+      margin-left: 0 !important;
+      padding: 30px;
+      background: #fafafafa;
+      .el-form-item {
+        margin-bottom: 10px;
+      }
     }
   }
 }
