@@ -40,7 +40,8 @@ export default {
         id: this.$route.params.id.toString(),
         propertyValues: []
       }
-      this.propertyValues.forEach((item, index) => {
+      let propertyValues = JSON.parse(JSON.stringify(this.propertyValues))
+      propertyValues.forEach((item, index) => {
         if (item.id !== null) {
           if (item.value instanceof Array) {
             item.value = JSON.stringify(item.value)
@@ -79,27 +80,24 @@ export default {
       this.$store.commit('SET_BREAD_DATA', data)
     },
     setData (data) {
-      let propertyValues = JSON.parse(JSON.stringify(data))
-      for (let item of propertyValues) {
-        if (item.propertyName.istable === true) {
-          try {
-            item.value.forEach((ceil, index) => {
-              let arr = ceil.text.split('、')
-              ceil.value = []
-              arr.forEach(child => {
-                if (!isEmpty(child)) {
-                  ceil.value.push({
-                    key: child
-                  })
-                }
-              })
+      if (data.propertyName.istable === true) {
+        try {
+          data.value.forEach((ceil, index) => {
+            let arr = ceil.text.split('、')
+            ceil.value = []
+            arr.forEach(child => {
+              if (!isEmpty(child)) {
+                ceil.value.push({
+                  key: child
+                })
+              }
             })
-          } catch (err) {
+          })
+        } catch (err) {
 
-          }
         }
       }
-      return propertyValues
+      return data.value
     },
     initData (data) {
       let propertyValues = JSON.parse(JSON.stringify(data))
@@ -111,7 +109,7 @@ export default {
               let text = ''
               let len = ceil.value.length
               ceil.value.forEach((child, i) => {
-                if (i !== len) {
+                if (i !== len - 1) {
                   text += child.key + '、'
                 } else {
                   text += child.key
