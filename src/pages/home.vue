@@ -124,7 +124,8 @@ $width: 200px;
   overflow: hidden;
 }
 .main-container {
-  align-items: stretch;
+  //  align-items: stretch;
+  height: 100%;
 }
 
 .aside {
@@ -138,5 +139,6 @@ $width: 200px;
 }
 .main {
   padding: 20px;
+  height: 100%;
 }
 </style>
