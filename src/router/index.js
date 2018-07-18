@@ -25,7 +25,7 @@ export default new Router({
         name: 'home-list',
         component: HomeList
       }, {
-        path: 'edit/:id',
+        path: 'edit/:type/:id',
         name: 'home-edit',
         component: HomeEdit
       }]

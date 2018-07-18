@@ -9,9 +9,11 @@ import '@/assets/scss/vars.scss'
 import '@/assets/scss/main.scss'
 import store from '@/store'
 import fly from '@/utils/fly.config'
-
+import VueLodash from 'vue-lodash'
 Vue.config.productionTip = false
 Vue.prototype.$fly = fly
+const options = { name: 'lodash' }
+Vue.use(VueLodash, options)
 Vue.use(ElementUI)
 /* eslint-disable no-new */
 new Vue({

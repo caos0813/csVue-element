@@ -1,11 +1,11 @@
 <template>
   <div class="page">
     <div class="tools-wrap">
-      <el-upload disabled  class="upload-demo" name="files" accept=".csv" :action="uploadUrl" :data="uploadData" :on-success="uploadSuccess" :on-error="uploadError" :show-file-list="false">
-        <el-button type="primary" size="small" >
-          <i class="el-icon-upload el-icon--right" ></i>导入</el-button>
+      <el-upload disabled class="upload-demo" name="files" accept=".csv" :action="uploadUrl" :data="uploadData" :on-success="uploadSuccess" :on-error="uploadError" :show-file-list="false">
+        <el-button type="primary" size="small">
+          <i class="el-icon-upload el-icon--right"></i>导入</el-button>
       </el-upload>
-      <form @submit="search">
+      <form name="form" @submit.prevent="search">
         <el-input placeholder="请输入搜索关键字" type="search" v-model="params.name " size="small "></el-input>
         <el-button type="primary " native-type="submit" size="small ">
           搜索</el-button>
@@ -75,7 +75,8 @@ export default {
         this.$router.push({
           name: 'home-edit',
           params: {
-            id: row.pkId
+            id: row.pkId,
+            type: this.$route.params.id
           },
           query: {
             name: row.name
@@ -136,9 +137,14 @@ export default {
   },
   watch: {
     '$route': function (to, from) {
-      if (to.name === from.name) {
-        this.refresh()
-        this.setBreadData()
+      if (to.name === 'home-list') {
+        if (from.name !== 'home-list' && to.params.id === from.params.type) {
+          this.getData(this.params)
+          this.setBreadData()
+        } else {
+          this.refresh()
+          this.setBreadData()
+        }
       }
     }
   },
