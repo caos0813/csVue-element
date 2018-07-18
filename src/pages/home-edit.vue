@@ -10,13 +10,13 @@
             {{item.propertyName.name}}
             <el-button type="primary" size="small" @click="addRow(pIndex)">添加分类</el-button>
           </template>
-          <el-input v-if="item.propertyName.istable===false" v-model.trim="item.value" type="textarea" autosize @blur="blur"></el-input>
+          <el-input v-if="item.propertyName.istable===false" v-model.trim="item.value" type="textarea" autosize></el-input>
           <div v-else>
             <el-form-item class="is-child" label="" v-for="(ceil,index) in item.value" :key="index">
               <template slot="label">
-                <el-input v-model.trim="ceil.key" placeholder="类名" @blur="blur"></el-input>
+                <el-input v-model.trim="ceil.key" placeholder="类名"></el-input>
               </template>
-              <el-input v-model.trim="ceil.text" placeholder="用中文顿号隔开如:专业1、专业2、专业3" type="textarea" autosize @blur="blur"></el-input>
+              <el-input v-model.trim="ceil.text" placeholder="用中文顿号隔开如:专业1、专业2、专业3" type="textarea" autosize></el-input>
               <div>
                 <el-button type="info " size="mini " @click="delRow(pIndex,index) ">删除</el-button>
               </div>
@@ -42,9 +42,6 @@ export default {
     }
   },
   methods: {
-    blur () {
-      this.onSubmit(true)
-    },
     delRow (pIndex, index) {
       this.propertyValues[pIndex].value.splice(index, 1)
       this.propertyValues = this.initData(this.propertyValues)
