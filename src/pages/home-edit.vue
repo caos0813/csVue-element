@@ -182,7 +182,7 @@ export default {
 .page {
   box-shadow: 0 1px 5px #ddd;
   position: relative;
-  padding-bottom: 30px;
+  padding-bottom: 150px;
 }
 .table-wrap {
   .el-button {
