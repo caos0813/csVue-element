@@ -37,7 +37,7 @@ fly.config.baseURL = (function () {
     //  baseURL = 'http://192.168.1.28:9080'
     baseURL = 'http://192.168.1.129:9080/'
   } else if (process.env.NODE_ENV === 'production') {
-    baseURL = 'http://39.104.166.195:9080/'
+    baseURL = 'http://39.104.124.195:9080/'
   }
   return baseURL
 })()
