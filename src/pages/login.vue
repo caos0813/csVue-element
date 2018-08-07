@@ -1,21 +1,23 @@
 <template>
   <div class="login-wrap">
     <div class="form-wrap">
-      <el-form ref="form" :model="params" :rules="rules">
-        <el-form-item prop="name">
-          <el-input v-model="params.name" placeholder="请输入账号"></el-input>
+      <el-form ref="form" :model="params" :rules="rules" >
+        <el-form-item prop="userName">
+          <el-input v-model="params.userName" placeholder="请输入账号" name="userName"></el-input>
         </el-form-item>
-        <el-form-item prop="password">
-          <el-input v-model="params.password" type="password" placeholder="请输入密码"></el-input>
+        <el-form-item prop="passWord">
+          <el-input v-model="params.passWord" type="passWord" placeholder="请输入密码" name="passWord"></el-input>
         </el-form-item>
         <el-form-item class="text-center">
-          <el-button class="btn" type="primary" round @click="submit">登录</el-button>
+          <el-button class="btn" type="primary" native-type="submit" @click.prevent="submit"  round >登录</el-button>
         </el-form-item>
       </el-form>
     </div>
   </div>
 </template>
 <script>
+import { api } from '@/utils'
+import Cookies from 'js-cookie'
 export default ({
   data () {
     return {
@@ -24,10 +26,10 @@ export default ({
 
       },
       rules: {
-        name: [
+        userName: [
           { required: true, message: '请输入账号', trigger: 'change' }
         ],
-        password: [
+        passWord: [
           { required: true, message: '请输入密码', trigger: 'change' },
           { min: 6, message: '密码长度不正确', trigger: 'change' }
         ]
@@ -38,7 +40,25 @@ export default ({
     submit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          console.log(this.params)
+          this.$fly.post(api.authentication, this.params).then(data => {
+            Cookies.set('user', {
+              userName: this.params.userName,
+              token: data.token
+            }, { expires: 7 })
+            this.$message({
+              message: '登录成功',
+              type: 'success'
+            })
+            this.$router.replace({
+              name: 'home'
+            })
+          }).catch(() => {
+            this.$message({
+              message: '登录失败',
+              type: 'error'
+            })
+          })
         } else {
           console.log('error submit!!')
         }

@@ -1,9 +1,9 @@
 function setBaseUrl () {
   let baseURL
   if (process.env.NODE_ENV === 'development') {
-    baseURL = 'http://www.aldexam.com:9080/'
+    baseURL = 'http://192.168.1.129:9080/'
   } else if (process.env.NODE_ENV === 'production') {
-    baseURL = 'http://www.aldexam.com:9080/'
+    baseURL = 'http://39.104.124.195:9080/'
   } else if (process.env.NODE_ENV === 'mock') {
     baseURL = location.protocol + location.host + '/api-proxy'
   }
@@ -16,5 +16,6 @@ export default {
   propertySearch: 'property/search/',
   property: 'property',
   propertyId: 'propertyId',
+  authentication: 'auth',
   import: baseURL + 'import'
 }

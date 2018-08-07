@@ -10,6 +10,7 @@ import '@/assets/scss/main.scss'
 import store from '@/store'
 import fly from '@/utils/fly.config'
 import VueLodash from 'vue-lodash'
+import Cookies from 'js-cookie'
 Vue.config.productionTip = false
 Vue.prototype.$fly = fly
 const options = { name: 'lodash' }
@@ -22,4 +23,14 @@ new Vue({
   store,
   components: { App },
   template: '<App/>'
+})
+router.beforeEach((to, from, next) => {
+  let { token } = Cookies.get('user') ? JSON.parse(Cookies.get('user')) : ''
+  if (!token && to.name !== 'login') { // 判断该路由是否需要登录权限
+    next({
+      name: 'login'
+    })
+  } else {
+    next()
+  }
 })

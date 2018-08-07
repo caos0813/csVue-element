@@ -1,10 +1,15 @@
 <template>
   <div class="page">
     <div class="tools-wrap">
-      <el-upload disabled class="upload-demo" name="files" accept=".csv" :action="uploadUrl" :data="uploadData" :on-success="uploadSuccess" :on-error="uploadError" :show-file-list="false">
+      <div>
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item :to="item" v-for="(item,index) in breadData" :key="index">{{item.query.name}}</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
+      <!-- <el-upload  class="upload-demo" name="files" accept=".csv" :action="uploadUrl" :data="uploadData" :on-success="uploadSuccess" :on-error="uploadError" :show-file-list="false">
         <el-button type="primary" size="small">
-          <i class="el-icon-upload el-icon--right"></i>导入</el-button>
-      </el-upload>
+          <i class="el-icon-upload el-iconright"></i>导入</el-button>
+      </el-upload> -->
       <form name="form" @submit.prevent="search">
         <el-input placeholder="请输入搜索关键字" type="search" v-model="params.name " size="small "></el-input>
         <el-button type="primary " native-type="submit" size="small ">
@@ -50,6 +55,11 @@ export default {
       },
       pageInfo: {},
       tableData: []
+    }
+  },
+  computed: {
+    breadData () {
+      return this.$store.state.breadData
     }
   },
   methods: {
@@ -115,6 +125,10 @@ export default {
       return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
     },
     getData: function (params) {
+      if (this.lodash.isEmpty(params.name)) {
+        console.log(1)
+        delete params.name
+      }
       this.loading = true
       params.propertyGroupId = this.$route.params.id
       this.$fly.get(api.findByPropertyGroupIdAndName, params).then(data => {

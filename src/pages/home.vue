@@ -6,11 +6,11 @@
         <i class="el-icon-menu menu"></i>
         <el-dropdown>
           <span class="el-dropdown-link">
-            admin
+            {{userName}}
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>退出登录</el-dropdown-item>
+          <el-dropdown-menu split-button slot="dropdown">
+            <el-dropdown-item @click.native="signOut">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -25,11 +25,8 @@
         </el-menu>
       </el-aside>
       <el-main class="main">
-        <div class="tool-bar">
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="item" v-for="(item,index) in breadData" :key="index">{{item.query.name}}</el-breadcrumb-item>
-          </el-breadcrumb>
-        </div>
+        <!-- <div class="tool-bar">
+        </div> -->
         <transition name="el-fade-in">
           <keep-alive>
             <router-view></router-view>
@@ -42,6 +39,7 @@
 
 <script>
 import { api } from '@/utils'
+import Cookies from 'js-cookie'
 export default {
   data () {
     return {
@@ -51,6 +49,9 @@ export default {
     }
   },
   computed: {
+    userName () {
+      return Cookies.get('user') ? JSON.parse(Cookies.get('user')).userName : ''
+    },
     activeIndex () {
       let index = this.$route.params.id
       if (typeof index === 'number') {
@@ -60,6 +61,14 @@ export default {
     },
     breadData () {
       return this.$store.state.breadData
+    }
+  },
+  methods: {
+    signOut () {
+      Cookies.remove('user')
+      this.$router.replace({
+        name: 'login'
+      })
     }
   },
   created () {
