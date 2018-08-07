@@ -20,14 +20,23 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: Home,
+      meta: {
+        requireAuth: true
+      },
       children: [{
         path: 'list/:id',
         name: 'home-list',
-        component: HomeList
+        component: HomeList,
+        meta: {
+          requireAuth: true
+        }
       }, {
         path: 'edit/:type/:id',
         name: 'home-edit',
-        component: HomeEdit
+        component: HomeEdit,
+        meta: {
+          requireAuth: true
+        }
       }]
     }
   ]

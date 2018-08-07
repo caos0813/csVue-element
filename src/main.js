@@ -17,20 +17,20 @@ const options = { name: 'lodash' }
 Vue.use(VueLodash, options)
 Vue.use(ElementUI)
 /* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  store,
-  components: { App },
-  template: '<App/>'
-})
 router.beforeEach((to, from, next) => {
   let { token } = Cookies.get('user') ? JSON.parse(Cookies.get('user')) : ''
-  if (!token && to.name !== 'login') { // 判断该路由是否需要登录权限
+  if (to.meta.requireAuth && !token) {
     next({
       name: 'login'
     })
   } else {
     next()
   }
+})
+new Vue({
+  el: '#app',
+  router,
+  store,
+  components: { App },
+  template: '<App/>'
 })
