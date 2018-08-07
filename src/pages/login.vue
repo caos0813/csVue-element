@@ -47,7 +47,7 @@ export default ({
               token: data.token
             }, { expires: 7 })
             this.$message({
-              message: '登录成功',
+              message: '登录成功!',
               type: 'success'
             })
             this.$router.replace({
