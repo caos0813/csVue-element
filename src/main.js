@@ -4,9 +4,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
+import 'babel-polyfill'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/assets/scss/vars.scss'
 import '@/assets/scss/main.scss'
+import { back } from '@/components'
 import store from '@/store'
 import fly from '@/utils/fly.config'
 import VueLodash from 'vue-lodash'
@@ -16,6 +18,7 @@ Vue.prototype.$fly = fly
 const options = { name: 'lodash' }
 Vue.use(VueLodash, options)
 Vue.use(ElementUI)
+Vue.component('back', back)
 /* eslint-disable no-new */
 router.beforeEach((to, from, next) => {
   let { token } = Cookies.get('user') ? JSON.parse(Cookies.get('user')) : ''

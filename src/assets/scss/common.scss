@@ -22,7 +22,6 @@ body {
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 a {
@@ -40,6 +39,7 @@ img {
 .text-center {
   text-align: center;
 }
+
 .text-right {
   text-align: right;
 }
@@ -47,18 +47,56 @@ img {
 .padding {
   padding: 20px;
 }
-
+.space {
+  padding: 10px;
+}
 .balanced {
   color: $balanced
 }
 
-.tools-wrap {
-  display: flex;
-  background: #f2f2f2;
-  padding: 10px;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 2px;
-  min-height: 52px;
+.page-wrap {
+  text-align: center;
+  padding: 25px 15px;
 }
 
+.tools-bar {
+  display: flex;
+  border-bottom: 1px solid $gray;
+  padding:15px;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  position: fixed;
+  top:60px;
+  background: $light;
+  left: 200px;
+  right: 0;
+  z-index: 1001;
+  .left-wrap {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    .ceil-box {
+      margin: 0 10px;
+      width: 15%;
+      display: flex;
+      align-items: center;
+      >span {
+        padding-right: 10px;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.full {
+  width: 100% !important;
+}
+.page{
+  padding: 80px 20px 20px;
+  box-sizing: border-box;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top:0;
+}

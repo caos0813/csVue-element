@@ -1,9 +1,13 @@
 <template>
   <el-container class="container">
     <el-header class="el-header">
-      <div class="logo">JunYang OMS</div>
+      <div class="logo">JunYang Admin</div>
       <div class="bar">
-        <i class="el-icon-menu menu"></i>
+        <div class="breadcrumb-wrap">
+          <el-breadcrumb separator="/">
+            <el-breadcrumb-item>首页</el-breadcrumb-item>
+          </el-breadcrumb>
+        </div>
         <el-dropdown>
           <span class="el-dropdown-link">
             {{userName}}
@@ -17,16 +21,23 @@
     </el-header>
     <el-container class="main-container">
       <el-aside class="aside">
-        <el-menu :default-active="activeIndex" class="el-menu-vertical-demo" :collapse="isCollapse" router>
-          <el-menu-item :index='item.pkId.toString()' v-for="(item,index) in listData" :key="index" :route="{name:'home-list',params:{id:item.pkId},query:{name:item.name}}">
-            <i class="el-icon-star-on"></i>
-            <span slot="title">{{item.name}}</span>
+        <el-menu default-active="0" class="el-menu-vertical-demo" :collapse="isCollapse" :default-openeds='defaultOpeneds' router>
+          <el-menu-item index="0" :route="{name:'index'}">
+            <i class="el-icon-tickets"></i>
+            <span slot="title">首页</span>
           </el-menu-item>
+          <el-submenu index="1">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span>内容管理</span>
+            </template>
+            <el-menu-item index="1-1" :route="{name:'subject-list'}">专题</el-menu-item>
+            <el-menu-item index="1-2" :route="{name:'article-list'}">文章</el-menu-item>
+            <el-menu-item index="1-3" :route="{name:'topic-list'}">话题</el-menu-item>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <el-main class="main">
-        <!-- <div class="tool-bar">
-        </div> -->
         <transition name="el-fade-in">
           <keep-alive>
             <router-view></router-view>
@@ -38,11 +49,11 @@
 </template>
 
 <script>
-import { api } from '@/utils'
 import Cookies from 'js-cookie'
 export default {
   data () {
     return {
+      defaultOpeneds: ['1'],
       isCollapse: false,
       title: '',
       listData: []
@@ -72,23 +83,6 @@ export default {
     }
   },
   created () {
-    this.$fly.get(api.propertyGroup, {
-      page: 0,
-      size: 100
-    }).then(data => {
-      this.listData = data._embedded.propertyGroup
-      if (this.$route.name === 'home') {
-        this.$router.replace({
-          name: 'home-list',
-          params: {
-            id: this.listData[0].pkId
-          },
-          query: {
-            name: this.listData[0].name
-          }
-        })
-      }
-    })
   }
 }
 
@@ -109,6 +103,15 @@ $width: 200px;
   color: $light;
   line-height: 60px;
   border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+.tool-bar {
+  height: 56px;
+  border-bottom: 1px solid $gray;
+}
+.breadcrumb-wrap {
+  /deep/ .el-breadcrumb__inner {
+    color: $light;
+  }
 }
 .bar {
   background: $color-primary;
@@ -147,7 +150,7 @@ $width: 200px;
   }
 }
 .main {
-  padding: 20px;
   height: 100%;
+  position: relative;
 }
 </style>

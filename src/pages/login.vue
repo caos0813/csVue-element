@@ -51,7 +51,7 @@ export default ({
               type: 'success'
             })
             this.$router.replace({
-              name: 'home'
+              name: 'index'
             })
           }).catch(() => {
             this.$message({
