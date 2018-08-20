@@ -13,6 +13,12 @@ fly.interceptors.request.use((config, promise) => {
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`
   }
+  let { body } = config
+  for (let x in body) {
+    if (body[x] === null) {
+      delete body[x]
+    }
+  }
   return config
 })
 fly.interceptors.response.use(
@@ -38,12 +44,13 @@ fly.interceptors.response.use(
 fly.config.baseURL = (function () {
   let baseURL
   if (process.env.NODE_ENV === 'development') {
-    //  baseURL = 'http://192.168.1.28:9080'
-    baseURL = 'http://39.104.124.195:9080/'
+    baseURL = 'http://192.168.1.50:9080'
+    // baseURL = 'http://39.104.124.195:9080/'
   } else if (process.env.NODE_ENV === 'production') {
     baseURL = 'http://39.104.124.195:9080/'
   }
   return baseURL
 })()
 fly.config.timeout = 15000
+
 export default fly

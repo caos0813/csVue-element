@@ -9,6 +9,8 @@ import TopicList from '@/pages/topic-list'
 import Topic from '@/pages/topic'
 import Article from '@/pages/article'
 import Subject from '@/pages/subject'
+import VolunteerList from '@/pages/volunteer-list'
+import VolunteerUse from '@/pages/volunteer-use'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -78,6 +80,14 @@ export default new Router({
         meta: {
           requireAuth: true
         }
+      }, {
+        path: '/volunteer-list',
+        name: 'volunteer-list',
+        component: VolunteerList
+      }, {
+        path: '/volunteer-use',
+        name: 'volunteer-use',
+        component: VolunteerUse
       }]
     }
   ]
