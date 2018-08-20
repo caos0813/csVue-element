@@ -38,8 +38,7 @@ fly.interceptors.response.use(
 fly.config.baseURL = (function () {
   let baseURL
   if (process.env.NODE_ENV === 'development') {
-    //  baseURL = 'http://192.168.1.28:9080'
-    baseURL = 'http://39.104.124.195:9080/'
+    baseURL = 'http://192.168.1.49:9080'
   } else if (process.env.NODE_ENV === 'production') {
     baseURL = 'http://39.104.124.195:9080/'
   }
