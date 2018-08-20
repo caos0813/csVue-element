@@ -1,6 +1,6 @@
 <template>
   <div class="upload">
-    <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+    <el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :http-request="upload">
       <img :src="imageUrl" class="avatar" v-if="imageUrl">
       <div class="btn-wrap" v-if="imageUrl">
         <el-button icon="el-icon-zoom-in" size="mini" circle @click.stop="handlePictureCardPreview"></el-button>
@@ -13,16 +13,49 @@
   </div>
 </template>
 <script>
+import { api } from '@/utils'
+const OSS = require('ali-oss')
 export default {
   data () {
     return {
+      uploadUrl: '',
       imageUrl: '',
+      uploadConfig: {},
       dialogVisible: false
     }
   },
   methods: {
+    async upload (option) {
+      let file = option.file
+      const point = file.name.lastIndexOf('.')
+      let fileName = file.name.substr(0, point)
+      let relativePath = 'image/article/'
+      // 分片上传文件
+      let client = new OSS({
+        accessKeyId: this.uploadConfig.accessKeyId,
+        accessKeySecret: this.uploadConfig.accessKeySecret,
+        bucket: this.uploadConfig.bucketName,
+        endpoint: this.uploadConfig.endpoint
+      })
+      let ret = await client.multipartUpload(relativePath + fileName, file, {
+        progress: async function (p) {
+          let e = {}
+          e.percent = p * 100
+          option.onProgress(e)
+        }
+      })
+      if (ret.res.statusCode === 200) {
+        option.onSuccess(ret)
+        return ret
+      } else {
+        option.onError('上传失败')
+      }
+    },
     handleAvatarSuccess (res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
+      console.log(file)
+      console.log(res)
+      //  this.imageUrl = URL.createObjectURL(file.raw)
+      this.imageUrl = res.res.requestUrls[0]
     },
     beforeAvatarUpload (file) {
       const isJPG = file.type === 'image/jpeg'
@@ -35,13 +68,12 @@ export default {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
       return isJPG && isLt2M
-    },
-    handleRemove (file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePictureCardPreview (file) {
-      this.dialogVisible = true
     }
+  },
+  created () {
+    this.$fly.get(api.uploadToken).then(data => {
+      this.uploadConfig = data
+    })
   }
 }
 </script>
@@ -84,9 +116,9 @@ export default {
       display: block;
     }
   }
-  .el-dialog__body{
+  .el-dialog__body {
     padding: 0 20px 20px;
-    img{
+    img {
       display: block;
     }
   }
