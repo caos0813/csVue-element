@@ -15,8 +15,9 @@
         </div>
       </div>
     </div>
-
-    <el-table :data="tableData" :header-cell-style="{background:'#F5F7FA'}" v-loading="loading" element-loading-text="拼命加载中 " border stripe>
+    <el-table :data="tableData" :header-cell-style="{background:'#F5F7FA'}" v-loading="loading" element-loading-text="拼命加载中" border stripe>
+      <el-table-column type="index" width="50">
+      </el-table-column>
       <el-table-column prop="number" label="激活卡号" width="180" align="center">
       </el-table-column>
       <el-table-column prop="phoneNumber" label="绑定账号" width="180" align="center">
@@ -33,7 +34,7 @@
       </el-table-column>
       <el-table-column prop="createdDate" label="绑定时间" align="center">
         <template slot-scope="props">
-          <span>{{props.row.createdDate | dateTime('yyyy-MM-dd')}}</span>
+          <span>{{props.row.createdDate | dateTime('yyyy-MM-dd hh:mm:ss')}}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -104,6 +105,7 @@ export default {
       return {
         page: 0,
         size: 10,
+        // sort: 'createdDate,desc',
         beginDate: this.date[0] || null,
         endDate: this.date[1] || null,
         activated: status
