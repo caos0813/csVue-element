@@ -11,7 +11,9 @@
         <el-button type="primary" size="small" @click="openCard">开卡</el-button>
       </div>
     </div>
-    <el-table :data="tableData" :header-cell-style="{background:'#F5F7FA'}" v-loading="loading" element-loading-text="拼命加载中 " border stripe>
+    <el-table :data="tableData" :header-cell-style="{background:'#F5F7FA'}" v-loading="loading" element-loading-text="拼命加载中" border stripe>
+      <el-table-column type="index" width="50">
+      </el-table-column>
       <el-table-column prop="provinceName" label="开卡省份" width="180" align="center">
       </el-table-column>
       <el-table-column prop="type" label="类型" width="180" align="center">
@@ -25,7 +27,7 @@
       </el-table-column>
       <el-table-column prop="createdDate" label="开卡时间" align="center">
         <template slot-scope="props">
-          <span>{{props.row.createdDate | dateTime('yyyy-MM-dd')}}</span>
+          <span>{{props.row.createdDate | dateTime('yyyy-MM-dd hh:mm:ss')}}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
@@ -155,6 +157,7 @@ export default {
       return {
         page: 0,
         size: 10,
+        // sort: ['createdDate,desc', 'id'],
         beginDate: this.date[0] || null,
         endDate: this.date[1] || null
       }
@@ -170,7 +173,7 @@ export default {
     },
     // 导出excel
     handlerExprot (id) {
-      window.location.href = 'http://192.168.1.50:9080' + api.exportByRecordId + '/' + id
+      window.open(this.$fly.config.baseURL + api.exportByRecordId + '/' + id)
     },
     // 开卡
     openCard () {
