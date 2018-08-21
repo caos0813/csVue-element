@@ -13,12 +13,14 @@ import store from '@/store'
 import fly from '@/utils/fly.config'
 import VueLodash from 'vue-lodash'
 import Cookies from 'js-cookie'
+import filters from '@/mixins/filters'
 Vue.config.productionTip = false
 Vue.prototype.$fly = fly
 const options = { name: 'lodash' }
 Vue.use(VueLodash, options)
 Vue.use(ElementUI)
 Vue.component('back', back)
+Vue.mixin(filters)
 /* eslint-disable no-new */
 router.beforeEach((to, from, next) => {
   let { token } = Cookies.get('user') ? JSON.parse(Cookies.get('user')) : ''

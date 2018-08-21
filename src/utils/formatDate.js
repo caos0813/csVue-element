@@ -1,8 +1,5 @@
-
-function padLeftZero (str) {
-  return ('00' + str).substr(str.length)
-}
-export default function formatDate (date, fmt) {
+function formatDate (timestr, fmt) {
+  let date = new Date(timestr)
   if (/(y+)/.test(fmt)) {
     fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
   }
@@ -20,4 +17,9 @@ export default function formatDate (date, fmt) {
     }
   }
   return fmt
+};
+
+function padLeftZero (str) {
+  return ('00' + str).substr(str.length)
 }
+export default formatDate

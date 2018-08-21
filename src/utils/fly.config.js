@@ -13,6 +13,12 @@ fly.interceptors.request.use((config, promise) => {
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`
   }
+  let { body } = config
+  for (let x in body) {
+    if (body[x] === null) {
+      delete body[x]
+    }
+  }
   return config
 })
 fly.interceptors.response.use(
@@ -50,4 +56,5 @@ fly.config.baseURL = (function () {
   return baseURL
 })()
 fly.config.timeout = 15000
+
 export default fly

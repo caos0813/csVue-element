@@ -10,6 +10,12 @@
       <router-link :to="{name:'topic-list'}" tag="a" class="ceil">
         话题
       </router-link>
+      <router-link :to="{name:'volunteer-list'}" tag="a" class="ceil">
+        志愿卡
+      </router-link>
+      <router-link :to="{name:'volunteer-use'}" tag="a" class="ceil">
+        志愿卡使用管理
+      </router-link>
     </div>
   </div>
 </template>
