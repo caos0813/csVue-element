@@ -3,7 +3,7 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
-
+console.log(process.env.CORS)
 module.exports = {
   dev: {
 
@@ -11,11 +11,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api-proxy': {
-        target: 'https://easy-mock.com/mock/5b489f17226e381d25bdc2d2/',
+      '/cors': {
+        target: 'http://' + process.env.CORS,
         changeOrigin: true,
         pathRewrite: {
-          '^/api-proxy': ''
+          '^/cors': ''
         }
       }
     },

@@ -1,9 +1,7 @@
 export default {
-  propertyGroup: 'propertyGroup',
-  findByPropertyGroupIdAndName: 'propertyId/search/findByPropertyGroupIdAndName',
-  propertySearch: 'property/search/',
-  property: 'property',
-  propertyId: 'propertyId',
+  productAll: '/product/queryAll',
   authentication: 'auth',
-  uploadToken: 'secret/token'
+  uploadToken: 'secret/token',
+  saveAndUpdate: '/specialTopic/saveAndUpdate',
+  querySpecialTopic: 'specialTopic/querySpecialTopic'
 }

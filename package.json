@@ -7,13 +7,13 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --progress  --config build/webpack.dev.conf.js",
     "start": "npm run dev",
+    "cors": "cross-env CORS=192.168.1.49:9080 webpack-dev-server --inline --progress  --config build/webpack.dev.conf.js",
     "dist": "node config/dist.server.js",
     "lint": "eslint --ext .js,.vue src",
     "build": "node build/build.js"
   },
   "dependencies": {
     "ali-oss": "^6.0.1",
-    "babel-polyfill": "^6.26.0",
     "element-ui": "^2.4.1",
     "flyio": "^0.6.0",
     "js-cookie": "^2.2.0",
@@ -25,6 +25,9 @@
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
+    "http-proxy-middleware": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
+    "cross-env": "^5.2.0",
     "babel-core": "^6.22.1",
     "babel-eslint": "^8.2.1",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",

@@ -54,10 +54,16 @@
   </div>
 </template>
 <script>
+import { api } from '@/utils'
 export default {
   data () {
     return {
-      params: {},
+      params: {
+        title: null,
+        page: 0,
+        size: 15,
+        sortType: 1
+      },
       tableData: [{
         date: '2016-05-03',
         name: '王小虎',
@@ -71,6 +77,14 @@ export default {
       }],
       multipleSelection: []
     }
+  },
+  methods: {
+    getData () {
+      this.$fly.get(api.querySpecialTopic, this.params)
+    }
+  },
+  created () {
+    this.getData()
   }
 }
 </script>

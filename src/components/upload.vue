@@ -1,9 +1,9 @@
 <template>
   <div class="upload">
-    <el-upload class="avatar-uploader" :action="uploadUrl" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :http-request="upload">
+    <el-upload class="avatar-uploader" accept="image/*" :action="uploadUrl" :show-file-list="false" :on-success="handleAvatarSuccess" :http-request="upload">
       <img :src="imageUrl" class="avatar" v-if="imageUrl">
       <div class="btn-wrap" v-if="imageUrl">
-        <el-button icon="el-icon-zoom-in" size="mini" circle @click.stop="handlePictureCardPreview"></el-button>
+        <el-button icon="el-icon-zoom-in" size="mini" circle @click.stop="preview"></el-button>
       </div>
       <i v-else class="el-icon-upload avatar-uploader-icon"></i>
     </el-upload>
@@ -13,22 +13,26 @@
   </div>
 </template>
 <script>
-import { api } from '@/utils'
+import { api, formatDate } from '@/utils'
 const OSS = require('ali-oss')
 export default {
   data () {
     return {
       uploadUrl: '',
-      imageUrl: '',
+      imageUrl: this.value,
       uploadConfig: {},
       dialogVisible: false
     }
   },
+  props: ['value'],
   methods: {
+    preview () {
+      this.dialogVisible = true
+    },
     async upload (option) {
       let file = option.file
-      const point = file.name.lastIndexOf('.')
-      let fileName = file.name.substr(0, point)
+      //  const point = file.name.lastIndexOf('.')
+      //  let fileName = file.name.substr(0, point)
       let relativePath = 'image/article/'
       // 分片上传文件
       let client = new OSS({
@@ -37,7 +41,7 @@ export default {
         bucket: this.uploadConfig.bucketName,
         endpoint: this.uploadConfig.endpoint
       })
-      let ret = await client.multipartUpload(relativePath + fileName, file, {
+      let ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), file, {
         progress: async function (p) {
           let e = {}
           e.percent = p * 100
@@ -52,22 +56,8 @@ export default {
       }
     },
     handleAvatarSuccess (res, file) {
-      console.log(file)
-      console.log(res)
-      //  this.imageUrl = URL.createObjectURL(file.raw)
       this.imageUrl = res.res.requestUrls[0]
-    },
-    beforeAvatarUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      return isJPG && isLt2M
+      this.$emit('input', this.imageUrl)
     }
   },
   created () {

@@ -34,11 +34,16 @@ fly.interceptors.response.use(
     return error
   }
 )
+console.log(process.env)
 // 配置请求基地址
 fly.config.baseURL = (function () {
   let baseURL
   if (process.env.NODE_ENV === 'development') {
-    baseURL = 'http://192.168.1.49:9080'
+    if (process.env.CORS) {
+      baseURL = 'http://' + window.location.host + '/cors'
+    } else {
+      baseURL = 'http://192.168.1.49:9080'
+    }
   } else if (process.env.NODE_ENV === 'production') {
     baseURL = 'http://39.104.124.195:9080/'
   }
