@@ -70,7 +70,7 @@ import { api } from '@/utils'
 export default {
   data () {
     return {
-      date: [],
+      date: null,
       pickerOptions2: {
         disabledDate (time) {
           return time.getTime() > Date.now()
@@ -154,17 +154,18 @@ export default {
   },
   computed: {
     params () {
+      console.log(1111)
+      console.log(this.date)
       return {
         page: 0,
         size: 10,
-        // sort: ['createdDate,desc', 'id'],
-        beginDate: this.date[0] || null,
-        endDate: this.date[1] || null
+        beginDate: this.date ? this.date[0] : null,
+        endDate: this.date ? this.date[1] : null
       }
     }
   },
   methods: {
-    dateChange () {
+    dateChange (e) {
       this.getData(this.params)
     },
     currentChange (e) {
@@ -238,6 +239,7 @@ export default {
     }
   },
   beforeMount () {
+    console.log(this.params)
     this.getData(this.params)
   }
 }

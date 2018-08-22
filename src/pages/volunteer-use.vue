@@ -49,7 +49,7 @@ import { api } from '@/utils'
 export default {
   data () {
     return {
-      date: [],
+      date: '',
       status: '',
       pickerOptions2: {
         disabledDate (time) {
@@ -106,8 +106,8 @@ export default {
         page: 0,
         size: 10,
         // sort: 'createdDate,desc',
-        beginDate: this.date[0] || null,
-        endDate: this.date[1] || null,
+        beginDate: this.date ? this.date[0] : null,
+        endDate: this.date ? this.date[1] : null,
         activated: status
       }
     }
