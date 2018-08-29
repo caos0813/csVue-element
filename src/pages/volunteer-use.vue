@@ -16,7 +16,7 @@
       </div>
     </div>
     <el-table :data="tableData" :header-cell-style="{background:'#F5F7FA'}" v-loading="loading" element-loading-text="拼命加载中" border stripe>
-      <el-table-column type="index" width="50">
+      <el-table-column type="index" width="50" align="center">
       </el-table-column>
       <el-table-column prop="number" label="激活卡号" width="180" align="center">
       </el-table-column>
@@ -128,9 +128,6 @@ export default {
       this.pageInfo = {}
       this.tableData = []
       this.$fly.get(api.getMembershipCards, params).then(data => {
-        // let { page, _embedded } = data
-        // this.pageInfo = page
-        // this.tableData = _embedded.membershipCards
         let { pageable, content, totalElements } = data
         this.pageInfo = pageable
         this.pageInfo.totalElements = totalElements

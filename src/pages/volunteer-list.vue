@@ -12,7 +12,7 @@
       </div>
     </div>
     <el-table :data="tableData" :header-cell-style="{background:'#F5F7FA'}" v-loading="loading" element-loading-text="拼命加载中" border stripe>
-      <el-table-column type="index" width="50">
+      <el-table-column type="index" width="50" align="center">
       </el-table-column>
       <el-table-column prop="provinceName" label="开卡省份" width="180" align="center">
       </el-table-column>
@@ -154,8 +154,6 @@ export default {
   },
   computed: {
     params () {
-      console.log(1111)
-      console.log(this.date)
       return {
         page: 0,
         size: 10,
@@ -198,8 +196,8 @@ export default {
               message: '生成成功!',
               type: 'success'
             })
-            this.addDialog = false
             this.getData(this.params)
+            this.addDialog = false
           }).catch(() => {
             this.$message({
               message: '生成失败',

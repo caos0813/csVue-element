@@ -79,7 +79,7 @@ export default {
               duration: 2000,
               type: 'success'
             })
-            this.$refs['form'].resetFields();
+            this.$refs['form'].resetFields()
           }).catch(() => {
             this.$message({
               message: '保存失败',
