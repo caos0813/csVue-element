@@ -16,7 +16,7 @@
       <router-link :to="{name:'volunteer-use'}" tag="a" class="ceil">
         志愿卡使用管理
       </router-link>
-      <router-link :to="{name:'feedback'}" tag="a" class="ceil">
+      <router-link :to="{name:'feedback-list'}" tag="a" class="ceil">
         反馈
       </router-link>
     </div>

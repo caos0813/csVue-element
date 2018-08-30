@@ -4,7 +4,8 @@ export default {
   generate: '/membershipCard/generate', // 生成志愿卡
   byCondition: '/membershipCardGenerateRecord/byCondition', // 获取志愿卡
   getMembershipCards: '/membershipCard/byCondition', // 获取会员卡
-  exportByRecordId: '/membershipCard/exportByRecordId', // 导出
+  exportByRecordId: '/membershipCard/exportByRecordId', // 根据会员卡id导出会员卡数据 的excel
+  exportToken: 'membershipCard/exportToken/generate', // 获取导出会员卡excel的token （需要登录）
   getFeedback: 'feedback/getFeedback', // 获取反馈列表
   uploadToken: 'secret/token', //  获取上传图片凭证
   productAll: '/product/queryAll', //  查询所有类型

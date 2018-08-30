@@ -11,7 +11,7 @@ import Article from '@/pages/article'
 import Special from '@/pages/special'
 import VolunteerList from '@/pages/volunteer-list'
 import VolunteerUse from '@/pages/volunteer-use'
-import Feedback from '@/pages/feedback'
+import FeedbackList from '@/pages/feedback-list'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -36,7 +36,7 @@ export default new Router({
         name: 'index',
         component: Index,
         meta: {
-          requireAuth: true
+          // requireAuth: true
         }
       },
       {
@@ -44,7 +44,7 @@ export default new Router({
         name: 'special-list',
         component: SpecialList,
         meta: {
-          requireAuth: true
+          // requireAuth: true
         }
       }, {
         path: '/special/:type',
@@ -58,7 +58,7 @@ export default new Router({
         name: 'article-list',
         component: ArticleList,
         meta: {
-          requireAuth: true
+          // requireAuth: true
         }
       }, {
         path: '/article/:type',
@@ -72,7 +72,7 @@ export default new Router({
         name: 'topic-list',
         component: TopicList,
         meta: {
-          requireAuth: true
+          // requireAuth: true
         }
       }, {
         path: '/topic/:type',
@@ -90,9 +90,9 @@ export default new Router({
         name: 'volunteer-use',
         component: VolunteerUse
       }, {
-        path: '/feedback',
-        name: 'feedback',
-        component: Feedback
+        path: '/feedback-list',
+        name: 'feedback-list',
+        component: FeedbackList
       }]
     }
   ]

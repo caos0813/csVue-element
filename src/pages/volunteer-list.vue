@@ -2,10 +2,8 @@
   <div class="page">
     <div class="tools-bar">
       <div class="left-wrap">
-        <div class="ceil-box">
-          <el-date-picker v-model="date" size="small" type="daterange" unlink-panels range-separator="至 " start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" @change="dateChange" value-format="timestamp">
-          </el-date-picker>
-        </div>
+        <el-date-picker v-model="date" class='date-picker-wrap' size="small" type="daterange" unlink-panels range-separator="至 " start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" @change="dateChange" value-format="timestamp">
+        </el-date-picker>
       </div>
       <div class="button-wrap">
         <el-button type="primary" size="small" @click="openCard">开卡</el-button>
@@ -37,7 +35,9 @@
       </el-table-column>
     </el-table>
     <div class="page-wrap text-left padding ">
-      <el-pagination background layout="total, prev, pager, next,sizes, jumper" :page-sizes="pageSizes" :current-page="pageInfo.pageNumber+1" :total="pageInfo.totalElements" :page-size="pageInfo.pageSize" @current-change="currentChange">
+      <!-- <el-pagination background layout="total, prev, pager, next,sizes, jumper" :page-sizes="pageSizes" :current-page="pageInfo.pageNumber+1" :total="pageInfo.totalElements" :page-size="pageInfo.pageSize" @current-change="currentChange">
+      </el-pagination> -->
+      <el-pagination background layout="total, prev, pager, next, jumper" :total="pageInfo.totalElements" @current-change="currentChange">
       </el-pagination>
     </div>
     <el-dialog title="开卡" :visible.sync="addDialog" width="500px" :close-on-click-modal="false">
@@ -67,6 +67,7 @@
 </template>
 <script>
 import { api } from '@/utils'
+import Cookies from 'js-cookie'
 export default {
   data () {
     return {
@@ -172,7 +173,8 @@ export default {
     },
     // 导出excel
     handlerExprot (id) {
-      window.open(this.$fly.config.baseURL + api.exportByRecordId + '/' + id)
+      let { token } = Cookies.get('user') ? JSON.parse(Cookies.get('user')) : ''
+      window.location.href = this.$fly.config.baseURL + api.exportByRecordId + '/' + id + '?token=' + token
     },
     // 开卡
     openCard () {

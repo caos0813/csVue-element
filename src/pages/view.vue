@@ -48,12 +48,12 @@
               <i class="el-icon-menu"></i>
               <span>个人中心</span>
             </template>
-            <el-menu-item index="3-1" :route="{name:'feedback'}">反馈</el-menu-item>
+            <el-menu-item index="3-1" :route="{name:'feedback-list'}">反馈</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
       <el-main class="main">
-          <router-view></router-view>
+        <router-view></router-view>
       </el-main>
     </el-container>
   </el-container>

@@ -2,17 +2,13 @@
   <div class="page">
     <div class="tools-bar">
       <div class="left-wrap">
-        <div class="ceil-box">
-          <el-date-picker v-model="date" size="small" type="daterange" unlink-panels range-separator="至 " start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" @change="dateChange" value-format="timestamp">
-          </el-date-picker>
-        </div>
-        <div class="ceil-box">
-          <el-select v-model="status" placeholder="请选择激活状态" size="small" @change="activeChange">
-            <el-option label="全部" value=""></el-option>
-            <el-option label="已激活" value=true></el-option>
-            <el-option label="未激活" value=false></el-option>
-          </el-select>
-        </div>
+        <el-date-picker v-model="date" class='date-picker-wrap' size="small" type="daterange" unlink-panels range-separator="至 " start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" @change="dateChange" value-format="timestamp">
+        </el-date-picker>
+        <el-select v-model="status" placeholder="请选择激活状态" size="small" @change="activeChange">
+          <el-option label="全部" value=""></el-option>
+          <el-option label="已激活" value=true></el-option>
+          <el-option label="未激活" value=false></el-option>
+        </el-select>
       </div>
     </div>
     <el-table :data="tableData" :header-cell-style="{background:'#F5F7FA'}" v-loading="loading" element-loading-text="拼命加载中" border stripe>
@@ -39,7 +35,9 @@
       </el-table-column>
     </el-table>
     <div class="page-wrap text-left padding ">
-      <el-pagination background layout="total, prev, pager, next,sizes, jumper" :page-sizes="pageSizes" :current-page="pageInfo.pageNumber+1" :total="pageInfo.totalElements" :page-size="pageInfo.pageSize" @current-change="currentChange">
+      <!-- <el-pagination background layout="total, prev, pager, next,sizes, jumper" :page-sizes="pageSizes" :current-page="pageInfo.pageNumber+1" :total="pageInfo.totalElements" :page-size="pageInfo.pageSize" @current-change="currentChange">
+      </el-pagination> -->
+      <el-pagination background layout="total, prev, pager, next, jumper" :total="pageInfo.totalElements" @current-change="currentChange">
       </el-pagination>
     </div>
   </div>
