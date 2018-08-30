@@ -3,12 +3,12 @@ import Router from 'vue-router'
 import Login from '@/pages/login'
 import View from '@/pages/view'
 import Index from '@/pages/index'
-import SubjectList from '@/pages/subject-list'
+import SpecialList from '@/pages/special-list'
 import ArticleList from '@/pages/article-list'
 import TopicList from '@/pages/topic-list'
 import Topic from '@/pages/topic'
 import Article from '@/pages/article'
-import Subject from '@/pages/subject'
+import Special from '@/pages/special'
 import VolunteerList from '@/pages/volunteer-list'
 import VolunteerUse from '@/pages/volunteer-use'
 import Feedback from '@/pages/feedback'
@@ -40,16 +40,16 @@ export default new Router({
         }
       },
       {
-        path: '/subject-list',
-        name: 'subject-list',
-        component: SubjectList,
+        path: '/special-list',
+        name: 'special-list',
+        component: SpecialList,
         meta: {
           requireAuth: true
         }
       }, {
-        path: '/subject/:type',
-        name: 'subject',
-        component: Subject,
+        path: '/special/:type',
+        name: 'special',
+        component: Special,
         meta: {
           requireAuth: true
         }

@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="box-wrap">
-      <router-link :to="{name:'subject-list'}" tag="a" class="ceil">
+      <router-link :to="{name:'specail-list'}" tag="a" class="ceil">
         专题
       </router-link>
       <router-link :to="{name:'article-list'}" tag="a" class="ceil">

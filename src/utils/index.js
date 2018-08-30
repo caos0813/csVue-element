@@ -1,5 +1,6 @@
 import api from './api'
 import formatDate from './formatDate'
+import { confirm } from './handle'
 function isEmpty (obj) {
   if (typeof obj === 'undefined' || obj === null || obj === '') {
     return true
@@ -7,4 +8,5 @@ function isEmpty (obj) {
     return false
   }
 }
-export { api, formatDate, isEmpty }
+console.log(confirm)
+export { api, formatDate, isEmpty, confirm }
