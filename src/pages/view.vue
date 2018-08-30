@@ -40,8 +40,15 @@
               <i class="el-icon-menu"></i>
               <span>志愿卡管理</span>
             </template>
-            <el-menu-item index="2-1" :route="{name:'volunteer-list'}">志愿卡管理</el-menu-item>
+            <el-menu-item index="2-1" :route="{name:'volunteer-list'}">开卡管理</el-menu-item>
             <el-menu-item index="2-2" :route="{name:'volunteer-use'}">使用管理</el-menu-item>
+          </el-submenu>
+          <el-submenu index="3">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span>个人中心</span>
+            </template>
+            <el-menu-item index="3-1" :route="{name:'feedback'}">反馈</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>

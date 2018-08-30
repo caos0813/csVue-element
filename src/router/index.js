@@ -11,6 +11,7 @@ import Article from '@/pages/article'
 import Subject from '@/pages/subject'
 import VolunteerList from '@/pages/volunteer-list'
 import VolunteerUse from '@/pages/volunteer-use'
+import Feedback from '@/pages/feedback'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -88,6 +89,10 @@ export default new Router({
         path: '/volunteer-use',
         name: 'volunteer-use',
         component: VolunteerUse
+      }, {
+        path: '/feedback',
+        name: 'feedback',
+        component: Feedback
       }]
     }
   ]

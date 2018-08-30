@@ -8,5 +8,6 @@ export default {
   byCondition: '/membershipCardGenerateRecord/byCondition', // 获取志愿卡
   getMembershipCards: '/membershipCard/byCondition', // 获取会员卡
   exportByRecordId: '/membershipCard/exportByRecordId', // 导出
+  getFeedback: 'feedback/getFeedback', // 获取反馈列表
   uploadToken: 'secret/token'
 }
