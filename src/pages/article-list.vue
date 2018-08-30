@@ -2,55 +2,49 @@
   <div class="page">
     <div class="tools-bar">
       <div class="left-wrap">
-        <div class="ceil-box">
-          <el-select v-model="params.product" placeholder="请选择产品" size="small">
-            <el-option label="产品1" value="shanghai"></el-option>
-            <el-option label="产品2" value="beijing"></el-option>
-          </el-select>
-        </div>
-        <div class="ceil-box">
-          <el-select v-model="params.product" placeholder="请选择模块" size="small">
-            <el-option label="产品1" value="shanghai"></el-option>
-            <el-option label="产品2" value="beijing"></el-option>
-          </el-select>
-        </div>
-        <div class="ceil-box">
-          <el-select v-model="params.product" placeholder="请选择专题" size="small">
-            <el-option label="产品1" value="shanghai"></el-option>
-            <el-option label="产品2" value="beijing"></el-option>
-          </el-select>
-        </div>
+
+        <el-input prefix-icon="el-icon-search" v-model="params.title" placeholder="请输入搜索关键字" size="small"></el-input>
+        <picker v-model="pickerVal" size="small" :span="-1" :column="2"></picker>
+        <el-button size="small" type="primary" @click="search">查询</el-button>
+        <el-button size="small" type="warning" @click="reset">重置</el-button>
       </div>
-      <div class="button-wrap">
-        <el-button type="primary" size="small">发布</el-button>
-        <el-button type="warning" size="small">下架</el-button>
-        <el-button type="danger" size="small">删除</el-button>
-      </div>
+      <listHandle :checkIds="checkIds" @refresh="refresh"></listHandle>
     </div>
-    <el-table ref="multipleTable" :data="tableData" border  stripe>
+    <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" border stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center">
       </el-table-column>
-      <el-table-column prop="title" label="标题" align="center">
+      <el-table-column label="标题" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.title }}</span>
+        </template>
       </el-table-column>
-      <el-table-column prop="name" label="专题" width="120" align="center">
+      <el-table-column label="推荐" align="center" width="80">
+        <template slot-scope="scope">
+          <el-tag size="small" :type="scope.row.isHomePageShow===1?'danger':'info'">{{scope.row.isHomePageShow?'推荐':'不推荐'}}</el-tag>
+        </template>
       </el-table-column>
-      <el-table-column prop="name" label="操作人" width="120" align="center">
+      <el-table-column label="所属专题" align="center">
+        <template slot-scope="scope">{{ scope.row.product.name }}、{{ scope.row.specialTopic.title }}</template>
       </el-table-column>
-      <el-table-column prop="status" label="状态" width="120" align="center">
+      <el-table-column prop="userName" label="操作人" width="120" align="center">
       </el-table-column>
-      <el-table-column prop="status" label="产品" width="120" align="center">
+      <el-table-column label="状态" width="120" align="center">
+        <template slot-scope="scope">
+          <el-tag size="small" :type="scope.row.status | publicStatus('style')">{{ scope.row.status | publicStatus }}</el-tag>
+        </template>
       </el-table-column>
-      <el-table-column prop="status" label="模块" width="120" align="center">
+      <el-table-column prop="totalReadNum" label="阅读量" width="120" align="center">
       </el-table-column>
-      <el-table-column prop="status" label="阅读量" width="120" align="center">
+      <el-table-column label="创建时间" width="180" align="center">
+        <template slot-scope="scope">{{ scope.row.createTime }}</template>
       </el-table-column>
-      <el-table-column label="发布时间" width="120" align="center">
-        <template slot-scope="scope">{{ scope.row.date }}</template>
+      <el-table-column label="发布时间" width="180" align="center">
+        <template slot-scope="scope">{{ scope.row.publishTime }}</template>
       </el-table-column>
       <el-table-column label="操作" width="120" align="center">
         <template slot-scope="scope ">
-         <el-button type="text " size="mini">
-            <router-link :to="{name:'article',params:{type:'edit'}}" tag="span">编辑</router-link>
+          <el-button type="text " size="mini">
+            <router-link :to="{name:'article',params:{type:'edit'},query:{id:scope.row.id}}" tag="span">编辑</router-link>
           </el-button>
         </template>
       </el-table-column>
@@ -62,23 +56,71 @@
   </div>
 </template>
 <script>
+import { api } from '@/utils'
+import { picker, listHandle } from '@/components'
 export default {
   data () {
     return {
-      params: {},
-      tableData: [{
-        date: '2016-05-03',
-        name: '王小虎',
-        status: '上架',
-        title: '我就是标题'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        status: '上架',
-        title: '我就是标题'
-      }],
-      multipleSelection: []
+      params: {
+        title: null,
+        page: 1,
+        size: 15,
+        sortType: 1
+      },
+      checkIds: [],
+      pickerVal: [],
+      pageInfo: {},
+      tableData: []
     }
+  },
+  components: {
+    picker,
+    listHandle
+  },
+  methods: {
+    handleSelectionChange (e) {
+      this.checkIds = this.lodash.map(e, 'id')
+      console.log(this.checkIds)
+    },
+    changePage (e) {
+      this.params.page = e
+      this.getData(this.params)
+    },
+    reset () {
+      this.params = {
+        title: null,
+        page: 1,
+        size: 15,
+        sortType: 1
+      }
+      this.pickerVal = []
+      this.getData(this.params)
+    },
+    search () {
+      console.log(this.pickerVal)
+      this.params.productId = this.pickerVal[0]
+      this.params.specialTopicId = this.pickerVal[1]
+      this.getData(this.params)
+    },
+    refresh () {
+      this.getData(this.params)
+    },
+    getData (obj) {
+      let params = this.lodash.clone(obj)
+      params.page--
+      console.log(obj)
+      this.$fly.get(api.articleList, params).then(data => {
+        this.tableData = data.content
+        this.pageInfo = {
+          totalPages: data.totalPages,
+          size: obj.size,
+          currentPage: obj.page
+        }
+      })
+    }
+  },
+  created () {
+    this.getData(this.params)
   }
 }
 </script>

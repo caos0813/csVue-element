@@ -15,7 +15,7 @@ fly.interceptors.request.use((config, promise) => {
   }
   let { body } = config
   for (let x in body) {
-    if (body[x] === null) {
+    if (body[x] === null || body[x] === undefined) {
       delete body[x]
     }
   }

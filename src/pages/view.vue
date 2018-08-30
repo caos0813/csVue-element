@@ -31,7 +31,7 @@
               <i class="el-icon-menu"></i>
               <span>内容管理</span>
             </template>
-            <el-menu-item index="1-1" :route="{name:'subject-list'}">专题</el-menu-item>
+            <el-menu-item index="1-1" :route="{name:'special-list'}">专题</el-menu-item>
             <el-menu-item index="1-2" :route="{name:'article-list'}">文章</el-menu-item>
             <el-menu-item index="1-3" :route="{name:'topic-list'}">话题</el-menu-item>
           </el-submenu>
@@ -46,11 +46,7 @@
         </el-menu>
       </el-aside>
       <el-main class="main">
-        <transition name="el-fade-in">
-          <keep-alive>
-            <router-view></router-view>
-          </keep-alive>
-        </transition>
+          <router-view></router-view>
       </el-main>
     </el-container>
   </el-container>

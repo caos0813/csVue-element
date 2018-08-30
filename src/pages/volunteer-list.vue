@@ -11,7 +11,7 @@
         <el-button type="primary" size="small" @click="openCard">开卡</el-button>
       </div>
     </div>
-    <el-table :data="tableData" :header-cell-style="{background:'#F5F7FA'}" v-loading="loading" element-loading-text="拼命加载中" border stripe>
+    <el-table :data="tableData" header-cell-class-name="tableHeader" v-loading="loading" element-loading-text="拼命加载中" border stripe>
       <el-table-column type="index" width="50">
       </el-table-column>
       <el-table-column prop="provinceName" label="开卡省份" width="180" align="center">

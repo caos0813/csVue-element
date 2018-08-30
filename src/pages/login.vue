@@ -3,10 +3,10 @@
     <div class="form-wrap">
       <el-form ref="form" :model="params" :rules="rules" >
         <el-form-item prop="userName">
-          <el-input v-model="params.userName" placeholder="请输入账号" name="userName"></el-input>
+          <el-input v-model="params.name" placeholder="请输入账号" name="userName"></el-input>
         </el-form-item>
         <el-form-item prop="passWord">
-          <el-input v-model="params.passWord" type="passWord" placeholder="请输入密码" name="passWord"></el-input>
+          <el-input v-model="params.passwords" type="passWord" placeholder="请输入密码" name="passWord"></el-input>
         </el-form-item>
         <el-form-item class="text-center">
           <el-button class="btn" type="primary" native-type="submit" @click.prevent="submit"  round >登录</el-button>
@@ -26,10 +26,10 @@ export default ({
 
       },
       rules: {
-        userName: [
+        name: [
           { required: true, message: '请输入账号', trigger: 'change' }
         ],
-        passWord: [
+        passwords: [
           { required: true, message: '请输入密码', trigger: 'change' },
           { min: 6, message: '密码长度不正确', trigger: 'change' }
         ]
@@ -41,7 +41,7 @@ export default ({
       this.$refs['form'].validate((valid) => {
         if (valid) {
           console.log(this.params)
-          this.$fly.post(api.authentication, this.params).then(data => {
+          this.$fly.post(api.login, this.params).then(data => {
             Cookies.set('user', {
               userName: this.params.userName,
               token: data.token

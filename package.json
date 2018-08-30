@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --progress  --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "cors": "cross-env CORS=192.168.1.49:9080 webpack-dev-server --inline --progress  --config build/webpack.dev.conf.js",
+    "cors": "cross-env CORS=192.168.1.49:9081 webpack-dev-server --inline --progress  --config build/webpack.dev.conf.js",
     "dist": "node config/dist.server.js",
     "lint": "eslint --ext .js,.vue src",
     "build": "node build/build.js"
