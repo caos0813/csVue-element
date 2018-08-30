@@ -36,7 +36,7 @@ export default new Router({
         name: 'index',
         component: Index,
         meta: {
-          // requireAuth: true
+          requireAuth: true
         }
       },
       {
@@ -44,7 +44,7 @@ export default new Router({
         name: 'special-list',
         component: SpecialList,
         meta: {
-          // requireAuth: true
+          requireAuth: true
         }
       }, {
         path: '/special/:type',
@@ -58,7 +58,7 @@ export default new Router({
         name: 'article-list',
         component: ArticleList,
         meta: {
-          // requireAuth: true
+          requireAuth: true
         }
       }, {
         path: '/article/:type',
@@ -72,7 +72,7 @@ export default new Router({
         name: 'topic-list',
         component: TopicList,
         meta: {
-          // requireAuth: true
+          requireAuth: true
         }
       }, {
         path: '/topic/:type',
@@ -84,15 +84,24 @@ export default new Router({
       }, {
         path: '/volunteer-list',
         name: 'volunteer-list',
-        component: VolunteerList
+        component: VolunteerList,
+        meta: {
+          requireAuth: true
+        }
       }, {
         path: '/volunteer-use',
         name: 'volunteer-use',
-        component: VolunteerUse
+        component: VolunteerUse,
+        meta: {
+          requireAuth: true
+        }
       }, {
         path: '/feedback-list',
         name: 'feedback-list',
-        component: FeedbackList
+        component: FeedbackList,
+        meta: {
+          requireAuth: true
+        }
       }]
     }
   ]
