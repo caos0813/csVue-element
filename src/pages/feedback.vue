@@ -89,12 +89,12 @@ export default {
     params () {
       return {
         page: 0,
-        size: 10
+        size: 10,
         // beginDate: this.date ? this.date[0] : null,
         // endDate: this.date ? this.date[1] : null,
-        // time: this.date ? this.date : null,
-        // phoneNum: '',
-        // name: ''
+        time: this.date ? this.date : null,
+        phoneNum: this.phoneNum,
+        name: this.name
       }
     }
   },
