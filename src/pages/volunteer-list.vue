@@ -11,8 +11,8 @@
         <el-button type="primary" size="small" @click="openCard">开卡</el-button>
       </div>
     </div>
-    <el-table :data="tableData" header-cell-class-name="tableHeader" v-loading="loading" element-loading-text="拼命加载中" border stripe>
-      <el-table-column type="index" width="50">
+    <el-table :data="tableData" :header-cell-style="{background:'#F5F7FA'}" v-loading="loading" element-loading-text="拼命加载中" border stripe>
+      <el-table-column type="index" width="50" align="center">
       </el-table-column>
       <el-table-column prop="provinceName" label="开卡省份" width="180" align="center">
       </el-table-column>
@@ -70,7 +70,7 @@ import { api } from '@/utils'
 export default {
   data () {
     return {
-      date: [],
+      date: null,
       pickerOptions2: {
         disabledDate (time) {
           return time.getTime() > Date.now()
@@ -157,14 +157,13 @@ export default {
       return {
         page: 0,
         size: 10,
-        // sort: ['createdDate,desc', 'id'],
-        beginDate: this.date[0] || null,
-        endDate: this.date[1] || null
+        beginDate: this.date ? this.date[0] : null,
+        endDate: this.date ? this.date[1] : null
       }
     }
   },
   methods: {
-    dateChange () {
+    dateChange (e) {
       this.getData(this.params)
     },
     currentChange (e) {
@@ -197,8 +196,8 @@ export default {
               message: '生成成功!',
               type: 'success'
             })
-            this.addDialog = false
             this.getData(this.params)
+            this.addDialog = false
           }).catch(() => {
             this.$message({
               message: '生成失败',
@@ -238,6 +237,7 @@ export default {
     }
   },
   beforeMount () {
+    console.log(this.params)
     this.getData(this.params)
   }
 }
