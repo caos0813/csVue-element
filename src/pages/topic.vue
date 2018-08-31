@@ -50,7 +50,7 @@
             <el-table-column label="索引" align="center" type="index" width="150px"></el-table-column>
             <el-table-column label="内容" align="center">
               <template slot-scope="scope">
-                <el-input v-model="scope.row.name" placeholder=""></el-input>
+                <el-input v-model="scope.row.voteContent" placeholder=""></el-input>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" width="200px">
@@ -230,7 +230,7 @@ export default {
       })
     },
     addRow () {
-      this.optionData.push({ name: '' })
+      this.optionData.push({ voteContent: '' })
     },
     delRow (e) {
       console.log(e)

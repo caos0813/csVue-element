@@ -14,7 +14,7 @@
       <el-form-item label="专题" prop="pickerVal">
         <picker v-model="params.pickerVal" :column="2"></picker>
         <el-col :span='4'>
-          <el-form-item label-width="20px" prop="delivery">
+          <el-form-item label-width="20px" >
             <template>
               <el-checkbox v-model="params.audioFlag" :true-label='1' :false-label='0' :disabled="isAudioFlag">音频</el-checkbox>
             </template>
@@ -26,14 +26,14 @@
           <el-input v-model="params.title"></el-input>
         </el-col>
         <el-col :span='4'>
-          <el-form-item label-width="20px" prop="delivery">
+          <el-form-item label-width="20px">
             <template>
               <el-checkbox v-model="params.isHomePageShow" :true-label='1' :false-label='0'>首页显示</el-checkbox>
             </template>
           </el-form-item>
         </el-col>
       </el-form-item>
-      <div v-show="params.audioFlag===1">
+      <div v-if="params.audioFlag===1">
         <el-form-item label="音频" prop="audioPath">
           <upload v-model="params.audioPath" type="audio" accept="audio/*" path="audio/article/"></upload>
         </el-form-item>
