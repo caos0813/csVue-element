@@ -5,7 +5,9 @@
         <back></back>
       </div>
       <div class="button-wrap">
-        <el-button type="warning" size="small" @click="submit">保存草稿</el-button>
+        <el-button type="primary" size="small" @click="release">直接发布</el-button>
+        <el-button type="info" size="small" @click="timeRelease">定时发布</el-button>
+        <el-button type="warning" size="small" @click="submit">草稿</el-button>
       </div>
     </div>
     <el-form ref="form" :model="params" :rules="rules" label-width="80px">
@@ -32,13 +34,6 @@
           </el-form-item>
         </el-col>
       </el-form-item>
-      <el-form-item label="发布时间">
-        <el-col :span='6'>
-          <el-date-picker v-model="params.publishTime" type="datetime" placeholder="请选择发布时间" class="full">
-          </el-date-picker>
-        </el-col>
-      </el-form-item>
-
       <el-form-item v-if="mode==='vote'">
         <el-form-item>
           <el-button type="info" size="small" @click="addRow">添加选项</el-button>
@@ -68,14 +63,26 @@
           </el-table>
         </el-col>
       </el-form-item>
-      <el-form-item>
-        <el-form-item>
-          <el-col :span="18">
-            <Tinymce :height="600" ref="editor" v-model="params.content" />
-          </el-col>
-        </el-form-item>
+      <el-form-item prop="content">
+        <el-col :span="18">
+          <Tinymce :height="600" ref="editor" v-model="params.content" />
+        </el-col>
       </el-form-item>
     </el-form>
+    <el-dialog title="定时发布" :visible.sync="timeDialog" width="500px" :close-on-click-modal="false">
+      <el-form :model="addForm" inline-message ref="addForm" :rules="formRules" label-suffix=":" label-width="100">
+        <el-form-item label="发布时间" prop="publishTime">
+          <el-col :span='12'>
+            <el-date-picker v-model="addForm.publishTime" :picker-options="pickerOptions2" type="datetime" placeholder="请选择发布时间" class="full">
+            </el-date-picker>
+          </el-col>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancel">取消</el-button>
+        <el-button type="primary" @click="save">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -86,7 +93,7 @@ export default {
   data () {
     let validatePickerVal = (rule, value, callback) => {
       if (value.length < 1) {
-        callback(new Error('请选择产品'))
+        callback(new Error('请选择产品分类和专题'))
       } else {
         callback()
       }
@@ -95,7 +102,7 @@ export default {
       rules: {
         title: [{ required: true, message: '请输入专题名称', trigger: 'blur' }],
         content: [{ required: true, message: '请输入内容', trigger: 'blur' }],
-        pickerVal: [{ required: true, validator: validatePickerVal, trigger: 'blur' }]
+        pickerVal: [{ required: true, validator: validatePickerVal, trigger: 'change' }]
       },
       params: {
         title: '',
@@ -104,7 +111,19 @@ export default {
         pickerVal: []
       },
       optionData: [],
-      mode: 'general'
+      mode: 'general',
+      timeDialog: false,
+      addForm: {
+        publishTime: ''
+      },
+      pickerOptions2: {
+        disabledDate (time) {
+          return time.getTime() < Date.now() - 8.64e7
+        }
+      },
+      formRules: {
+        publishTime: [{ type: 'date', required: true, message: '时间不能为空', trigger: 'change' }]
+      }
     }
   },
   components: {
@@ -121,47 +140,93 @@ export default {
         }
       }
     },
-    submit () {
+    // 立即发布
+    release () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          let { title, isHot, pickerVal, type, id, content, publishTime } = this.params
-          let votes = this.mode === 'vote' ? this.optionData : null
-          if (this.lodash.isArray(votes) && votes.length < 1) {
-            this.$message({
-              message: '请添加选项',
-              duration: 2000,
-              type: 'error'
-            })
-            return
-          }
-          this.$fly.post(api.topicHandle, {
-            id,
-            title,
-            isHot,
-            publishTime: publishTime ? new Date(publishTime).getTime() : null,
-            content,
-            type,
-            votes,
-            productId: pickerVal[0]
-          }).then(data => {
-            this.$message({
-              message: '保存成功',
-              duration: 2000,
-              type: 'success'
-            })
-            this.$refs['form'].resetFields()
-            this.goBack()
-          }).catch(() => {
-            this.$message({
-              message: '保存失败',
-              duration: 2000,
-              type: 'error'
-            })
-          })
+          console.log('release')
+          this.postData(api.gambitPublishNow)
         } else {
           console.log('error submit!!')
           return false
         }
+      })
+    },
+    timeRelease () {
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          this.timeDialog = true
+          if (this.$refs['addForm']) {
+            this.$refs['addForm'].resetFields()
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    // 定时发布
+    save () {
+      this.$refs['addForm'].validate((valid) => {
+        if (valid) {
+          this.postData(api.gambitPublishDelay)
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    cancel () {
+      this.$refs['addForm'].resetFields()
+      this.timeDialog = false
+    },
+    submit () {
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          this.postData(api.topicHandle)
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    postData (link) {
+      let { title, isHot, pickerVal, type, id, content } = this.params
+      let votes = this.mode === 'vote' ? this.optionData : null
+      let publishTime = this.timeDialog ? new Date(this.addForm.publishTime).getTime() : null
+      if (this.lodash.isArray(votes) && votes.length < 1) {
+        this.$message({
+          message: '请添加选项',
+          duration: 2000,
+          type: 'error'
+        })
+        return
+      }
+      console.log(title, isHot, pickerVal, type, id, content, publishTime)
+      this.$fly.post(link, {
+        id,
+        title,
+        isHot,
+        publishTime: publishTime,
+        content,
+        type,
+        votes,
+        productId: pickerVal[0]
+      }).then(data => {
+        this.$message({
+          message: '保存成功',
+          duration: 2000,
+          type: 'success'
+        })
+        this.$refs['form'].resetFields()
+        this.timeDialog = false
+        this.goBack()
+      }).catch(() => {
+        this.$message({
+          message: '保存失败',
+          duration: 2000,
+          type: 'error'
+        })
       })
     },
     addRow () {

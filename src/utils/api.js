@@ -25,5 +25,9 @@ export default {
   topicSoldOut: '/gambit/soldOut',
   topicDetail: '/gambit/queryById',
   topicHot: '/gambit/setHot',
-  topicDeleteVote: 'gambit/deleteVote'
+  topicDeleteVote: 'gambit/deleteVote',
+  gambitPublishDelay: 'gambit/publishDelay', // 话题定时发布
+  gambitPublishNow: 'gambit/publishNow', // 话题立即发布
+  articlePublishDelay: 'article/publishDelay', // 文章定时发布
+  articlePublishNow: 'article/publishNow' // 文章立即发布
 }

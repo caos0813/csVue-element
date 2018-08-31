@@ -2,7 +2,7 @@
   <div class="button-wrap">
     <el-button type="danger" size="small" @click="handleFn('hot')" v-if="showHot" :disabled="checkIds.length<1">设为热门</el-button>
     <el-button type="primary" size="small" @click="handleFn('add')">新增</el-button>
-    <el-button type="warning" size="small" @click="handleFn('soldOut')" :disabled="checkIds.length<1">下架</el-button>
+    <el-button type="warning" v-if="showSoldout" size="small" @click="handleFn('soldOut')" :disabled="checkIds.length<1">下架</el-button>
     <el-button type="danger" size="small" @click="handleFn('delete')" :disabled="checkIds.length<1">删除</el-button>
   </div>
 </template>
@@ -20,6 +20,10 @@ export default {
       default () {
         return []
       }
+    },
+    showSoldout: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {

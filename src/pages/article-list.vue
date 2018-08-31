@@ -2,7 +2,6 @@
   <div class="page">
     <div class="tools-bar">
       <div class="left-wrap">
-
         <el-input prefix-icon="el-icon-search" v-model="params.title" placeholder="请输入搜索关键字" size="small"></el-input>
         <picker v-model="pickerVal" size="small" :span="-1" :column="2"></picker>
         <el-button size="small" type="primary" @click="search">查询</el-button>
@@ -35,11 +34,11 @@
       </el-table-column>
       <el-table-column prop="totalReadNum" label="阅读量" width="120" align="center">
       </el-table-column>
-      <el-table-column label="创建时间" width="180" align="center">
-        <template slot-scope="scope">{{ scope.row.createTime }}</template>
+      <el-table-column label="创建时间" width="200" align="center">
+        <template slot-scope="scope">{{ scope.row.createTime | dateTime('yyyy-MM-dd hh:mm:ss') }}</template>
       </el-table-column>
-      <el-table-column label="发布时间" width="180" align="center">
-        <template slot-scope="scope">{{ scope.row.publishTime }}</template>
+      <el-table-column label="发布时间" width="200" align="center">
+        <template slot-scope="scope">{{ scope.row.publishTime | dateTime('yyyy-MM-dd hh:mm:ss') }}</template>
       </el-table-column>
       <el-table-column label="操作" width="120" align="center">
         <template slot-scope="scope ">
@@ -50,7 +49,7 @@
       </el-table-column>
     </el-table>
     <div class="page-wrap">
-      <el-pagination background layout="prev, pager, next" :total="1000">
+      <el-pagination background layout="prev, pager, next " :current-page="pageInfo.currentPage" :page-count="pageInfo.totalPages " :page-size="pageInfo.size " @current-change="changePage">
       </el-pagination>
     </div>
   </div>

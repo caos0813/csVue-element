@@ -5,7 +5,7 @@
         <back></back>
       </div>
       <div class="button-wrap">
-        <el-button type="warning" size="small" @click="submit">保存草稿</el-button>
+        <el-button type="warning" size="small" @click="submit">草稿</el-button>
         <!-- <el-button type="warning" size="small">下架</el-button> -->
       </div>
     </div>
@@ -17,15 +17,17 @@
         <el-col :span='12'>
           <el-input v-model="params.title"></el-input>
         </el-col>
-        <el-col :span='4'>
+        <!-- <el-col :span='4'>
           <el-form-item label-width="20px">
             <template>
               <el-checkbox v-model="params.isHomePageShow" :true-label='1' :false-label='0'>首页显示</el-checkbox>
             </template>
           </el-form-item>
-        </el-col>
+        </el-col> -->
       </el-form-item>
-
+      <el-form-item label="简介" prop="introduction">
+        <el-input type="textarea" :rows="3" placeholder="请输入简介" v-model="params.introduction"></el-input>
+      </el-form-item>
       <el-form-item label="封面" prop="filePath">
         <upload v-model='params.filePath'></upload>
       </el-form-item>
@@ -48,13 +50,15 @@ export default {
       rules: {
         title: [{ required: true, message: '请输入专题名称', trigger: 'blur' }],
         filePath: [{ required: true, message: '请上传封面', trigger: 'blur' }],
-        pickerVal: [{ required: true, validator: validatePickerVal, trigger: 'blur' }]
+        pickerVal: [{ required: true, validator: validatePickerVal, trigger: 'change' }],
+        introduction: [{ required: true, message: '请输入简介', trigger: 'blur' }]
       },
       params: {
         title: '',
         isHomePageShow: 0,
         pickerVal: [],
-        filePath: ''
+        filePath: '',
+        introduction: ''
       }
     }
   },
@@ -66,13 +70,13 @@ export default {
     submit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          let { title, isHomePageShow, filePath, pickerVal, id } = this.params
+          let { title, filePath, pickerVal, id, introduction } = this.params
           this.$fly.post(api.specialHandle, {
             id,
             title,
-            isHomePageShow,
             filePath,
-            productId: pickerVal[0]
+            productId: pickerVal[0],
+            introduction
           }).then(data => {
             this.$message({
               message: '保存成功',

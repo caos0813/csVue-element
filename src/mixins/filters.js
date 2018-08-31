@@ -2,7 +2,9 @@ import { formatDate } from '@/utils'
 export default {
   filters: {
     dateTime: function (timestr, fmt) {
-      return formatDate(new Date(timestr), fmt)
+      if (timestr) {
+        return formatDate(new Date(timestr), fmt)
+      }
     },
     publicStatus: function (status, type) {
       let txt
@@ -21,6 +23,12 @@ export default {
           break
         case 3:
           txt = '已下架'
+          if (type) {
+            txt = 'warning'
+          }
+          break
+        case 4:
+          txt = '未发布'
           if (type) {
             txt = 'warning'
           }
