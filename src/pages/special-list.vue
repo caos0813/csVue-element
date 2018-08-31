@@ -3,7 +3,7 @@
     <div class="tools-bar">
       <div class="left-wrap">
         <el-input prefix-icon="el-icon-search" v-model="params.title" placeholder="请输入搜索关键字" size="small"></el-input>
-        <picker v-model="pickerVal" size="small" :span="-1" :column="2"></picker>
+        <picker v-model="pickerVal" size="small" :span="-1" :column="1"></picker>
         <el-button size="small" type="primary" @click="search">查询</el-button>
         <el-button size="small" type="warning" @click="reset">重置</el-button>
       </div>
@@ -95,7 +95,6 @@ export default {
     search () {
       console.log(this.pickerVal)
       this.params.productId = this.pickerVal[0]
-      this.params.specialTopicId = this.pickerVal[1]
       this.getData(this.params)
     },
     getData (obj) {
