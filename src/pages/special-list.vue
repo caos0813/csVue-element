@@ -95,6 +95,7 @@ export default {
     search () {
       console.log(this.pickerVal)
       this.params.productId = this.pickerVal[0]
+      this.params.specialTopicId = this.pickerVal[1]
       this.getData(this.params)
     },
     getData (obj) {
