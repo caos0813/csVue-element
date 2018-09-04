@@ -22,10 +22,10 @@
           <el-tag size="small" :type="scope.row.isHot===1?'danger':'info'">{{scope.row.isHot?'是':'否'}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="所属产品" align="center">
+      <el-table-column label="所属产品" width="120" align="center">
         <template slot-scope="scope">{{ scope.row.product.name }}</template>
       </el-table-column>
-      <el-table-column prop="userName" label="操作人" width="120" align="center">
+      <el-table-column prop="userName" label="操作人" align="center">
       </el-table-column>
       <el-table-column label="状态" width="120" align="center">
         <template slot-scope="scope">
@@ -34,7 +34,7 @@
       </el-table-column>
       <el-table-column prop="totalReadNum" label="阅读量" width="120" align="center">
         <template slot-scope="scope">
-          {{scope.row.totalReadNum||0}}
+          {{scope.row.totalReadNum}}
         </template>
       </el-table-column>
       <el-table-column label="创建时间" width="200" align="center">
