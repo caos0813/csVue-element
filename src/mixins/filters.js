@@ -28,7 +28,7 @@ export default {
           }
           break
         case 4:
-          txt = '未发布'
+          txt = '待发布'
           if (type) {
             txt = 'warning'
           }

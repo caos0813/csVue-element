@@ -29,7 +29,9 @@ export default {
   methods: {
     handleFn (type) {
       let { name } = this.$route
+      console.log(this.$route)
       let path = name.split('-')[0]
+      console.log(path)
       if (type === 'add') {
         this.toState({ name: path, params: { type: 'add' } })
       } else {

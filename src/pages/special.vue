@@ -5,7 +5,7 @@
         <back></back>
       </div>
       <div class="button-wrap">
-        <el-button type="warning" size="small" @click="submit">草稿</el-button>
+        <el-button type="warning" size="small" @click="submit">保存</el-button>
         <!-- <el-button type="warning" size="small">下架</el-button> -->
       </div>
     </div>

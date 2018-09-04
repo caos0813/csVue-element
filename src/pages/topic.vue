@@ -142,15 +142,7 @@ export default {
     },
     // 立即发布
     release () {
-      this.$refs['form'].validate((valid) => {
-        if (valid) {
-          console.log('release')
-          this.postData(api.gambitPublishNow)
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+      this.postData('form', api.gambitPublishNow, 1)
     },
     timeRelease () {
       this.$refs['form'].validate((valid) => {
@@ -167,66 +159,60 @@ export default {
     },
     // 定时发布
     save () {
-      this.$refs['addForm'].validate((valid) => {
-        if (valid) {
-          this.postData(api.gambitPublishDelay)
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+      this.postData('addForm', api.gambitPublishDelay, 4)
     },
     cancel () {
       this.$refs['addForm'].resetFields()
       this.timeDialog = false
     },
     submit () {
-      this.$refs['form'].validate((valid) => {
+      this.postData('form', api.topicHandle, 2)
+    },
+    postData (refs, link, status) {
+      this.$refs[refs].validate((valid) => {
         if (valid) {
-          this.postData(api.topicHandle)
+          let { title, isHot, pickerVal, type, id, content } = this.params
+          let votes = this.mode === 'vote' ? this.optionData : null
+          let publishTime = this.timeDialog ? new Date(this.addForm.publishTime).getTime() : null
+          if (this.lodash.isArray(votes) && votes.length < 1) {
+            this.$message({
+              message: '请添加选项',
+              duration: 2000,
+              type: 'error'
+            })
+            return
+          }
+          console.log(title, isHot, pickerVal, type, id, content, publishTime)
+          this.$fly.post(link, {
+            id,
+            title,
+            isHot,
+            publishTime: publishTime,
+            content,
+            type,
+            votes,
+            productId: pickerVal[0],
+            status: status
+          }).then(data => {
+            this.$message({
+              message: '保存成功',
+              duration: 2000,
+              type: 'success'
+            })
+            this.$refs['form'].resetFields()
+            this.timeDialog = false
+            this.goBack()
+          }).catch(() => {
+            this.$message({
+              message: '保存失败',
+              duration: 2000,
+              type: 'error'
+            })
+          })
         } else {
           console.log('error submit!!')
           return false
         }
-      })
-    },
-    postData (link) {
-      let { title, isHot, pickerVal, type, id, content } = this.params
-      let votes = this.mode === 'vote' ? this.optionData : null
-      let publishTime = this.timeDialog ? new Date(this.addForm.publishTime).getTime() : null
-      if (this.lodash.isArray(votes) && votes.length < 1) {
-        this.$message({
-          message: '请添加选项',
-          duration: 2000,
-          type: 'error'
-        })
-        return
-      }
-      console.log(title, isHot, pickerVal, type, id, content, publishTime)
-      this.$fly.post(link, {
-        id,
-        title,
-        isHot,
-        publishTime: publishTime,
-        content,
-        type,
-        votes,
-        productId: pickerVal[0]
-      }).then(data => {
-        this.$message({
-          message: '保存成功',
-          duration: 2000,
-          type: 'success'
-        })
-        this.$refs['form'].resetFields()
-        this.timeDialog = false
-        this.goBack()
-      }).catch(() => {
-        this.$message({
-          message: '保存失败',
-          duration: 2000,
-          type: 'error'
-        })
       })
     },
     addRow () {

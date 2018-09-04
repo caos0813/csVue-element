@@ -33,6 +33,9 @@
         </template>
       </el-table-column>
       <el-table-column prop="totalReadNum" label="阅读量" width="120" align="center">
+        <template slot-scope="scope">
+          {{scope.row.totalReadNum||0}}
+        </template>
       </el-table-column>
       <el-table-column label="创建时间" width="200" align="center">
         <template slot-scope="scope">{{ scope.row.createTime | dateTime('yyyy-MM-dd hh:mm:ss') }}</template>

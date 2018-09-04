@@ -14,7 +14,7 @@
       <el-form-item label="专题" prop="pickerVal">
         <picker v-model="params.pickerVal" :column="2"></picker>
         <el-col :span='4'>
-          <el-form-item label-width="20px" >
+          <el-form-item label-width="20px">
             <template>
               <el-checkbox v-model="params.audioFlag" :true-label='1' :false-label='0' :disabled="isAudioFlag">音频</el-checkbox>
             </template>
@@ -122,12 +122,7 @@ export default {
   methods: {
     // 直接发布
     release () {
-      this.$refs['form'].validate((valid) => {
-        if (valid) {
-          console.log('release')
-          this.postData(api.articlePublishNow)
-        }
-      })
+      this.postData('form', api.articlePublishNow, 1)
     },
     timeRelease () {
       this.$refs['form'].validate((valid) => {
@@ -141,11 +136,7 @@ export default {
     },
     // 定时发布
     save () {
-      this.$refs['addForm'].validate((valid) => {
-        if (valid) {
-          this.postData(api.articlePublishDelay)
-        }
-      })
+      this.postData('addForm', api.articlePublishDelay, 4)
     },
     cancel () {
       this.$refs['addForm'].resetFields()
@@ -153,44 +144,46 @@ export default {
     },
     // 保存为草稿
     submit () {
-      this.$refs['form'].validate((valid) => {
+      this.postData('form', api.articleHandle, 2)
+    },
+    postData (refs, link, status) {
+      this.$refs[refs].validate((valid) => {
         if (valid) {
-          this.postData(api.articleHandle)
+          let { title, isHomePageShow, image, pickerVal, id, content, audioPath, audioFlag, textarea } = this.params
+          console.log(this.params)
+          let publishTime = this.timeDialog ? new Date(this.addForm.publishTime).getTime() : null
+          this.$fly.post(link, {
+            id,
+            title,
+            audioPath: audioFlag ? audioPath : null,
+            isHomePageShow,
+            publishTime: publishTime,
+            image: audioFlag ? null : image,
+            content: audioFlag ? textarea : content,
+            specialTopicId: pickerVal[1],
+            productId: pickerVal[0],
+            status: status
+          }).then(data => {
+            console.log(data)
+            this.$message({
+              message: '保存成功',
+              duration: 2000,
+              type: 'success'
+            })
+            this.$refs['form'].resetFields()
+            this.timeDialog = false
+            this.goBack()
+          }).catch(() => {
+            this.$message({
+              message: '保存失败',
+              duration: 2000,
+              type: 'error'
+            })
+          })
         } else {
           console.log('error submit!!')
           return false
         }
-      })
-    },
-    postData (link) {
-      let { title, isHomePageShow, image, pickerVal, id, content, audioPath, audioFlag, textarea } = this.params
-      console.log(this.params)
-      let publishTime = this.timeDialog ? new Date(this.addForm.publishTime).getTime() : null
-      this.$fly.post(link, {
-        id,
-        title,
-        audioPath: audioFlag ? audioPath : null,
-        isHomePageShow,
-        publishTime: publishTime,
-        image: audioFlag ? null : image,
-        content: audioFlag ? textarea : content,
-        specialTopicId: pickerVal[1],
-        productId: pickerVal[0]
-      }).then(data => {
-        this.$message({
-          message: '保存成功',
-          duration: 2000,
-          type: 'success'
-        })
-        this.$refs['form'].resetFields()
-        this.timeDialog = false
-        this.goBack()
-      }).catch(() => {
-        this.$message({
-          message: '保存失败',
-          duration: 2000,
-          type: 'error'
-        })
       })
     }
   },
