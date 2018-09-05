@@ -99,7 +99,6 @@ export default {
       } else {
         status = ''
       }
-      // console.log(this.$refs['pageRef'])
       return {
         page: 0,
         size: 10,
