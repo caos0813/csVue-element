@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrap">
     <div class="form-wrap">
-      <el-form ref="form" :model="params" :rules="rules" >
+      <el-form ref="form" :model="params" :rules="rules">
         <el-form-item prop="userName">
           <el-input v-model="params.name" placeholder="请输入账号" name="userName"></el-input>
         </el-form-item>
@@ -9,7 +9,7 @@
           <el-input v-model="params.passwords" type="passWord" placeholder="请输入密码" name="passWord"></el-input>
         </el-form-item>
         <el-form-item class="text-center">
-          <el-button class="btn" type="primary" native-type="submit" @click.prevent="submit"  round >登录</el-button>
+          <el-button class="btn" type="primary" native-type="submit" @click.prevent="submit" round>登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -37,22 +37,38 @@ export default ({
     }
   },
   methods: {
+    async getConfig (data) {
+      try {
+        let uploadConfig = await this.$fly.get(api.uploadToken, {}, {
+          headers: {
+            Authorization: `Bearer ${data.token}`
+          }
+        })
+        Cookies.set('user', {
+          userName: this.params.userName,
+          token: data.token,
+          uploadConfig: uploadConfig
+        }, { expires: 7 })
+        this.$message({
+          message: '登录成功!',
+          type: 'success'
+        })
+        this.$router.replace({
+          name: 'index'
+        })
+      } catch (err) {
+        this.$message({
+          message: '登录失败',
+          type: 'error'
+        })
+      }
+    },
     submit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          console.log(this.params)
           this.$fly.post(api.login, this.params).then(data => {
-            Cookies.set('user', {
-              userName: this.params.userName,
-              token: data.token
-            }, { expires: 7 })
-            this.$message({
-              message: '登录成功!',
-              type: 'success'
-            })
-            this.$router.replace({
-              name: 'index'
-            })
+            /* 获取阿里上传配置参数 */
+            this.getConfig(data)
           }).catch(() => {
             this.$message({
               message: '登录失败',

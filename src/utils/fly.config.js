@@ -9,7 +9,7 @@ let fly = require('flyio')
 fly.interceptors.request.use((config, promise) => {
   // 给所有请求添加自定义header
   //  config.headers['X-Tag'] = 'flyio'
-  let { token } = Cookies.get('user') ? JSON.parse(Cookies.get('user')) : ''
+  let { token } = Cookies.getJSON('user') ? Cookies.getJSON('user') : ''
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`
   }

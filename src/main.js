@@ -24,11 +24,11 @@ Vue.mixin(filters)
 Vue.mixin(toState)
 /* eslint-disable no-new */
 router.beforeEach((to, from, next) => {
-  let { token } = Cookies.get('user') ? JSON.parse(Cookies.get('user')) : ''
+  let { token } = Cookies.getJSON('user') ? Cookies.getJSON('user') : ''
   if (to.meta.requireAuth && !token) {
-    /* next({
+    next({
       name: 'login'
-    }) */
+    })
   } else {
     next()
   }
