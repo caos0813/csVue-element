@@ -130,6 +130,7 @@ export default {
       this.getData(this.params)
     },
     currentChange (e) {
+      console.log(e)
       this.params.page = e - 1
       this.getData(this.params)
     },

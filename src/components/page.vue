@@ -20,11 +20,11 @@ export default {
     }
   },
   methods: {
-    sizeChange () {
-      this.$emit('sizeChange')
+    sizeChange (e) {
+      this.$emit('sizeChange', e)
     },
-    currentChange () {
-      this.$emit('currentChange')
+    currentChange (e) {
+      this.$emit('currentChange', e)
     }
   }
 }
