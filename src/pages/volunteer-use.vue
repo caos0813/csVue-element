@@ -16,11 +16,18 @@
       </el-table-column>
       <el-table-column prop="number" label="激活卡号" align="center">
       </el-table-column>
+      <el-table-column prop="provinceName" label="开卡省份" align="center">
+      </el-table-column>
       <el-table-column prop="phoneNumber" label="绑定账号" align="center">
       </el-table-column>
       <el-table-column prop="type" label="类型" align="center">
         <template slot-scope="props">
           <span>{{props.row.type==='ALL'?'全功能':'志愿卡'}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createdDate" label="创建时间" align="center">
+        <template slot-scope="props">
+          <span>{{props.row.createdDate | dateTime('yyyy-MM-dd hh:mm:ss')}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="activatedDate" label="是否激活" align="center">
