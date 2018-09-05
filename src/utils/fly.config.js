@@ -9,7 +9,7 @@ let fly = require('flyio')
 fly.interceptors.request.use((config, promise) => {
   // 给所有请求添加自定义header
   //  config.headers['X-Tag'] = 'flyio'
-  let { token } = Cookies.get('user') ? JSON.parse(Cookies.get('user')) : ''
+  let { token } = Cookies.getJSON('user') ? Cookies.getJSON('user') : ''
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`
   }
@@ -48,8 +48,8 @@ fly.config.baseURL = (function () {
     if (process.env.CORS) {
       baseURL = 'http://' + window.location.host + '/cors'
     } else {
-      // baseURL = 'http://192.168.1.49:9081'
       baseURL = 'http://edit.junyanginfo.com:8082'
+      // baseURL = 'http://edit.junyanginfo.com:8082'
     }
   } else if (process.env.NODE_ENV === 'production') {
     // baseURL = 'http://39.104.124.195:9080/'

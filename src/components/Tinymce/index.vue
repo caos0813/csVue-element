@@ -11,7 +11,8 @@
 import editorImage from './components/editorImage'
 import plugins from './plugins'
 import toolbar from './toolbar'
-
+import { formatDate } from '@/utils'
+import Cookies from 'js-cookie'
 export default {
   name: 'tinymce',
   components: { editorImage },
@@ -37,6 +38,14 @@ export default {
       type: Number,
       required: false,
       default: 360
+    },
+    CDN: {
+      type: String,
+      default: 'http://fdomsimage.oss-cn-huhehaote.aliyuncs.com/'
+    },
+    path: {
+      type: String,
+      default: 'image/editor/'
     }
   },
   data () {
@@ -104,97 +113,39 @@ export default {
           editor.on('FullscreenStateChanged', (e) => {
             _this.fullscreen = e.state
           })
+        },
+        // 阿里云上传
+        images_dataimg_filter (img) {
+          setTimeout(() => {
+            /*  const $image = $(img)
+             $image.removeAttr('width')
+             $image.removeAttr('height')
+             if ($image[0].height && $image[0].width) {
+               $image.attr('data-wscntype', 'image')
+               $image.attr('data-wscnh', $image[0].height)
+               $image.attr('data-wscnw', $image[0].width)
+               $image.addClass('wscnph')
+             } */
+          }, 0)
+          return img
+        },
+        async images_upload_handler (blobInfo, success, failure) {
+          let uploadConfig = Cookies.getJSON('user').uploadConfig
+          let file = blobInfo.blob()
+          let relativePath = _this.path
+          let client = new OSS({
+            accessKeyId: uploadConfig.accessKeyId,
+            accessKeySecret: uploadConfig.accessKeySecret,
+            bucket: uploadConfig.bucketName,
+            endpoint: uploadConfig.endpoint
+          })
+          let ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), file)
+          if (ret.res.statusCode === 200) {
+            success(_this.CDN + ret.name)
+          } else {
+            failure('上传失败')
+          }
         }
-        // 上传图片回调
-        // images_upload_handler (blobInfo, success, failure) {
-        //   console.log(blobInfo.base64())
-        // }
-        //   let fd = new FormData()
-        //   fd.append('file', blobInfo.blob())
-        //   fd.append('upfile', blobInfo.blob(), blobInfo.filename())
-        // this.$fly.post(api.topicList, fd).then(data => {
-        // this.tableData = data.content
-        // this.pageInfo = {
-        //   totalPages: data.totalPages,
-        //   size: obj.size,
-        //   currentPage: obj.page
-        // }
-        // })
-        // this.$mp.fly({
-        //   method: 'POST',
-        //   // 这里是你的上传地址
-        //   url: 'uploadimage',
-        //   data: fd,
-        // })
-        //   .then((res) => {
-        //     // 这里返回的是你图片的地址
-        //     success(res.data.url)
-        //   })
-        //   .catch(() => {
-        //     failure('上传失败')
-        //   })
-        // }
-        // images_upload_handler (blobInfo, success, failure) {
-        //   console.log(blobInfo)
-        //   console.log(success)
-        //   console.log(failure)
-        // if (blobInfo.blob().size > self.maxSize) {
-        //   failure('文件体积过大')
-        // }
-        // if (self.accept.indexOf(blobInfo.blob().type) >= 0) {
-        //   let formData = new FormData()
-        //   // 服务端接收文件的参数名，文件数据，文件名
-        //   formData.append('upfile', blobInfo.blob(), blobInfo.filename())
-        //   this.$mp.fly({
-        //     method: 'POST',
-        //     // 这里是你的上传地址
-        //     url: 'uploadimage',
-        //     data: formData,
-        //   })
-        //     .then((res) => {
-        //       // 这里返回的是你图片的地址
-        //       success(res.data.url)
-        //     })
-        //     .catch(() => {
-        //       failure('上传失败')
-        //     })
-        // } else {
-        //   failure('图片格式错误')
-        // }
-        // }
-        // 整合七牛上传
-        // images_dataimg_filter(img) {
-        //   setTimeout(() => {
-        //     const $image = $(img);
-        //     $image.removeAttr('width');
-        //     $image.removeAttr('height');
-        //     if ($image[0].height && $image[0].width) {
-        //       $image.attr('data-wscntype', 'image');
-        //       $image.attr('data-wscnh', $image[0].height);
-        //       $image.attr('data-wscnw', $image[0].width);
-        //       $image.addClass('wscnph');
-        //     }
-        //   }, 0);
-        //   return img
-        // },
-        // images_upload_handler(blobInfo, success, failure, progress) {
-        //   progress(0);
-        //   const token = _this.$store.getters.token;
-        //   getToken(token).then(response => {
-        //     const url = response.data.qiniu_url;
-        //     const formData = new FormData();
-        //     formData.append('token', response.data.qiniu_token);
-        //     formData.append('key', response.data.qiniu_key);
-        //     formData.append('file', blobInfo.blob(), url);
-        //     upload(formData).then(() => {
-        //       success(url);
-        //       progress(100);
-        //     })
-        //   }).catch(err => {
-        //     failure('出现未知问题，刷新页面，或者联系程序员')
-        //     console.log(err);
-        //   });
-        // },
       })
     },
     destroyTinymce () {
@@ -217,6 +168,11 @@ export default {
   },
   destroyed () {
     this.destroyTinymce()
+  },
+  created () {
+    /* this.$fly.get(api.uploadToken).then(data => {
+      this.uploadConfig = data
+    }) */
   }
 }
 </script>

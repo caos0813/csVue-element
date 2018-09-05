@@ -17,13 +17,12 @@
   </div>
 </template>
 <script>
-import { api, formatDate } from '@/utils'
-const OSS = require('ali-oss')
+import { formatDate } from '@/utils'
+import Cookies from 'js-cookie'
 export default {
   data () {
     return {
       uploadUrl: '',
-      uploadConfig: {},
       loading: false,
       dialogVisible: false
     }
@@ -65,12 +64,13 @@ export default {
       //  const point = file.name.lastIndexOf('.')
       //  let fileName = file.name.substr(0, point)
       let relativePath = this.path
+      let uploadConfig = Cookies.getJSON('user').uploadConfig
       // 分片上传文件
       let client = new OSS({
-        accessKeyId: this.uploadConfig.accessKeyId,
-        accessKeySecret: this.uploadConfig.accessKeySecret,
-        bucket: this.uploadConfig.bucketName,
-        endpoint: this.uploadConfig.endpoint
+        accessKeyId: uploadConfig.accessKeyId,
+        accessKeySecret: uploadConfig.accessKeySecret,
+        bucket: uploadConfig.bucketName,
+        endpoint: uploadConfig.endpoint
       })
       let ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), file, {
         progress: async function (p) {
@@ -88,17 +88,11 @@ export default {
       }
     },
     handleAvatarSuccess (res, file) {
-      console.log(res.name)
       this.loading = false
       let url = this.CDN + res.name
       console.log(url)
       this.$emit('input', url)
     }
-  },
-  created () {
-    this.$fly.get(api.uploadToken).then(data => {
-      this.uploadConfig = data
-    })
   }
 }
 </script>
@@ -134,7 +128,7 @@ export default {
         border-color: #409eff;
       }
     }
-    .el-icon-service{
+    .el-icon-service {
       color: #409eff;
     }
     .avatar-uploader-icon {
