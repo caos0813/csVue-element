@@ -7,7 +7,7 @@
         <el-button size="small" type="primary" @click="search">查询</el-button>
         <el-button size="small" type="warning" @click="reset">重置</el-button>
       </div>
-      <listHandle :checkIds="checkIds" @refresh="refresh" :show-soldout='showSoldout'></listHandle>
+      <listHandle :checkData="checkData" @refresh="refresh" :show-soldout='showSoldout'></listHandle>
     </div>
     <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" border stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center">
@@ -48,7 +48,7 @@ export default {
         size: 15,
         sortType: 1
       },
-      checkIds: [],
+      checkData: [],
       pickerVal: [],
       pageInfo: {},
       tableData: []
@@ -63,7 +63,7 @@ export default {
       this.getData(this.params)
     },
     handleSelectionChange (e) {
-      this.checkIds = this.lodash.map(e, 'id')
+      this.checkData = this.lodash.map(e, 'id')
     },
     changePage (e) {
       this.params.page = e

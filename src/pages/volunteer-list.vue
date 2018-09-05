@@ -40,7 +40,7 @@
       <el-pagination background layout="total, prev, pager, next, jumper" :total="pageInfo.totalElements" @current-change="currentChange">
       </el-pagination>
     </div>
-    <el-dialog title="开卡" :visible.sync="addDialog" width="500px" :close-on-click-modal="false">
+    <el-dialog title="开卡" v-loading="cardLoading" text="正在生成" :visible.sync="addDialog" width="500px" :close-on-click-modal="false">
       <el-form :model="addForm" inline-message ref="addForm" :rules="rules" label-suffix=":" label-width="100">
         <el-form-item label="省份" prop="province">
           <el-select v-model="addForm.province" placeholder="选择省份">
@@ -118,6 +118,7 @@ export default {
         number: 1,
         type: 'ALL'
       },
+      cardLoading: false,
       provinceArr: [],
       rules: {
         province: [{
@@ -201,7 +202,9 @@ export default {
       }
       this.$refs['addForm'].validate((valid) => {
         if (valid) {
+          this.cardLoading = true
           this.$fly.post(api.generate, params).then(data => {
+            this.cardLoading = false
             this.$message({
               message: '生成成功!',
               type: 'success'
@@ -231,7 +234,9 @@ export default {
       })
     },
     getData (params) {
+      this.loading = true
       this.$fly.get(api.byCondition, params).then(data => {
+        this.loading = false
         let { pageable, content, totalElements } = data
         this.pageInfo = pageable
         this.pageInfo.totalElements = totalElements

@@ -7,7 +7,7 @@
         <el-button size="small" type="primary" @click="search">查询</el-button>
         <el-button size="small" type="warning" @click="reset">重置</el-button>
       </div>
-      <listHandle :checkIds="checkIds" @refresh="refresh"></listHandle>
+      <listHandle :checkData="checkData" @refresh="refresh"></listHandle>
     </div>
     <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" border stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center">
@@ -45,7 +45,7 @@
       </el-table-column>
       <el-table-column label="操作" width="120" align="center">
         <template slot-scope="scope ">
-          <el-button type="text " size="mini">
+          <el-button type="text " size="mini" v-if="scope.row.status===2||scope.row.status===3">
             <router-link :to="{name:'article',params:{type:'edit'},query:{id:scope.row.id}}" tag="span">编辑</router-link>
           </el-button>
         </template>
@@ -71,7 +71,7 @@ export default {
         size: 15,
         sortType: 1
       },
-      checkIds: [],
+      checkData: [],
       pickerVal: [],
       pageInfo: {},
       tableData: []
@@ -83,8 +83,12 @@ export default {
   },
   methods: {
     handleSelectionChange (e) {
-      this.checkIds = this.lodash.map(e, 'id')
-      console.log(this.checkIds)
+      this.checkData = []
+      this.lodash.map(e, (item) => {
+        this.checkData.push({ id: item.id, status: item.status })
+      })
+      // this.checkIds = this.lodash.map(e, 'id')
+      // console.log(this.checkIds)
     },
     changePage (e) {
       this.params.page = e
