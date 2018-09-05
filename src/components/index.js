@@ -3,4 +3,5 @@ import back from './back.vue'
 import Tinymce from './Tinymce'
 import picker from './picker'
 import listHandle from './list-handle'
-export { upload, back, Tinymce, picker, listHandle }
+import page from './page'
+export { upload, back, Tinymce, picker, listHandle, page }

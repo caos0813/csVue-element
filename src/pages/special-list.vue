@@ -9,12 +9,12 @@
       </div>
       <listHandle :checkData="checkData" @refresh="refresh" :show-soldout='showSoldout'></listHandle>
     </div>
-    <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" border stripe @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center">
+    <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" v-loading="loading" border stripe @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" label-class-name="checkLabel">
       </el-table-column>
-      <el-table-column prop="title" label="标题" align="center">
+      <el-table-column prop="title" label="标题" align="center" min-width="180" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column prop="userName" label="操作人" align="center">
+      <el-table-column prop="userName" label="操作人" min-width="260" align="center">
       </el-table-column>
       <el-table-column prop="introduction" label="简介" min-width="200" show-overflow-tooltip align="center">
       </el-table-column>
@@ -29,44 +29,59 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="page-wrap">
-      <el-pagination background layout="prev, pager, next " :current-page="pageInfo.currentPage" :page-count="pageInfo.totalPages " :page-size="pageInfo.size " @current-change="changePage">
+    <!-- <div class="page-wrap">
+      <el-pagination background layout="total,sizes, prev, pager, next, jumper" :total="pageInfo.totalElements" :current-page="pageInfo.currentPage" :page-sizes="pageSizes" @current-change="currentChange" @size-change="sizeChange">
       </el-pagination>
-    </div>
+    </div> -->
+    <page :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
   </div>
 </template>
 <script>
 import { api } from '@/utils'
-import { picker, listHandle } from '@/components'
+import { picker, listHandle, page } from '@/components'
 export default {
   data () {
     return {
       showSoldout: false,
-      params: {
-        title: null,
-        page: 1,
-        size: 15,
-        sortType: 1
-      },
       checkData: [],
       pickerVal: [],
       pageInfo: {},
-      tableData: []
+      tableData: [],
+      loading: false
+    }
+  },
+  computed: {
+    params () {
+      return {
+        title: null,
+        page: 1,
+        size: 10,
+        sortType: 1
+      }
     }
   },
   components: {
     picker,
-    listHandle
+    listHandle,
+    page
   },
   methods: {
     refresh () {
       this.getData(this.params)
     },
     handleSelectionChange (e) {
-      this.checkData = this.lodash.map(e, 'id')
+      this.checkData = []
+      this.lodash.map(e, (item) => {
+        this.checkData.push({ id: item.id })
+      })
+      // this.checkData = this.lodash.map(e, 'id')
     },
-    changePage (e) {
+    currentChange (e) {
       this.params.page = e
+      this.getData(this.params)
+    },
+    sizeChange (e) {
+      this.params.size = e
       this.getData(this.params)
     },
     reset () {
@@ -87,13 +102,19 @@ export default {
     getData (obj) {
       let params = this.lodash.clone(obj)
       params.page--
-      console.log(obj)
+      this.loading = true
       this.$fly.get(api.specialList, params).then(data => {
-        this.tableData = data.content
+        this.loading = false
+        let { content, totalElements } = data
+        this.tableData = content
+        // this.pageInfo = {
+        //   totalPages: data.totalPages,
+        //   size: obj.size,
+        //   currentPage: obj.page
+        // }
         this.pageInfo = {
-          totalPages: data.totalPages,
-          size: obj.size,
-          currentPage: obj.page
+          totalElements: totalElements,
+          currentPage: params.page + 1
         }
       })
     }
@@ -103,5 +124,8 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+.checkLabel > .el-checkbox {
+  display: none;
+}
 </style>

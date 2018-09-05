@@ -22,19 +22,19 @@
           <span>{{props.row.time | dateTime('yyyy-MM-dd hh:mm:ss')}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="content" label="反馈内容" align="center">
+      <el-table-column prop="content" label="反馈内容" align="center" show-overflow-tooltip>
       </el-table-column>
     </el-table>
-    <div class="page-wrap text-left padding ">
-      <!-- <el-pagination background layout="total, prev, pager, next,sizes, jumper" :page-sizes="pageSizes" :current-page="pageInfo.pageNumber+1" :total="pageInfo.totalElements" :page-size="pageInfo.pageSize" @current-change="currentChange">
-      </el-pagination> -->
-      <el-pagination background layout="total, prev, pager, next, jumper" :total="pageInfo.totalElements" @current-change="currentChange">
+    <!-- <div class="page-wrap text-left padding ">
+      <el-pagination background layout="total, prev, pager, next, jumper" :total="pageInfo.totalElements" :current-page="pageInfo.currentPage" :page-sizes="[100, 200, 300, 400]" :page-size="100" @current-change="currentChange">
       </el-pagination>
-    </div>
+    </div> -->
+    <page :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
   </div>
 </template>
 <script>
 import { api } from '@/utils'
+import { page } from '@/components'
 export default {
   data () {
     return {
@@ -95,6 +95,9 @@ export default {
       }
     }
   },
+  components: {
+    page
+  },
   methods: {
     dateChange (e) {
       if (e[0] === e[1]) {
@@ -109,6 +112,10 @@ export default {
     },
     currentChange (e) {
       this.params.page = e - 1
+      this.getData(this.params)
+    },
+    sizeChange (e) {
+      this.params.size = e
       this.getData(this.params)
     },
     search () {
@@ -131,22 +138,18 @@ export default {
       this.getData(this.params)
     },
     getData (params) {
+      this.loading = true
       this.$fly.get(api.getFeedback, params).then(data => {
+        this.loading = false
         let { content, totalElements } = data
         this.pageInfo = {
-          totalElements: totalElements
+          totalElements: totalElements,
+          currentPage: params.page + 1
         }
         this.tableData = content
       })
     }
   },
-  // watch: {
-  //   '$route' (to, from) {
-  //     if (to.name === 'feedback-list' && from.name !== 'feedback-list') {
-  //       this.getData(this.params)
-  //     }
-  //   }
-  // },
   beforeMount () {
     this.getData(this.params)
   }

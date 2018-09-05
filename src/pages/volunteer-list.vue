@@ -34,12 +34,11 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="page-wrap text-left padding ">
-      <!-- <el-pagination background layout="total, prev, pager, next,sizes, jumper" :page-sizes="pageSizes" :current-page="pageInfo.pageNumber+1" :total="pageInfo.totalElements" :page-size="pageInfo.pageSize" @current-change="currentChange">
-      </el-pagination> -->
+    <!-- <div class="page-wrap text-left padding ">
       <el-pagination background layout="total, prev, pager, next, jumper" :total="pageInfo.totalElements" @current-change="currentChange">
       </el-pagination>
-    </div>
+    </div> -->
+    <page :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
     <el-dialog title="开卡" v-loading="cardLoading" text="正在生成" :visible.sync="addDialog" width="500px" :close-on-click-modal="false">
       <el-form :model="addForm" inline-message ref="addForm" :rules="rules" label-suffix=":" label-width="100">
         <el-form-item label="省份" prop="province">
@@ -68,6 +67,7 @@
 <script>
 import { api } from '@/utils'
 import Cookies from 'js-cookie'
+import { page } from '@/components'
 export default {
   data () {
     return {
@@ -111,7 +111,6 @@ export default {
       tableData: [],
       pageInfo: {},
       loading: false,
-      pageSizes: [100, 200, 300, 400],
       addDialog: false,
       addForm: {
         province: '',
@@ -164,6 +163,9 @@ export default {
       }
     }
   },
+  components: {
+    page
+  },
   methods: {
     dateChange (e) {
       if (e[0] === e[1]) {
@@ -178,6 +180,10 @@ export default {
     },
     currentChange (e) {
       this.params.page = e - 1
+      this.getData(this.params)
+    },
+    sizeChange (e) {
+      this.params.size = e
       this.getData(this.params)
     },
     // 导出excel
@@ -237,9 +243,11 @@ export default {
       this.loading = true
       this.$fly.get(api.byCondition, params).then(data => {
         this.loading = false
-        let { pageable, content, totalElements } = data
-        this.pageInfo = pageable
-        this.pageInfo.totalElements = totalElements
+        let { content, totalElements } = data
+        this.pageInfo = {
+          totalElements: totalElements,
+          currentPage: params.page + 1
+        }
         this.tableData = content
       })
     }

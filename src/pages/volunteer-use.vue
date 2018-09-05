@@ -34,16 +34,16 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="page-wrap text-left padding ">
-      <!-- <el-pagination background layout="total, prev, pager, next,sizes, jumper" :page-sizes="pageSizes" :current-page="pageInfo.pageNumber+1" :total="pageInfo.totalElements" :page-size="pageInfo.pageSize" @current-change="currentChange">
-      </el-pagination> -->
-      <el-pagination background layout="total, prev, pager, next, jumper" :total="pageInfo.totalElements" @current-change="currentChange">
+    <!-- <div class="page-wrap text-left padding ">
+      <el-pagination background layout="total,sizes, prev, pager, next, jumper" :total="pageInfo.totalElements" :current-page="pageInfo.currentPage" :page-sizes="pageSizes" @current-change="currentChange" @size-change="sizeChange">
       </el-pagination>
-    </div>
+    </div> -->
+    <page ref="pageRef" :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
   </div>
 </template>
 <script>
 import { api } from '@/utils'
+import { page } from '@/components'
 export default {
   data () {
     return {
@@ -85,9 +85,8 @@ export default {
         }]
       },
       tableData: [],
-      pageInfo: {},
       loading: false,
-      pageSizes: [10, 100, 200, 500]
+      pageInfo: {}
     }
   },
   computed: {
@@ -100,15 +99,20 @@ export default {
       } else {
         status = ''
       }
+      // console.log(this.$refs['pageRef'])
       return {
         page: 0,
         size: 10,
+        // size: this.refs['pageRef'].pageSize[0],
         // sort: 'createdDate,desc',
         beginDate: this.date ? this.date[0] : null,
         endDate: this.date ? this.date[1] : null,
         activated: status
       }
     }
+  },
+  components: {
+    page
   },
   methods: {
     dateChange (e) {
@@ -129,24 +133,25 @@ export default {
       this.params.page = e - 1
       this.getData(this.params)
     },
+    sizeChange (e) {
+      this.params.size = e
+      this.getData(this.params)
+    },
     getData (params) {
-      this.pageInfo = {}
+      // this.pageInfo = {}
       this.tableData = []
+      this.loading = true
       this.$fly.get(api.getMembershipCards, params).then(data => {
-        let { pageable, content, totalElements } = data
-        this.pageInfo = pageable
-        this.pageInfo.totalElements = totalElements
+        this.loading = false
+        let { content, totalElements } = data
+        this.pageInfo = {
+          totalElements: totalElements,
+          currentPage: params.page + 1
+        }
         this.tableData = content
       })
     }
   },
-  // watch: {
-  //   '$route' (to, from) {
-  //     if (to.name === 'volunteer-use' && from.name !== 'volunteer-use') {
-  //       this.getData(this.params)
-  //     }
-  //   }
-  // },
   beforeMount () {
     this.getData(this.params)
   }
