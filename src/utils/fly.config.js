@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-//  import router from '@/router'
+import router from '@/router'
 import { message } from 'element-ui'
 let fly = require('flyio')
 // wx.js为您下载的源码文件
@@ -29,9 +29,9 @@ fly.interceptors.response.use(
   (err) => {
     const error = err.response ? err.response.data : { err: '网络请求错误', code: '-1000' }
     if (!err.response) {
-      /* router.replace({
+      router.replace({
         name: 'login'
-      }) */
+      })
       message({
         message: '接口调用失败',
         type: 'error'

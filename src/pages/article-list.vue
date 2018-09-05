@@ -22,10 +22,10 @@
           <el-tag size="small" :type="scope.row.isHomePageShow===1?'danger':'info'">{{scope.row.isHomePageShow?'推荐':'不推荐'}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="所属专题" align="center">
+      <el-table-column label="所属专题" width="200" align="center">
         <template slot-scope="scope">{{ scope.row.product.name }}、{{ scope.row.specialTopic.title }}</template>
       </el-table-column>
-      <el-table-column prop="userName" label="操作人" width="120" align="center">
+      <el-table-column prop="userName" label="操作人" align="center">
       </el-table-column>
       <el-table-column label="状态" width="120" align="center">
         <template slot-scope="scope">
@@ -34,7 +34,7 @@
       </el-table-column>
       <el-table-column prop="totalReadNum" label="阅读量" width="120" align="center">
         <template slot-scope="scope">
-          {{scope.row.totalReadNum||0}}
+          {{scope.row.totalReadNum}}
         </template>
       </el-table-column>
       <el-table-column label="创建时间" width="200" align="center">
@@ -54,6 +54,8 @@
     <div class="page-wrap">
       <el-pagination background layout="prev, pager, next " :current-page="pageInfo.currentPage" :page-count="pageInfo.totalPages " :page-size="pageInfo.size " @current-change="changePage">
       </el-pagination>
+      <!-- <el-pagination background layout="total, prev, pager, next, jumper" :total="pageInfo.totalElements" @current-change="currentChange">
+      </el-pagination> -->
     </div>
   </div>
 </template>

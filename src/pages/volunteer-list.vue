@@ -12,9 +12,9 @@
     <el-table :data="tableData" :header-cell-style="{background:'#F5F7FA'}" v-loading="loading" element-loading-text="拼命加载中" border stripe>
       <el-table-column type="index" width="50" align="center">
       </el-table-column>
-      <el-table-column prop="provinceName" label="开卡省份" width="180" align="center">
+      <el-table-column prop="provinceName" label="开卡省份" align="center">
       </el-table-column>
-      <el-table-column prop="type" label="类型" width="180" align="center">
+      <el-table-column prop="type" label="类型" align="center">
         <template slot-scope="props">
           <span>{{props.row.type==='ALL'?'全功能':'志愿卡'}}</span>
         </template>

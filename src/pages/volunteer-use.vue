@@ -14,16 +14,16 @@
     <el-table :data="tableData" :header-cell-style="{background:'#F5F7FA'}" v-loading="loading" element-loading-text="拼命加载中" border stripe>
       <el-table-column type="index" width="50" align="center">
       </el-table-column>
-      <el-table-column prop="number" label="激活卡号" width="180" align="center">
+      <el-table-column prop="number" label="激活卡号" align="center">
       </el-table-column>
-      <el-table-column prop="phoneNumber" label="绑定账号" width="180" align="center">
+      <el-table-column prop="phoneNumber" label="绑定账号" align="center">
       </el-table-column>
       <el-table-column prop="type" label="类型" align="center">
         <template slot-scope="props">
           <span>{{props.row.type==='ALL'?'全功能':'志愿卡'}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="activatedDate" label="是否激活" width="180" align="center">
+      <el-table-column prop="activatedDate" label="是否激活" align="center">
         <template slot-scope="props">
           <span>{{props.row.activatedDate===null?'否':'是'}}</span>
         </template>
