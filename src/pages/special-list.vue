@@ -33,7 +33,7 @@
       <el-pagination background layout="total,sizes, prev, pager, next, jumper" :total="pageInfo.totalElements" :current-page="pageInfo.currentPage" :page-sizes="pageSizes" @current-change="currentChange" @size-change="sizeChange">
       </el-pagination>
     </div> -->
-    <page :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
+    <page ref="pageInfo" :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
   </div>
 </template>
 <script>
@@ -45,25 +45,23 @@ export default {
       showSoldout: false,
       checkData: [],
       pickerVal: [],
+      params: {
+        title: null,
+        page: 1,
+        // size: 10,
+        sortType: 1
+      },
       pageInfo: {},
       tableData: [],
       loading: false
-    }
-  },
-  computed: {
-    params () {
-      return {
-        title: null,
-        page: 1,
-        size: 10,
-        sortType: 1
-      }
     }
   },
   components: {
     picker,
     listHandle,
     page
+  },
+  computed: {
   },
   methods: {
     refresh () {
@@ -99,8 +97,8 @@ export default {
       this.params.productId = this.pickerVal[0]
       this.getData(this.params)
     },
-    getData (obj) {
-      let params = this.lodash.clone(obj)
+    getData (params) {
+      // let params = this.lodash.clone(obj)
       params.page--
       this.loading = true
       this.$fly.get(api.specialList, params).then(data => {
@@ -121,6 +119,10 @@ export default {
   },
   created () {
     this.getData(this.params)
+  },
+  mounted () {
+    console.log(this.$refs.pageInfo.pageSizes[0])
+    this.params.size = this.$refs.pageInfo.pageSizes[0]
   }
 }
 </script>
