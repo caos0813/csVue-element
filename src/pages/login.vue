@@ -66,6 +66,7 @@ export default ({
     submit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
+          Cookies.remove('user')
           this.$fly.post(api.login, this.params).then(data => {
             /* 获取阿里上传配置参数 */
             this.getConfig(data)

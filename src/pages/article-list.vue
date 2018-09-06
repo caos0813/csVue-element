@@ -55,7 +55,7 @@
       <el-pagination background layout="prev, pager, next " :current-page="pageInfo.currentPage" :page-count="pageInfo.totalPages" :page-size="pageInfo.size " @current-change="changePage">
       </el-pagination>
     </div> -->
-    <page :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
+    <page ref="pageInfo" :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
   </div>
 </template>
 <script>
@@ -67,7 +67,7 @@ export default {
       params: {
         title: null,
         page: 1,
-        size: 10,
+        // size: 10,
         sortType: 1
       },
       checkData: [],
@@ -91,10 +91,6 @@ export default {
       // this.checkIds = this.lodash.map(e, 'id')
       // console.log(this.checkIds)
     },
-    // changePage (e) {
-    //   this.params.page = e
-    //   this.getData(this.params)
-    // },
     currentChange (e) {
       this.params.page = e
       this.getData(this.params)
@@ -122,10 +118,9 @@ export default {
     refresh () {
       this.getData(this.params)
     },
-    getData (obj) {
-      let params = this.lodash.clone(obj)
+    getData (params) {
+      // let params = this.lodash.clone(obj)
       params.page--
-      console.log(obj)
       this.loading = true
       this.$fly.get(api.articleList, params).then(data => {
         this.loading = false
@@ -139,6 +134,9 @@ export default {
   },
   created () {
     this.getData(this.params)
+  },
+  mounted () {
+    this.params.size = this.$refs.pageInfo.pageSizes[0]
   }
 }
 </script>

@@ -45,7 +45,7 @@
       <el-pagination background layout="total,sizes, prev, pager, next, jumper" :total="pageInfo.totalElements" :current-page="pageInfo.currentPage" :page-sizes="pageSizes" @current-change="currentChange" @size-change="sizeChange">
       </el-pagination>
     </div> -->
-    <page ref="pageRef" :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
+    <page ref="pageInfo" :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
   </div>
 </template>
 <script>
@@ -107,9 +107,8 @@ export default {
         status = ''
       }
       return {
-        page: 0,
-        size: 10,
-        // size: this.refs['pageRef'].pageSize[0],
+        page: 1,
+        // size: 10,
         // sort: 'createdDate,desc',
         beginDate: this.date ? this.date[0] : null,
         endDate: this.date ? this.date[1] : null,
@@ -137,6 +136,7 @@ export default {
     },
     currentChange (e) {
       console.log(e)
+      console.log(this.$refs.pageInfo.pageSizes)
       this.params.page = e - 1
       this.getData(this.params)
     },
@@ -146,7 +146,8 @@ export default {
     },
     getData (params) {
       // this.pageInfo = {}
-      this.tableData = []
+      // this.tableData = []
+      params.page--
       this.loading = true
       this.$fly.get(api.getMembershipCards, params).then(data => {
         this.loading = false
@@ -159,8 +160,11 @@ export default {
       })
     }
   },
-  beforeMount () {
+  created () {
     this.getData(this.params)
+  },
+  mounted () {
+    this.params.size = this.$refs.pageInfo.pageSizes[0]
   }
 }
 </script>

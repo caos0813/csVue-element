@@ -29,7 +29,7 @@
       <el-pagination background layout="total, prev, pager, next, jumper" :total="pageInfo.totalElements" :current-page="pageInfo.currentPage" :page-sizes="[100, 200, 300, 400]" :page-size="100" @current-change="currentChange">
       </el-pagination>
     </div> -->
-    <page :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
+    <page ref="pageInfo" :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
   </div>
 </template>
 <script>
@@ -86,8 +86,8 @@ export default {
   computed: {
     params () {
       return {
-        page: 0,
-        size: 10,
+        page: 1,
+        // size: 10,
         beginTime: this.date ? this.date[0] : null,
         endTime: this.date ? this.date[1] : null,
         phoneNum: this.phoneNum,
@@ -128,7 +128,7 @@ export default {
       this.phoneNum = ''
       this.name = ''
       this.params = {
-        page: 0,
+        page: 1,
         size: 15,
         beginTime: this.date ? this.date[0] : null,
         endTime: this.date ? this.date[1] : null,
@@ -138,6 +138,7 @@ export default {
       this.getData(this.params)
     },
     getData (params) {
+      params.page--
       this.loading = true
       this.$fly.get(api.getFeedback, params).then(data => {
         this.loading = false
@@ -150,8 +151,11 @@ export default {
       })
     }
   },
-  beforeMount () {
+  created () {
     this.getData(this.params)
+  },
+  mounted () {
+    this.params.size = this.$refs.pageInfo.pageSizes[0]
   }
 }
 </script>

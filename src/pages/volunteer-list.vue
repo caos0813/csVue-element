@@ -38,7 +38,7 @@
       <el-pagination background layout="total, prev, pager, next, jumper" :total="pageInfo.totalElements" @current-change="currentChange">
       </el-pagination>
     </div> -->
-    <page :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
+    <page ref="pageInfo" :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
     <el-dialog title="开卡" v-loading="cardLoading" text="正在生成" :visible.sync="addDialog" width="500px" :close-on-click-modal="false">
       <el-form :model="addForm" inline-message ref="addForm" :rules="rules" label-suffix=":" label-width="100">
         <el-form-item label="省份" prop="province">
@@ -156,8 +156,8 @@ export default {
   computed: {
     params () {
       return {
-        page: 0,
-        size: 10,
+        page: 1,
+        // size: 10,
         beginDate: this.date ? this.date[0] : null,
         endDate: this.date ? this.date[1] : null
       }
@@ -240,6 +240,7 @@ export default {
       })
     },
     getData (params) {
+      params.page--
       this.loading = true
       this.$fly.get(api.byCondition, params).then(data => {
         this.loading = false
@@ -252,16 +253,11 @@ export default {
       })
     }
   },
-  // watch: {
-  //   '$route' (to, from) {
-  //     if (to.name === 'volunteer-list' && from.name !== 'volunteer-list') {
-  //       this.getData(this.params)
-  //     }
-  //   }
-  // },
-  beforeMount () {
-    // console.log(this.params)
+  created () {
     this.getData(this.params)
+  },
+  mounted () {
+    this.params.size = this.$refs.pageInfo.pageSizes[0]
   }
 }
 </script>
