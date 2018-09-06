@@ -12,7 +12,6 @@ import Index from '@/pages/index'
 // import VolunteerUse from '@/pages/volunteer-use'
 // import Login from '@/pages/login'
 // import FeedbackList from '@/pages/feedback-list'
-const TopicList = r => require.ensure([], () => r(require('@/pages/topic-list')), 'topic')
 const Topic = r => require.ensure([], () => r(require('@/pages/topic')), 'topic')
 const ArticleList = r => require.ensure([], () => r(require('@/pages/article-list')), 'article')
 const Article = r => require.ensure([], () => r(require('@/pages/article')), 'article')
@@ -20,8 +19,10 @@ const SpecialList = r => require.ensure([], () => r(require('@/pages/special-lis
 const Special = r => require.ensure([], () => r(require('@/pages/special')), 'special')
 const VolunteerList = r => require.ensure([], () => r(require('@/pages/volunteer-list')), 'volunteer')
 const VolunteerUse = r => require.ensure([], () => r(require('@/pages/volunteer-use')), 'volunteer')
-const Login = r => require.ensure([], () => r(require('@/pages/login')), 'login')
 const FeedbackList = r => require.ensure([], () => r(require('@/pages/feedback-list')), 'feedbackList')
+const Login = resolve => { require(['@/pages/login.vue'], resolve) }
+const TopicList = resolve => { require(['@/pages/topic-list.vue'], resolve) }
+
 Vue.use(Router)
 export default new Router({
   routes: [
