@@ -9,7 +9,7 @@
       </div>
       <listHandle :checkData="checkData" @refresh="refresh"></listHandle>
     </div>
-    <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" v-loading="loading" border stripe @selection-change="handleSelectionChange">
+    <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" v-loading="loading" element-loading-text="拼命加载中" border stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" label-class-name="checkLabel">
       </el-table-column>
       <el-table-column label="标题" align="center" min-width="180" show-overflow-tooltip>
