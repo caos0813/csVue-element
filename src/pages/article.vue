@@ -87,7 +87,7 @@ export default {
       rules: {
         title: [{ required: true, message: '请输入专题名称', trigger: 'blur' }],
         content: [{ required: true, message: '请输入内容', trigger: 'blur' }],
-        textarea: [{ required: true, message: '请输入音频描述', trigger: 'blur' }],
+        // textarea: [{ required: true, message: '请输入音频描述', trigger: 'blur' }],
         image: [{ type: 'string', required: true, message: '请上传封面', trigger: 'blur' }],
         audioPath: [{ required: true, message: '请上传音频', trigger: 'blur' }],
         pickerVal: [{ required: true, validator: validatePickerVal, trigger: 'change' }]

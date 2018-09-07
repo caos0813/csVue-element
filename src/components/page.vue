@@ -20,9 +20,6 @@ export default {
     }
   },
   methods: {
-    getPageSizes () {
-      return this.pageSizes
-    },
     sizeChange (e) {
       this.$emit('sizeChange', e)
     },
