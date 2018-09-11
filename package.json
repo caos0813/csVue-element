@@ -5,7 +5,7 @@
   "author": "zhan <448401921@qq.com>",
   "private": true,
   "scripts": {
-    "dev": "cross-env HOST=192.168.1.167 webpack-dev-server --inline --progress  --config build/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --inline --progress  --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "cors": "cross-env CORS=192.168.1.49:9081 webpack-dev-server --inline --progress  --config build/webpack.dev.conf.js",
     "dist": "node config/dist.server.js",

@@ -86,6 +86,31 @@ export default {
         plugins: plugins,
         // 是否显示POWERED BY TINYMCE
         branding: false,
+        style_formats: [
+          {
+            title: '标题',
+            items: [
+              { title: 'h1标签(22px)', block: 'h1' },
+              { title: 'h2标签(20px)', block: 'h2' },
+              { title: 'h3标签(18px)', block: 'h3' },
+              { title: 'h4标签(16px)', block: 'h4' },
+              { title: 'h5标签(14px)', block: 'h5' },
+              { title: 'h6标签(12px)', block: 'h6' }
+            ]
+          },
+          {
+            title: '取消加粗',
+            inline: 'span',
+            styles: {
+              'font-weight': 'normal'
+            }
+          },
+          {
+            title: '正文',
+            format: 'p'
+          }
+        ],
+        fontsize_formats: '12px 14px 15px 16px 18px 20px 22px 24px 28px',
         // images_upload_url: '',
         // images_upload_url: 'http://fdomsimage.oss-cn-huhehaote.aliyuncs.com/',
         end_container_on_empty_block: true,
