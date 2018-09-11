@@ -94,8 +94,33 @@ export default {
               { title: 'h2标签(20px)', block: 'h2' },
               { title: 'h3标签(18px)', block: 'h3' },
               { title: 'h4标签(16px)', block: 'h4' },
-              { title: 'h5标签(14px)', block: 'h5' },
-              { title: 'h6标签(12px)', block: 'h6' }
+              { title: 'h5标签(15px)', block: 'h5' },
+              { title: 'h6标签(14px)', block: 'h6' }
+            ]
+          },
+          {
+            title: '字间距',
+            items: [
+              {
+                title: '1px',
+                inline: 'span',
+                styles: {
+                  'letter-spacing': '1px'
+                }
+              },
+              {
+                title: '2px',
+                inline: 'span',
+                styles: {
+                  'letter-spacing': '2px'
+                }
+              }, {
+                title: '3px',
+                inline: 'span',
+                styles: {
+                  'letter-spacing': '3px'
+                }
+              }
             ]
           },
           {
@@ -107,7 +132,7 @@ export default {
           },
           {
             title: '正文',
-            format: 'p'
+            block: 'p'
           }
         ],
         fontsize_formats: '12px 14px 15px 16px 18px 20px 22px 24px 28px',
