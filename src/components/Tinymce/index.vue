@@ -8,11 +8,14 @@
 </template>
 
 <script>
+/* eslint-disable */
 import editorImage from './components/editorImage'
 import plugins from './plugins'
 import toolbar from './toolbar'
 import { formatDate } from '@/utils'
 import Cookies from 'js-cookie'
+const Compress = require('compress.js')
+const compress = new Compress()
 export default {
   name: 'tinymce',
   components: { editorImage },
@@ -29,6 +32,18 @@ export default {
       required: false,
       default () {
         return []
+      }
+    },
+    imgOptions: {
+      type: Object,
+      default () {
+        return {
+          size: 1, // the max size in MB, defaults to 2MB
+          quality: 0.8, // the quality of the image, max is 1,
+          maxWidth: 1080, // the max width of the output image, defaults to 1920px
+          maxHeight: 1080, // the max height of the output image, defaults to 1920px
+          resize: true // defaults to true, set false if you do not want to resize the image width and height
+        }
       }
     },
     menubar: {
@@ -180,8 +195,8 @@ export default {
           return img
         },
         async images_upload_handler (blobInfo, success, failure) {
+          let ret
           let uploadConfig = Cookies.getJSON('user').uploadConfig
-          let file = blobInfo.blob()
           let relativePath = _this.path
           let client = new OSS({
             accessKeyId: uploadConfig.accessKeyId,
@@ -189,7 +204,16 @@ export default {
             bucket: uploadConfig.bucketName,
             endpoint: uploadConfig.endpoint
           })
-          let ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), file)
+          try {
+            let results = await compress.compress([blobInfo.blob()], _this.imgOptions)
+            const img1 = results[0]
+            const base64str = img1.data
+            const imgExt = img1.ext
+            let file = Compress.convertBase64ToFile(base64str, imgExt)
+            ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), file)
+          } catch (err) {
+            console.log(err)
+          }
           if (ret.res.statusCode === 200) {
             success(_this.CDN + ret.name)
           } else {

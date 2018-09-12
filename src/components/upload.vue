@@ -19,6 +19,8 @@
 <script>
 import { formatDate } from '@/utils'
 import Cookies from 'js-cookie'
+const Compress = require('compress.js')
+const compress = new Compress()
 export default {
   data () {
     return {
@@ -35,6 +37,18 @@ export default {
     type: {
       type: String,
       default: 'image'
+    },
+    imgOptions: {
+      type: Object,
+      default () {
+        return {
+          size: 1, // the max size in MB, defaults to 2MB
+          quality: 0.8, // the quality of the image, max is 1,
+          maxWidth: 1080, // the max width of the output image, defaults to 1920px
+          maxHeight: 1080, // the max height of the output image, defaults to 1920px
+          resize: true // defaults to true, set false if you do not want to resize the image width and height
+        }
+      }
     },
     CDN: {
       type: String,
@@ -59,10 +73,7 @@ export default {
       this.dialogVisible = true
     },
     async upload (option) {
-      let file = option.file
-      this.loading = true
-      //  const point = file.name.lastIndexOf('.')
-      //  let fileName = file.name.substr(0, point)
+      let ret
       let relativePath = this.path
       let uploadConfig = Cookies.getJSON('user').uploadConfig
       // 分片上传文件
@@ -72,14 +83,35 @@ export default {
         bucket: uploadConfig.bucketName,
         endpoint: uploadConfig.endpoint
       })
-      let ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), file, {
-        progress: async function (p) {
-          let e = {}
-          e.percent = p * 100
-          option.onProgress(e)
+      this.loading = true
+      console.log(option.file)
+      if (this.type === 'image') {
+        try {
+          console.log(this.imgOptions)
+          let results = await compress.compress([option.file], this.imgOptions)
+          const img1 = results[0]
+          const base64str = img1.data
+          const imgExt = img1.ext
+          let file = Compress.convertBase64ToFile(base64str, imgExt)
+          ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), file, {
+            progress: async function (p) {
+              let e = {}
+              e.percent = p * 100
+              option.onProgress(e)
+            }
+          })
+        } catch (err) {
+          console.log(err)
         }
-      })
-      console.log(ret)
+      } else {
+        ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), option.file, {
+          progress: async function (p) {
+            let e = {}
+            e.percent = p * 100
+            option.onProgress(e)
+          }
+        })
+      }
       if (ret.res.statusCode === 200) {
         option.onSuccess(ret)
         return ret
