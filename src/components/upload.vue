@@ -18,9 +18,9 @@
 </template>
 <script>
 import { formatDate } from '@/utils'
+import ImageCompressor from 'image-compressor.js'
 import Cookies from 'js-cookie'
-const Compress = require('compress.js')
-const compress = new Compress()
+const compress = new ImageCompressor()
 export default {
   data () {
     return {
@@ -89,14 +89,13 @@ export default {
         try {
           const size = option.file.size / (1024 * 1024)
           if (size <= 0.8) {
-            this.imgOptions.resize = false
+            this.imgOptions.quality = 1
+            this.imgOptions.maxWidth = Infinity
+            this.imgOptions.maxHeight = Infinity
           }
-          let results = await compress.compress([option.file], this.imgOptions)
-          const img1 = results[0]
-          const base64str = img1.data
-          const imgExt = img1.ext
-          let file = Compress.convertBase64ToFile(base64str, imgExt)
-          ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), file, {
+          let result = await compress.compress(option.file, this.imgOptions)
+          console.log(result)
+          ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), result, {
             progress: async function (p) {
               let e = {}
               e.percent = p * 100
