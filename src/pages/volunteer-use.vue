@@ -22,7 +22,7 @@
       </el-table-column>
       <el-table-column prop="type" label="类型" align="center">
         <template slot-scope="props">
-          <span>{{props.row.type==='ALL'?'全功能':'志愿卡'}}</span>
+          <span>{{props.row.type==='FULL_FEATURED'?'全功能':props.row.type==='ZHI_YUAN'?'志愿卡':'选科卡'}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="createdDate" label="创建时间" align="center">

@@ -16,7 +16,7 @@
       </el-table-column>
       <el-table-column prop="type" label="类型" align="center">
         <template slot-scope="props">
-          <span>{{props.row.type==='ALL'?'全功能':'志愿卡'}}</span>
+          <span>{{props.row.type==='FULL_FEATURED'?'全功能':props.row.type==='ZHI_YUAN'?'志愿卡':'选科卡'}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="count" label="数量" align="center">
@@ -52,14 +52,15 @@
         </el-form-item>
         <el-form-item label="类型" prop="type">
           <el-select v-model="addForm.type" placeholder="选择开卡类型">
-            <el-option label="全功能" value="ALL"></el-option>
-            <el-option label="志愿卡" value="VOLUNTEER"></el-option>
+            <el-option label="全功能" value="FULL_FEATURED"></el-option>
+            <el-option label="志愿卡" value="ZHI_YUAN"></el-option>
+            <el-option label="选科卡" value="XUAN_KE"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="resetForm">重置</el-button>
-        <el-button type="primary" @click="save">生成志愿卡</el-button>
+        <el-button type="primary" @click="save">生成卡</el-button>
       </span>
     </el-dialog>
   </div>
@@ -115,7 +116,7 @@ export default {
       addForm: {
         province: '',
         number: 1,
-        type: 'ALL'
+        type: 'FULL_FEATURED'
       },
       cardLoading: false,
       provinceArr: [],

@@ -12,7 +12,8 @@ import Index from '@/pages/index'
 // import VolunteerUse from '@/pages/volunteer-use'
 // import Login from '@/pages/login'
 // import FeedbackList from '@/pages/feedback-list'
-const Topic = r => require.ensure([], () => r(require('@/pages/topic')), 'topic')
+
+/* const Topic = r => require.ensure([], () => r(require('@/pages/topic')), 'topic')
 const ArticleList = r => require.ensure([], () => r(require('@/pages/article-list')), 'article')
 const Article = r => require.ensure([], () => r(require('@/pages/article')), 'article')
 const SpecialList = r => require.ensure([], () => r(require('@/pages/special-list')), 'special')
@@ -21,7 +22,21 @@ const VolunteerList = r => require.ensure([], () => r(require('@/pages/volunteer
 const VolunteerUse = r => require.ensure([], () => r(require('@/pages/volunteer-use')), 'volunteer')
 const FeedbackList = r => require.ensure([], () => r(require('@/pages/feedback-list')), 'feedbackList')
 const Login = resolve => { require(['@/pages/login.vue'], resolve) }
-const TopicList = resolve => { require(['@/pages/topic-list.vue'], resolve) }
+const TopicList = resolve => { require(['@/pages/topic-list.vue'], resolve) } */
+
+const Topic = () => import('@/pages/topic')
+const ArticleList = () => import('@/pages/article-list')
+const Article = () => import('@/pages/article')
+const SpecialList = () => import('@/pages/special-list')
+const Special = () => import('@/pages/special')
+const VolunteerList = () => import('@/pages/volunteer-list')
+const VolunteerUse = () => import('@/pages/volunteer-use')
+const FeedbackList = () => import('@/pages/feedback-list')
+const Login = () => import('@/pages/login')
+const TopicList = () => import('@/pages/topic-list')
+
+// const TopicList = r => require.ensure([], () => r(require('../../common/home.vue')))
+// const TopicList = () => Promise.resolve({ '@/pages/topic-list.vue' })
 
 Vue.use(Router)
 export default new Router({
