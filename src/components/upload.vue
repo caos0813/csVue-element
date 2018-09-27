@@ -43,8 +43,8 @@ export default {
       default () {
         return {
           size: 1, // the max size in MB, defaults to 2MB
-          quality: 0.8, // the quality of the image, max is 1,
-          maxWidth: 1080, // the max width of the output image, defaults to 1920px
+          quality: 0.9, // the quality of the image, max is 1,
+          maxWidth: 1920, // the max width of the output image, defaults to 1920px
           maxHeight: 1080, // the max height of the output image, defaults to 1920px
           resize: true // defaults to true, set false if you do not want to resize the image width and height
         }
@@ -87,7 +87,10 @@ export default {
       console.log(option.file)
       if (this.type === 'image') {
         try {
-          console.log(this.imgOptions)
+          const size = option.file.size / (1024 * 1024)
+          if (size <= 0.8) {
+            this.imgOptions.resize = false
+          }
           let results = await compress.compress([option.file], this.imgOptions)
           const img1 = results[0]
           const base64str = img1.data
