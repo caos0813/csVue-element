@@ -111,7 +111,7 @@ export default {
       this.getData(this.params)
     },
     currentChange (e) {
-      this.params.page = e - 1
+      this.params.page = e
       this.getData(this.params)
     },
     sizeChange (e) {

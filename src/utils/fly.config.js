@@ -48,7 +48,7 @@ fly.config.baseURL = (function () {
     if (process.env.CORS) {
       baseURL = 'http://' + window.location.host + '/cors'
     } else {
-      baseURL = 'http://192.168.1.40:8082'
+      baseURL = 'http://192.168.1.169:8082'
       // baseURL = 'http://edit.junyanginfo.com:8082'
     }
   } else if (process.env.NODE_ENV === 'production') {

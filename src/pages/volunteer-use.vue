@@ -135,9 +135,7 @@ export default {
       this.getData(this.params)
     },
     currentChange (e) {
-      console.log(e)
-      console.log(this.$refs.pageInfo.pageSizes)
-      this.params.page = e - 1
+      this.params.page = e
       this.getData(this.params)
     },
     sizeChange (e) {
