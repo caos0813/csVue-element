@@ -14,8 +14,8 @@ import plugins from './plugins'
 import toolbar from './toolbar'
 import { formatDate } from '@/utils'
 import Cookies from 'js-cookie'
-const Compress = require('compress.js')
-const compress = new Compress()
+import ImageCompressor from 'image-compressor.js'
+const compress = new ImageCompressor()
 export default {
   name: 'tinymce',
   components: { editorImage },
@@ -39,9 +39,8 @@ export default {
       default () {
         return {
           size: 1, // the max size in MB, defaults to 2MB
-          quality: 0.8, // the quality of the image, max is 1,
-          maxWidth: 1080, // the max width of the output image, defaults to 1920px
-          maxHeight: 1080, // the max height of the output image, defaults to 1920px
+          quality: 0.9, // the quality of the image, max is 1,
+          maxWidth: 1920, // the max width of the output image, defaults to 1920px
           resize: true // defaults to true, set false if you do not want to resize the image width and height
         }
       }
@@ -205,12 +204,13 @@ export default {
             endpoint: uploadConfig.endpoint
           })
           try {
-            let results = await compress.compress([blobInfo.blob()], _this.imgOptions)
-            const img1 = results[0]
-            const base64str = img1.data
-            const imgExt = img1.ext
-            let file = Compress.convertBase64ToFile(base64str, imgExt)
-            ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), file)
+            const size = blobInfo.blob().size / (1024 * 1024)
+            if (size <= 0.8) {
+              _this.imgOptions.quality = 1
+              _this.imgOptions.maxWidth = Infinity
+            }
+            let result = await compress.compress(blobInfo.blob(), _this.imgOptions)
+            ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), result)
           } catch (err) {
             console.log(err)
           }
