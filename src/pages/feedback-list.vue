@@ -100,14 +100,12 @@ export default {
   },
   methods: {
     dateChange (e) {
-      if (e[0] === e[1]) {
-        let beginTime = new Date(e[0])
-        let endTime = new Date(e[1])
-        e[0] = new Date(beginTime.getFullYear() + '-' + (beginTime.getMonth() + 1) + '-' + beginTime.getDate() + ' 00:00:00').getTime()
-        e[1] = new Date(endTime.getFullYear() + '-' + (endTime.getMonth() + 1) + '-' + endTime.getDate() + ' 23:59:59').getTime()
-        this.params.beginTime = e[0]
-        this.params.endTime = e[1]
-      }
+      let beginTime = new Date(e[0])
+      let endTime = new Date(e[1])
+      e[0] = new Date(beginTime.getFullYear() + '-' + (beginTime.getMonth() + 1) + '-' + beginTime.getDate() + ' 00:00:00').getTime()
+      e[1] = new Date(endTime.getFullYear() + '-' + (endTime.getMonth() + 1) + '-' + endTime.getDate() + ' 23:59:59').getTime()
+      this.params.beginTime = e[0]
+      this.params.endTime = e[1]
       this.getData(this.params)
     },
     currentChange (e) {
