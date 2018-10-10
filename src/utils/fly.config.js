@@ -40,24 +40,18 @@ fly.interceptors.response.use(
     return error
   }
 )
-console.log(process.env)
 // 配置请求基地址
 fly.config.baseURL = (function () {
   let baseURL
   if (process.env.NODE_ENV === 'development') {
-    if (process.env.CORS) {
-      baseURL = 'http://' + window.location.host + '/cors'
-    } else {
-      baseURL = 'http://edit.junyanginfo.com:8082'
-      // baseURL = 'http://edit.junyanginfo.com:8082'
-    }
+    baseURL = 'http://testomsapi.junyanginfo.com'
+  } else if (process.env.NODE_ENV === 'release') {
+    baseURL = 'http://testomsapi.junyanginfo.com'
   } else if (process.env.NODE_ENV === 'production') {
-    // baseURL = 'http://39.104.124.195:9080/'
-    baseURL = 'http://edit.junyanginfo.com:8082'
+    baseURL = 'http://omsapi.junyanginfo.com'
   }
   return baseURL
 })()
 fly.config.timeout = 15000
-// fly.config.withCredentials = true
 
 export default fly

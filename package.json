@@ -7,10 +7,11 @@
   "scripts": {
     "dev": "cross-env  webpack-dev-server --inline --progress  --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "cors": "cross-env CORS=192.168.1.49:9081 webpack-dev-server --inline --progress  --config build/webpack.dev.conf.js",
-    "dist": "node config/dist.server.js",
+    "server:release": "cross-env NODE_ENV='release' node config/dist.server.js",
+    "server:prod": "cross-env NODE_ENV='production' node config/dist.server.js",
     "lint": "eslint --ext .js,.vue src",
-    "build": "node build/build.js"
+    "release": "cross-env NODE_ENV='release' DIST_PATH='release' node build/build.js",
+    "prod": "cross-env DIST_PATH='prod' node build/build.js"
   },
   "dependencies": {
     "element-ui": "^2.4.1",
