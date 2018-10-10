@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 console.log(process.env.NODE_ENV)
 //指定启动服务器到哪个文件夹，我这边指的是dist文件夹
-app.use(express.static('./prod'))
+app.use(express.static(`./${process.env.NODE_ENV}`))
 
 //监听端口为3000
 var server = app.listen(8080, function () {

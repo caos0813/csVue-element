@@ -10,8 +10,8 @@
     "server:release": "cross-env NODE_ENV='release' node config/dist.server.js",
     "server:prod": "cross-env NODE_ENV='production' node config/dist.server.js",
     "lint": "eslint --ext .js,.vue src",
-    "release": "cross-env NODE_ENV='release' DIST_PATH='release' node build/build.js",
-    "prod": "cross-env DIST_PATH='prod' node build/build.js"
+    "release": "cross-env NODE_ENV='release'  node build/build.js",
+    "prod": "cross-env NODE_ENV='production' node build/build.js"
   },
   "dependencies": {
     "element-ui": "^2.4.1",

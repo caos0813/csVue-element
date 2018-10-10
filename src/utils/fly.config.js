@@ -41,10 +41,11 @@ fly.interceptors.response.use(
   }
 )
 // 配置请求基地址
+console.log(process.env.NODE_ENV)
 fly.config.baseURL = (function () {
   let baseURL
   if (process.env.NODE_ENV === 'development') {
-    baseURL = 'http://testomsapi.junyanginfo.com'
+    baseURL = 'http://edit.junyanginfo.com:8082/'
   } else if (process.env.NODE_ENV === 'release') {
     baseURL = 'http://testomsapi.junyanginfo.com'
   } else if (process.env.NODE_ENV === 'production') {
