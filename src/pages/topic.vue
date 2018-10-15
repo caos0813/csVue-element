@@ -34,7 +34,7 @@
           </el-form-item>
         </el-col>
       </el-form-item>
-      <el-form-item v-if="mode==='vote'">
+      <el-form-item v-if="mode==='vote'" prop="vote">
         <el-form-item>
           <el-button type="info" size="small" @click="addRow">添加选项</el-button>
           <div class="radio-wrap">
@@ -98,11 +98,20 @@ export default {
         callback()
       }
     }
+    let validateVoteVal = (rule, value, callback) => {
+      console.log(value)
+      if (this.optionData.length < 1) {
+        callback(new Error('请添加选项'))
+      } else {
+        callback()
+      }
+    }
     return {
       rules: {
         title: [{ required: true, message: '请输入专题名称', trigger: 'blur' }],
         content: [{ required: true, message: '请输入内容', trigger: 'blur' }],
-        pickerVal: [{ required: true, validator: validatePickerVal, trigger: 'change' }]
+        pickerVal: [{ required: true, validator: validatePickerVal, trigger: 'change' }],
+        vote: [{ required: true, validator: validateVoteVal, trigger: 'change' }]
       },
       params: {
         title: '',

@@ -18,8 +18,8 @@ export default {
   data () {
     return {
       firstData: [],
-      secondData: [],
-      pickerVal: []
+      secondData: []
+      // pickerVal: []
     }
   },
   props: {
@@ -54,7 +54,7 @@ export default {
   }, */
   watch: {
     value: {
-      handler (val) {
+      handler (val, oldVal) {
         this.pickerVal = val
       },
       immediate: true
@@ -74,13 +74,16 @@ export default {
     }
   },
   created () {
-    this.$fly.get(api.productAll).then(data => {
-      this.firstData = data
-      //  this.pickerVal = this.value
-      if (!this.lodash.isUndefined(this.pickerVal[0])) {
-        this.firstChange(this.pickerVal[0], true)
-      }
-    })
+    setTimeout(() => {
+      this.$fly.get(api.productAll).then(data => {
+        this.firstData = data
+        // this.pickerVal = this.value
+        console.log(this.pickerVal)
+        if (!this.lodash.isUndefined(this.pickerVal[0])) {
+          this.firstChange(this.pickerVal[0], true)
+        }
+      })
+    }, 100)
   }
 }
 </script>

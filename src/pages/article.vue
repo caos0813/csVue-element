@@ -12,6 +12,7 @@
     </div>
     <el-form ref="form" :model="params" :rules="rules" label-width="80px">
       <el-form-item label="专题" prop="pickerVal">
+         <!-- v-if="params.pickerVal.length>0" -->
         <picker v-model="params.pickerVal" :column="2"></picker>
         <el-col :span='4'>
           <el-form-item label-width="20px">
@@ -150,7 +151,6 @@ export default {
       this.$refs[refs].validate((valid) => {
         if (valid) {
           let { title, isHomePageShow, image, pickerVal, id, content, audioPath, audioFlag, textarea } = this.params
-          console.log(this.params)
           let publishTime = this.timeDialog ? new Date(this.addForm.publishTime).getTime() : null
           this.$fly.post(link, {
             id,
@@ -164,7 +164,6 @@ export default {
             productId: pickerVal[0],
             status: status
           }).then(data => {
-            console.log(data)
             this.$message({
               message: '保存成功',
               duration: 2000,
@@ -195,7 +194,8 @@ export default {
         id
       }).then(data => {
         this.params = data
-        console.log(this.lodash.isNull(data.audioPath))
+        // console.log(this.lodash.isNull(data.audioPath))
+        this.params.pickerVal = [data.product.id, data.specialTopic.id]
         if (this.lodash.isNull(data.audioPath)) {
           this.params.audioFlag = 0
           this.isAudioFlag = true
@@ -204,7 +204,7 @@ export default {
           this.isAudioFlag = true
           this.params.textarea = data.content
         }
-        this.params.pickerVal = [data.product.id, data.specialTopic.id]
+        console.log(this.params.pickerVal)
       })
     }
   }
