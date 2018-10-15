@@ -18,8 +18,8 @@ export default {
   data () {
     return {
       firstData: [],
-      secondData: []
-      // pickerVal: []
+      secondData: [],
+      pickerVal: []
     }
   },
   props: {
