@@ -3,7 +3,7 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
-console.log(process.env.CORS)
+console.log(process.env.NODE_ENV)
 module.exports = {
   dev: {
 
@@ -53,10 +53,10 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve(__dirname, `../${process.env.NODE_ENV}/index.html`),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsRoot: path.resolve(__dirname, `../${process.env.NODE_ENV}`),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
 
