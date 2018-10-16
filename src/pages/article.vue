@@ -194,7 +194,6 @@ export default {
         id
       }).then(data => {
         this.params = data
-        // console.log(this.lodash.isNull(data.audioPath))
         this.params.pickerVal = [data.product.id, data.specialTopic.id]
         if (this.lodash.isNull(data.audioPath)) {
           this.params.audioFlag = 0
