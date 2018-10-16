@@ -45,7 +45,8 @@ console.log(process.env.NODE_ENV)
 fly.config.baseURL = (function () {
   let baseURL
   if (process.env.NODE_ENV === 'development') {
-    baseURL = 'http://edit.junyanginfo.com:8082/'
+    // baseURL = 'http://edit.junyanginfo.com:8082/'
+    baseURL = 'http://testomsapi.junyanginfo.com'
   } else if (process.env.NODE_ENV === 'release') {
     baseURL = 'http://testomsapi.junyanginfo.com'
   } else if (process.env.NODE_ENV === 'production') {
