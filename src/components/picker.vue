@@ -56,6 +56,14 @@ export default {
     value: {
       handler (val, oldVal) {
         this.pickerVal = val
+        if (val.length) {
+          this.$fly.get(api.productAll).then(data => {
+            this.firstData = data
+            if (!this.lodash.isUndefined(this.pickerVal[0])) {
+              this.firstChange(this.pickerVal[0], true)
+            }
+          })
+        }
       },
       immediate: true
     }
@@ -72,18 +80,6 @@ export default {
     secondChange (e, init) {
       this.$emit('input', this.pickerVal)
     }
-  },
-  created () {
-    setTimeout(() => {
-      this.$fly.get(api.productAll).then(data => {
-        this.firstData = data
-        // this.pickerVal = this.value
-        console.log(this.pickerVal)
-        if (!this.lodash.isUndefined(this.pickerVal[0])) {
-          this.firstChange(this.pickerVal[0], true)
-        }
-      })
-    }, 100)
   }
 }
 </script>
