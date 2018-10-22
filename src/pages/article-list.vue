@@ -103,7 +103,7 @@ export default {
       this.params = {
         title: null,
         page: 1,
-        size: 15,
+        size: this.$refs.pageInfo.pageSizes[0],
         sortType: 1
       }
       this.pickerVal = []
@@ -111,8 +111,6 @@ export default {
     },
     search () {
       console.log(this.pickerVal)
-      this.params.productId = this.pickerVal[0]
-      this.params.specialTopicId = this.pickerVal[1]
       this.getData(this.params)
     },
     refresh () {
@@ -121,6 +119,8 @@ export default {
     getData (params) {
       // let params = this.lodash.clone(obj)
       params.page--
+      params.productId = this.pickerVal[0]
+      params.specialTopicId = this.pickerVal[1]
       this.loading = true
       this.$fly.get(api.articleList, params).then(data => {
         this.loading = false

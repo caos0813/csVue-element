@@ -99,6 +99,7 @@ export default {
   computed: {
     params () {
       let status
+      let size
       if (this.status === 'true') {
         status = true
       } else if (this.status === 'false') {
@@ -106,9 +107,12 @@ export default {
       } else {
         status = ''
       }
+      if (this.$refs.pageInfo) {
+        size = this.$refs.pageInfo.pageSizes[0]
+      }
       return {
         page: 1,
-        // size: 10,
+        size: size,
         // sort: 'createdDate,desc',
         beginDate: this.date ? this.date[0] : null,
         endDate: this.date ? this.date[1] : null,
@@ -137,6 +141,7 @@ export default {
       this.getData(this.params)
     },
     sizeChange (e) {
+      console.log(e)
       this.params.size = e
       this.getData(this.params)
     },

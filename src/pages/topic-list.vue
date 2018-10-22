@@ -64,6 +64,7 @@ import { picker, listHandle, page } from '@/components'
 export default {
   data () {
     return {
+      pickerVal: [],
       params: {
         title: null,
         page: 1,
@@ -71,7 +72,6 @@ export default {
         sortType: 1
       },
       checkData: [],
-      pickerVal: [],
       pageInfo: {},
       tableData: [],
       loading: false
@@ -103,14 +103,13 @@ export default {
       this.params = {
         title: null,
         page: 1,
-        size: 15,
+        size: this.$refs.pageInfo.size,
         sortType: 1
       }
       this.pickerVal = []
       this.getData(this.params)
     },
     search () {
-      this.params.productId = this.pickerVal[0]
       this.getData(this.params)
     },
     refresh () {
@@ -118,6 +117,7 @@ export default {
     },
     getData (params) {
       // let params = this.lodash.clone(obj)
+      params.productId = this.pickerVal[0]
       params.page--
       this.loading = true
       this.$fly.get(api.topicList, params).then(data => {

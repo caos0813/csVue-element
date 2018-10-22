@@ -1,6 +1,7 @@
 <template>
   <div class="page-wrap padding">
-    <el-pagination background layout="total,sizes, prev, pager, next, jumper" :total="pageInfo.totalElements" :current-page="pageInfo.currentPage" :page-sizes="pageSizes" @current-change="currentChange" @size-change="sizeChange">
+    <el-pagination background layout="total,sizes, prev, pager, next, jumper" :total="pageInfo.totalElements" :current-page="pageInfo.currentPage" :page-sizes="pageSizes" :page-size="size"
+    @current-change="currentChange" @size-change="sizeChange">
     </el-pagination>
   </div>
 </template>
@@ -8,7 +9,8 @@
 export default {
   data () {
     return {
-      pageSizes: [10, 50, 100, 200, 500]
+      pageSizes: [10, 50, 100, 200, 500],
+      size: 10
     }
   },
   props: {
@@ -21,6 +23,7 @@ export default {
   },
   methods: {
     sizeChange (e) {
+      console.log(e)
       this.$emit('sizeChange', e)
     },
     currentChange (e) {

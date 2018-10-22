@@ -143,30 +143,24 @@ export default {
       this.params = {
         title: null,
         page: 1,
-        size: 15,
+        size: this.$refs.pageInfo.pageSizes[0],
         sortType: 1
       }
       this.pickerVal = []
       this.getData(this.params)
     },
     search () {
-      console.log(this.pickerVal)
-      this.params.productId = this.pickerVal[0]
       this.getData(this.params)
     },
     getData (params) {
       // let params = this.lodash.clone(obj)
+      params.productId = this.pickerVal[0]
       params.page--
       this.loading = true
       this.$fly.get(api.specialList, params).then(data => {
         this.loading = false
         let { content, totalElements } = data
         this.tableData = content
-        // this.pageInfo = {
-        //   totalPages: data.totalPages,
-        //   size: obj.size,
-        //   currentPage: obj.page
-        // }
         this.pageInfo = {
           totalElements: totalElements,
           currentPage: params.page + 1
