@@ -21,7 +21,7 @@
       </el-table-column>
       <el-table-column prop="count" label="数量" align="center">
       </el-table-column>
-      <el-table-column prop="activatedCount" label="激活数" align="center">
+      <el-table-column prop="activeCount" label="激活数" align="center">
       </el-table-column>
       <el-table-column prop="createdDate" label="开卡时间" align="center">
         <template slot-scope="props">
