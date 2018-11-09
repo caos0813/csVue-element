@@ -4,10 +4,10 @@
     <el-button type="primary" size="small" @click="handleFn('add')">新增</el-button>
     <el-button type="warning" v-if="showSoldout" size="small" @click="handleFn('soldOut')" :disabled="checkIds.length<1">下架</el-button>
     <el-button type="danger" size="small" @click="handleFn('delete')" :disabled="checkIds.length<1">删除</el-button> -->
-    <el-button type="danger" size="small" @click="handleFn('hot')" v-if="showHot" :disabled="checkData.length<1">设为热门</el-button>
-    <el-button type="primary" size="small" @click="handleFn('add')">新增</el-button>
-    <el-button type="warning" v-if="showSoldout" size="small" @click="handleFn('soldOut')" :disabled="checkData.length<1">下架</el-button>
-    <el-button type="danger" size="small" @click="handleFn('delete')" :disabled="checkData.length<1">删除</el-button>
+    <el-button type="danger" size="small" @click.stop="handleFn('hot')" v-if="showHot" :disabled="checkData.length<1">设为热门</el-button>
+    <el-button type="primary" size="small" @click.stop="handleFn('add')">新增</el-button>
+    <el-button type="warning" v-if="showSoldout" size="small" @click.stop="handleFn('soldOut')" :disabled="checkData.length<1">下架</el-button>
+    <el-button type="danger" size="small" @click.stop="handleFn('delete')" :disabled="checkData.length<1">删除</el-button>
   </div>
 </template>
 
@@ -61,7 +61,7 @@ export default {
         } else if (type === 'hot') {
           url = api[`${path}Hot`]
           txt = '设为热门'
-        }
+        } 
         // console.log(this.checkData)
         confirm(`您确定将选择的内容${txt}吗？`, '提示').then(() => {
           this.checkIds = []

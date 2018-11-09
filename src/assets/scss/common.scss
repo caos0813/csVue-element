@@ -92,7 +92,7 @@ img {
       flex: 1;
       padding-right: 15px;
     }
-    >.date-picker-wrap{
+    >.date-picker-wrap {
       margin-right: 15px;
     }
   } // .left-wrap {
@@ -121,4 +121,84 @@ img {
 
 .tableHeader {
   background-color: #F5F7FA !important
+}
+
+.mRight_15 {
+  margin-right: 15px;
+}
+
+.dialog-wrap {
+  background-color: #fff; // border: 1px solid red;
+  width: 60%;
+  position: absolute;
+  top: 0;
+  right: 120px;
+  padding: 10px 15px;
+  margin-right: 20px;
+  z-index: 1700 !important;
+  animation-fill-mode: forwards;
+  box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.1);
+  transition: all ease 0.4s;
+  padding-top: 5px;
+  .el-checkbox {
+    min-width: 120px;
+    &+.el-checkbox {
+      margin-left: 0px;
+    }
+  }
+  >.dialog-header {
+    color: $dark03;
+    font-size: 20px;
+    .btn-close {
+      position: absolute;
+      color: $dark03;
+      font-size: 20px;
+      top: 0;
+      right: 10px;
+    }
+  }
+  .dialog-container {
+    margin-top: 35px;
+    >.page-wrap {
+      position: absolute;
+      left: 0;
+    }
+  }
+  .dialog-footer {
+    text-align: right;
+    padding: 10px 0;
+  }
+}
+
+.start {
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    visibility: visible;
+    transform: translate3d(100%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.hide {
+  display: none;
+}
+
+.close {
+  animation: fadeOut ease-in 0.4s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    visibility: visible;
+    transform: translate3d(130%, 0, 0);
+  }
 }

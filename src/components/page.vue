@@ -23,11 +23,17 @@ export default {
   },
   methods: {
     sizeChange (e) {
-      console.log(e)
+      // console.log(e)
       this.$emit('sizeChange', e)
     },
     currentChange (e) {
       this.$emit('currentChange', e)
+    },
+    preClick (e) {
+      this.$emit('preClick', e)
+    },
+    nextClick (e) {
+      this.$emit('nextClick', e)
     }
   }
 }

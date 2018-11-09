@@ -19,6 +19,12 @@
       <router-link :to="{name:'feedback-list'}" tag="a" class="ceil">
         反馈
       </router-link>
+      <router-link :to="{name:'order-list'}" tag="a" class="ceil">
+        订单
+      </router-link>
+      <router-link :to="{name:'banner-list'}" tag="a" class="ceil">
+        banner图
+      </router-link>
     </div>
   </div>
 </template>

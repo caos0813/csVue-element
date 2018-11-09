@@ -34,6 +34,10 @@ const VolunteerUse = () => import('@/pages/volunteer-use')
 const FeedbackList = () => import('@/pages/feedback-list')
 const Login = () => import('@/pages/login')
 const TopicList = () => import('@/pages/topic-list')
+const OrderList = () => import('@/pages/order-list')
+const BannerList = () => import('@/pages/banner-list')
+const Banner = () => import('@/pages/banner')
+const Comment = () => import('@/pages/comment')
 
 // const TopicList = r => require.ensure([], () => r(require('../../common/home.vue')))
 // const TopicList = () => Promise.resolve({ '@/pages/topic-list.vue' })
@@ -125,6 +129,34 @@ export default new Router({
         path: '/feedback-list',
         name: 'feedback-list',
         component: FeedbackList,
+        meta: {
+          requireAuth: true
+        }
+      }, {
+        path: '/order-list',
+        name: 'order-list',
+        component: OrderList,
+        meta: {
+          requireAuth: true
+        }
+      }, {
+        path: '/banner-list',
+        name: 'banner-list',
+        component: BannerList,
+        meta: {
+          requireAuth: true
+        }
+      }, {
+        path: '/banner/:type',
+        name: 'banner',
+        component: Banner,
+        meta: {
+          requireAuth: true
+        }
+      }, {
+        path: '/comment',
+        name: 'comment',
+        component: Comment,
         meta: {
           requireAuth: true
         }

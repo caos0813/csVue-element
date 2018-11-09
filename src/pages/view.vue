@@ -50,6 +50,20 @@
             </template>
             <el-menu-item index="3-1" :route="{name:'feedback-list'}">反馈</el-menu-item>
           </el-submenu>
+          <el-submenu index="4">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span>交易管理</span>
+            </template>
+            <el-menu-item index="4-1" :route="{name:'order-list'}">订单管理</el-menu-item>
+          </el-submenu>
+          <el-submenu index="5">
+            <template slot="title">
+              <i class="el-icon-menu"></i>
+              <span>banner图管理</span>
+            </template>
+            <el-menu-item index="5-1" :route="{name:'banner-list'}">banner图</el-menu-item>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <el-main class="main">

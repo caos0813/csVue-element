@@ -3,27 +3,18 @@
     <div class="tools-bar">
       <div class="left-wrap">
         <el-input prefix-icon="el-icon-search" v-model="params.title" placeholder="请输入搜索关键字" size="small"></el-input>
-        <picker v-model="pickerVal" size="small" :span="-1" :column="2"></picker>
         <el-button size="small" type="primary" @click="search">查询</el-button>
         <el-button size="small" type="warning" @click="reset">重置</el-button>
       </div>
-      <listHandle :checkData="checkData" @refresh="refresh"></listHandle>
+      <listHandle :showSend="true" :checkData="checkData" @refresh="refresh"></listHandle>
     </div>
     <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" v-loading="loading" element-loading-text="拼命加载中" border stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" label-class-name="checkLabel">
       </el-table-column>
-      <el-table-column label="标题" align="center" min-width="180" show-overflow-tooltip>
-        <template slot-scope="scope">
-          <span>{{ scope.row.title }}</span>
-        </template>
+      <el-table-column label="标题" prop="title" align="center" min-width="180" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column label="推荐" align="center" width="80">
-        <template slot-scope="scope">
-          <el-tag size="small" :type="scope.row.isHomePageShow===1?'danger':'info'">{{scope.row.isHomePageShow?'推荐':'不推荐'}}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="所属专题" min-width="160" show-overflow-tooltip align="center">
-        <template slot-scope="scope">{{ scope.row.product.name }}、{{ scope.row.specialTopic.title }}</template>
+      <el-table-column label="所属产品" min-width="160" show-overflow-tooltip align="center">
+        <template slot-scope="scope">{{ scope.row.productName }}</template>
       </el-table-column>
       <el-table-column prop="userName" label="操作人" min-width="260" align="center">
       </el-table-column>
@@ -37,22 +28,43 @@
           {{scope.row.totalReadNum}}
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" width="180" align="center">
-        <template slot-scope="scope">{{ scope.row.createTime | dateTime('yyyy-MM-dd hh:mm:ss') }}</template>
-      </el-table-column>
       <el-table-column label="发布时间" width="180" align="center">
         <template slot-scope="scope">{{ scope.row.publishTime | dateTime('yyyy-MM-dd hh:mm:ss') }}</template>
       </el-table-column>
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope ">
           <el-button type="text " size="mini" v-if="scope.row.status===2||scope.row.status===3">
-            <router-link :to="{name:'article',params:{type:'edit'},query:{id:scope.row.id}}" tag="span">编辑</router-link>
+            <router-link :to="{name:'banner',params:{type:'edit'},query:{id:scope.row.id}}" tag="span">编辑</router-link>
           </el-button>
           <el-button type="text" size="mini" @click.stop="openSendDialog(scope.row.id)">推送</el-button>
         </template>
       </el-table-column>
     </el-table>
     <page ref="pageInfo" :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
+    <!-- <el-dialog title="推送" :visible.sync="sendDialog" width="800px" :close-on-click-modal="false">
+      <el-form :model="form" inline-message ref="form" :rules="sendRules" label-suffix=":" label-width="100px">
+        <el-form-item label='被推送的标题'>
+          <label v-for="(item,index) in checkData" :key="index">{{item.title}}</label>
+        </el-form-item>
+        <el-form-item label="推送时间" prop="sendTime">
+          <el-radio v-model="form.radio" label="1">直接推送</el-radio>
+          <br />
+          <el-radio v-model="form.radio" label="2">定时推送</el-radio>
+          <el-date-picker v-model="form.sendTime" type="datetime" size="small" :picker-options="pickerOptions2" placeholder="请选择发布时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="推送范围" prop="sendRange">
+          <el-checkbox :indeterminate="form.isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全国</el-checkbox>
+          <el-checkbox-group v-model="form.provincesIds" @change="handleCheckedCitiesChange">
+            <el-checkbox v-for="(item,index) in provincesData" :key="index" :label="item.name" :min="1" :disabled="item.disabled"></el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancel" size="small">取消</el-button>
+        <el-button type="primary" size="small" @click="sendFn('send')">确定</el-button>
+      </span>
+    </el-dialog> -->
     <div class="dialog-wrap" id="dialog-wrap" :class="{'start':startAnimate,'close':closeAnimate,'hide':!popoverIsClose}">
       <div class="dialog-header">
         <span class="title">推送</span>
@@ -87,7 +99,7 @@
 </template>
 <script>
 import { api, confirm } from '@/utils'
-import { picker, listHandle, page } from '@/components'
+import { listHandle, page } from '@/components'
 export default {
   data () {
     let validateTime = (rule, value, callback) => {
@@ -109,13 +121,12 @@ export default {
         title: null,
         page: 1,
         // size: 10,
-        sortType: 1
+        sortType: 'publishTime|desc'
       },
       checkData: [],
-      pickerVal: [],
-      pageInfo: {},
       tableData: [],
       loading: false,
+      pageInfo: {},
       sendDialog: false,
       sendTitle: [],
       checkAll: false,
@@ -143,15 +154,30 @@ export default {
     }
   },
   components: {
-    picker,
     listHandle,
     page
   },
   methods: {
+    reset () {
+      this.params = {
+        title: null,
+        page: 1,
+        // size: this.$refs.pageInfo.pageSizes[0],
+        size: 10,
+        sortType: 1
+      }
+      this.getData(this.params)
+    },
+    search () {
+      this.getData(this.params)
+    },
+    refresh () {
+      this.getData(this.params)
+    },
     handleSelectionChange (e) {
       this.checkData = []
       this.lodash.map(e, (item) => {
-        this.checkData.push({ id: item.id, status: item.status })
+        this.checkData.push({ id: item.id, status: item.status, title: item.title })
       })
       // this.checkIds = this.lodash.map(e, 'id')
       // console.log(this.checkIds)
@@ -161,33 +187,16 @@ export default {
       this.getData(this.params)
     },
     sizeChange (e) {
+      this.params.page = 1
       this.params.size = e
       this.getData(this.params)
     },
-    reset () {
-      this.params = {
-        title: null,
-        page: 1,
-        size: this.$refs.pageInfo.pageSizes[0],
-        sortType: 1
-      }
-      this.pickerVal = []
-      this.getData(this.params)
-    },
-    search () {
-      console.log(this.pickerVal)
-      this.getData(this.params)
-    },
-    refresh () {
-      this.getData(this.params)
-    },
     getData (params) {
-      // let params = this.lodash.clone(obj)
       params.page--
-      params.productId = this.pickerVal[0]
-      params.specialTopicId = this.pickerVal[1]
+      // params.productId = this.pickerVal[0]
+      // params.specialTopicId = this.pickerVal[1]
       this.loading = true
-      this.$fly.get(api.articleList, params).then(data => {
+      this.$fly.get(api.bannerList, params).then(data => {
         this.loading = false
         this.tableData = data.content
         this.pageInfo = {
@@ -273,7 +282,7 @@ export default {
           }
           params = {
             id: this.bannerId,
-            type: 2,
+            type: 1,
             provinceIds: `${list}`,
             area: area
           }
@@ -325,6 +334,7 @@ export default {
       let comSelect = document.getElementById('dialog-wrap')
       if (comSelect) {
         let flag = comSelect.contains(event.target)
+        console.log(flag)
         if (flag) return
         // _this.popoverIsClose = false
         _this.closeAnimate = true
@@ -375,8 +385,3 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.checkLabel > .el-checkbox {
-  display: none;
-}
-</style>
