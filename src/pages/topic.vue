@@ -55,8 +55,8 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width="200px">
               <template slot-scope="scope">
-                <!-- <el-button icon="el-icon-arrow-up" circle size="small" title="上移" @click="moveRow(scope,'up')" v-if="scope.$index!==0"></el-button>
-                <el-button icon="el-icon-arrow-down" circle size="small" title="下移" @click="moveRow(scope,'down')" v-if="scope.$index!==optionData.length-1"></el-button> -->
+                <el-button icon="el-icon-arrow-up" circle size="small" title="上移" @click="moveRow(scope,'up')" :disabled="scope.$index===0"></el-button><!-- v-if="scope.$index!==0" -->
+                <el-button icon="el-icon-arrow-down" circle size="small" title="下移" @click="moveRow(scope,'down')" :disabled="scope.$index==optionData.length-1"></el-button><!-- v-if="scope.$index!==optionData.length-1" -->
                 <el-button type="danger" size="small" @click="delRow(scope)" icon="el-icon-delete" circle></el-button>
               </template>
             </el-table-column>
@@ -87,6 +87,7 @@
 </template>
 <script>
 import Tinymce from '@/components/Tinymce'
+import draggable from 'vuedraggable'
 import { api } from '@/utils'
 import { picker } from '@/components'
 export default {
@@ -137,7 +138,8 @@ export default {
   },
   components: {
     Tinymce,
-    picker
+    picker,
+    draggable
   },
   methods: {
     modeChange (e) {

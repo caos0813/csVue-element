@@ -28,6 +28,8 @@
       </el-table-column>
       <el-table-column prop="payDescription" label="订单状态" align="center">
       </el-table-column>
+      <el-table-column prop="phoneNumber" label="手机号" align="center">
+      </el-table-column>
       <el-table-column prop="goodsName" label="商品名称" align="center">
       </el-table-column>
       <el-table-column prop="createDate" label="日期" align="center">

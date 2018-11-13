@@ -40,7 +40,7 @@
           <span>{{props.row.expirationDate | dateTime('yyyy-MM-dd hh:mm:ss')}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="activatedDate" label="激活时间" align="center">
+      <el-table-column prop="activatedDate" label="到期时间" align="center">
         <template slot-scope="props">
           <span>{{props.row.expirationDate | dateTime('yyyy-MM-dd hh:mm:ss')}}</span>
         </template>

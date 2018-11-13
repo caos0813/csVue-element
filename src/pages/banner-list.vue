@@ -255,7 +255,7 @@ export default {
           let list = []
           let provincesIds = this.form.provincesIds
           let provincesData = this.provincesData
-          if (process.env.NODE_ENV === 'development') {
+          if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'release') {
             for (let x in provincesData) {
               provincesIds.map((item) => {
                 if (provincesData[x].name === item) {
