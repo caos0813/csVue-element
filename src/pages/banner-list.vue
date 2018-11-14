@@ -348,7 +348,7 @@ export default {
       this.provincesData = provinces
       this.$fly.get(api.getProvinceIds).then(data1 => {
         this.povincesDataById = data1
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'release') {
           provinces.map(item => {
             item['disabled'] = true
             for (let i = 0; i < data1.length; i++) {
