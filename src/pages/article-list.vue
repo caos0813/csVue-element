@@ -48,7 +48,9 @@
           <el-button type="text " size="mini" v-if="scope.row.status===2||scope.row.status===3">
             <router-link :to="{name:'article',params:{type:'edit'},query:{id:scope.row.id}}" tag="span">编辑</router-link>
           </el-button>
-          <el-button type="text" size="mini" @click.stop="openSendDialog(scope.row.id)">推送</el-button>
+          <span>
+            <el-button type="text" size="mini" v-if="scope.row.status===1||scope.row.status===4" @click.stop="openSendDialog(scope.row.id)">推送</el-button>
+          </span>
         </template>
       </el-table-column>
     </el-table>
@@ -338,6 +340,7 @@ export default {
       this.provincesData = provinces
       this.$fly.get(api.getProvinceIds).then(data1 => {
         this.povincesDataById = data1
+        console.log(process.env.NODE_ENV)
         if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'release') {
           provinces.map(item => {
             item['disabled'] = true

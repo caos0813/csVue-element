@@ -4,11 +4,14 @@
       <div class="left-wrap">
         <el-date-picker v-model="date" class='date-picker-wrap' size="small" type="daterange" unlink-panels range-separator="至 " start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" @change="dateChange" value-format="timestamp">
         </el-date-picker>
-        <el-select v-model="status" placeholder="请选择激活状态" size="small" @change="activeChange">
+        <el-select v-model="status" placeholder="请选择激活状态" size="small" class="mRight_15" @change="activeChange">
           <el-option label="全部" value=""></el-option>
           <el-option label="已激活" value=true></el-option>
           <el-option label="未激活" value=false></el-option>
         </el-select>
+        <el-input prefix-icon="el-icon-search" v-model="keyword" placeholder="请输入搜索关键字" size="small"></el-input>
+        <el-button size="small" type="primary" @click="search">查询</el-button>
+        <el-button size="small" type="warning" @click="reset">重置</el-button>
       </div>
     </div>
     <el-table :data="tableData" :header-cell-style="{background:'#F5F7FA'}" v-loading="loading" element-loading-text="拼命加载中" border stripe>
@@ -35,12 +38,12 @@
           <span>{{props.row.activatedDate===null?'否':'是'}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="expirationDate" label="到期时间" align="center">
+      <el-table-column prop="" label="激活时间" align="center">
         <template slot-scope="props">
-          <span>{{props.row.expirationDate | dateTime('yyyy-MM-dd hh:mm:ss')}}</span>
+          <span>{{props.row.activatedDate | dateTime('yyyy-MM-dd hh:mm:ss')}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="activatedDate" label="到期时间" align="center">
+      <el-table-column prop="expirationDate" label="到期时间" align="center">
         <template slot-scope="props">
           <span>{{props.row.expirationDate | dateTime('yyyy-MM-dd hh:mm:ss')}}</span>
         </template>
@@ -61,6 +64,7 @@ export default {
     return {
       date: '',
       status: '',
+      keyword: '',
       pickerOptions2: {
         disabledDate (time) {
           return time.getTime() > Date.now()
@@ -165,6 +169,23 @@ export default {
         }
         this.tableData = content
       })
+    },
+    reset () {
+      this.params.status = ''
+      this.params.keyword = ''
+      this.params.date = ''
+      this.params.page = 1
+      this.params.size = this.$refs.pageInfo.pageSizes[0]
+      this.params.sortType = 1
+      this.params.page = 1
+      // console.log(this.params.page)
+      this.pickerVal = []
+      this.getData(this.params)
+    },
+    search () {
+      this.params.page = 1
+      this.params.keyword = this.keyword
+      this.getData(this.params)
     }
   },
   created () {

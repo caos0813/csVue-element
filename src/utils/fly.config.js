@@ -46,8 +46,8 @@ fly.config.baseURL = (function () {
   let baseURL
   if (process.env.NODE_ENV === 'development') {
     // baseURL = 'http://edit.junyanginfo.com:8082/'
-    // baseURL = 'http://192.168.1.84:8082'
-    baseURL = 'http://testomsapi.junyanginfo.com'
+    baseURL = 'http://192.168.1.84:8082'
+    // baseURL = 'http://testomsapi.junyanginfo.com'
   } else if (process.env.NODE_ENV === 'release') {
     baseURL = 'http://testomsapi.junyanginfo.com'
   } else if (process.env.NODE_ENV === 'production') {
