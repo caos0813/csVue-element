@@ -12,6 +12,8 @@
     <el-table :data="tableData" :header-cell-style="{background:'#F5F7FA'}" v-loading="loading" element-loading-text="拼命加载中" border stripe>
       <el-table-column type="index" width="50" align="center">
       </el-table-column>
+      <el-table-column prop="username" label="开卡人" align="center">
+      </el-table-column>
       <el-table-column prop="provinceName" label="开卡省份" align="center">
       </el-table-column>
       <el-table-column prop="type" label="类型" align="center">
