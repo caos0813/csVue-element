@@ -36,7 +36,7 @@
           <el-button type="text " size="mini" v-if="scope.row.status===2||scope.row.status===3">
             <router-link :to="{name:'banner',params:{type:'edit'},query:{id:scope.row.id}}" tag="span">编辑</router-link>
           </el-button>
-          <el-button type="text" size="mini" v-if="scope.row.status===1||scope.row.status===4" @click.stop="openSendDialog(scope.row.id)">推送</el-button>
+          <el-button type="text" size="mini" v-if=" scope.row.status===1" @click.stop="openSendDialog(scope.row.id)">推送</el-button>
         </template>
       </el-table-column>
     </el-table>

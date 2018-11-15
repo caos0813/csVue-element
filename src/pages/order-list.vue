@@ -22,34 +22,34 @@
     <el-table :data="tableData" :header-cell-style="{background:'#F5F7FA'}" v-loading="loading" element-loading-text="拼命加载中" border stripe>
       <el-table-column type="index" width="50" align="center">
       </el-table-column>
-      <el-table-column prop="userId" label="用户ID" align="center">
+      <el-table-column prop="userId" label="用户ID" width="100" align="center">
       </el-table-column>
-      <el-table-column prop="orderNumber" label="订单编号" align="center">
+      <el-table-column prop="orderNumber" min-width="120" show-overflow-tooltip label="订单编号" align="center">
       </el-table-column>
       <el-table-column prop="payDescription" label="订单状态" align="center">
       </el-table-column>
-      <el-table-column prop="phoneNumber" label="手机号" align="center">
+      <el-table-column prop="phoneNumber" width="120" label="手机号" align="center">
       </el-table-column>
-      <el-table-column prop="goodsName" label="商品名称" align="center">
+      <el-table-column prop="goodsName" min-width="120" show-overflow-tooltip label="商品名称" align="center">
       </el-table-column>
-      <el-table-column prop="createDate" label="日期" align="center">
+      <el-table-column prop="createDate" width="170" label="日期" align="center">
         <template slot-scope="props">
           <span>{{props.row.createDate | dateTime('yyyy-MM-dd hh:mm:ss')}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="buyWay" label="订单类型" align="center">
+      <el-table-column prop="buyWay" width="120" label="订单类型" align="center">
         <template slot-scope="props">
           <span>{{props.row.payWay===1?'App购买':props.row.payWay===2?'卡激活':'其他'}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="price" label="商品价格" align="center">
+      <el-table-column prop="price" width="120" label="商品价格" align="center">
       </el-table-column>
-      <el-table-column prop="payWay" label="支付方式" align="center">
+      <el-table-column prop="payWay" width="120" label="支付方式" align="center">
         <template slot-scope="props">
           <span>{{props.row.payWay===1?'微信支付':props.row.payWay===2?'支付宝支付':'其他'}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="remark" label="备注" align="center">
+      <el-table-column prop="remark" min-width="120" show-overflow-tooltip label="备注" align="center">
       </el-table-column>
     </el-table>
     <page ref="pageInfo" :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page>
