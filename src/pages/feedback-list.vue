@@ -17,6 +17,8 @@
       </el-table-column>
       <el-table-column prop="phoneNum" label="手机号" width="120" align="center">
       </el-table-column>
+      <el-table-column prop="source" label="来源" width="180" align="center" >
+      </el-table-column>
       <el-table-column prop="time" label="时间" align="center" width="180">
         <template slot-scope="props">
           <span>{{props.row.time | dateTime('yyyy-MM-dd hh:mm:ss')}}</span>
