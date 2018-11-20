@@ -60,7 +60,7 @@
       </div>
       <div class="dialog-container">
         <el-table class="table" header-cell-class-name="tableHeader" :data="commentTableData" v-loading="loading2" element-loading-text="拼命加载中" border stripe>
-          <el-table-column type="selection" width="55" align="center" label-class-name="checkLabel">
+          <el-table-column type="index" width="55" align="center">
           </el-table-column>
           <el-table-column prop="useId" label="评论人" align="center">
           </el-table-column>

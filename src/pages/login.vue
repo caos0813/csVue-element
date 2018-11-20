@@ -90,6 +90,7 @@ export default ({
   height: 100%;
   align-items: stretch;
   background: url("~/static/images/login_bg.jpg") no-repeat;
+  background-size: cover;
   display: flex;
   align-items: center;
   justify-content: center;
