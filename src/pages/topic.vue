@@ -87,7 +87,6 @@
 </template>
 <script>
 import Tinymce from '@/components/Tinymce'
-import draggable from 'vuedraggable'
 import { api } from '@/utils'
 import { picker } from '@/components'
 export default {
@@ -138,8 +137,7 @@ export default {
   },
   components: {
     Tinymce,
-    picker,
-    draggable
+    picker
   },
   methods: {
     modeChange (e) {
