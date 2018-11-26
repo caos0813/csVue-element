@@ -255,7 +255,7 @@ export default {
           let list = []
           let provincesIds = this.form.provincesIds
           let provincesData = this.provincesData
-          if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'release') {
+          /* if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'release' || process.env.NODE_ENV === 'beta') {
             for (let x in provincesData) {
               provincesIds.map((item) => {
                 if (provincesData[x].name === item) {
@@ -265,11 +265,22 @@ export default {
                 return list
               })
             }
-          } else if (process.env.NODE_ENV === 'production') {
+          } */
+          if (process.env.NODE_ENV === 'production') {
             for (let x in provincesData) {
               provincesIds.map((item) => {
                 if (provincesData[x].name === item) {
                   list.push('pro_' + provincesData[x].code)
+                }
+                return list
+              })
+            }
+          } else {
+            for (let x in provincesData) {
+              provincesIds.map((item) => {
+                if (provincesData[x].name === item) {
+                  list.push('dev_' + provincesData[x].code)
+                  // list.push('pro_' + provincesData[x].code)
                 }
                 return list
               })
@@ -349,7 +360,7 @@ export default {
       this.$fly.get(api.getProvinceIds).then(data1 => {
         this.povincesDataById = data1
         console.log(process.env.NODE_ENV)
-        if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'release') {
+        /* if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'release' || process.env.NODE_ENV === 'beta') {
           provinces.map(item => {
             item['disabled'] = true
             for (let i = 0; i < data1.length; i++) {
@@ -360,11 +371,23 @@ export default {
             }
           })
           console.log(provinces)
-        } else if (process.env.NODE_ENV === 'production') {
+        } */
+        if (process.env.NODE_ENV === 'production') {
           provinces.map(item => {
             item['disabled'] = true
             for (let i = 0; i < data.length; i++) {
               if (data1[i] === 'pro_' + item.code) {
+                item['disabled'] = false
+                break
+              }
+            }
+          })
+          console.log(provinces)
+        } else {
+          provinces.map(item => {
+            item['disabled'] = true
+            for (let i = 0; i < data1.length; i++) {
+              if (data1[i] === 'dev_' + item.code) {
                 item['disabled'] = false
                 break
               }
