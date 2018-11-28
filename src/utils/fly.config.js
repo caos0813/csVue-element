@@ -42,6 +42,7 @@ fly.interceptors.response.use(
 )
 // 配置请求基地址
 console.log(process.env.NODE_ENV)
+// process.env.NODE_ENV = 'production'
 fly.config.baseURL = (function () {
   let baseURL
   if (process.env.NODE_ENV === 'development') {

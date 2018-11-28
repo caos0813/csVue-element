@@ -365,7 +365,7 @@ export default {
         if (process.env.NODE_ENV === 'production') {
           provinces.map(item => {
             item['disabled'] = true
-            for (let i = 0; i < data.length; i++) {
+            for (let i = 0; i < data1.length; i++) {
               if (data1[i] === 'pro_' + item.code) {
                 item['disabled'] = false
                 break
