@@ -1,0 +1,2 @@
+webpackJsonp([4],{"2NXm":function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var s=function(){var e=this.$createElement;return(this._self._c||e)("div",{staticClass:"page"},[this._v("\n  index\n")])};s._withStripped=!0;var i={render:s,staticRenderFns:[]},r=i;var a=n("VU/8")({},r,!1,null,null,null);a.options.__file="src/pages/index.vue";t.default=a.exports}});
+//# sourceMappingURL=4.99065ffc0c67f49ca340.js.map

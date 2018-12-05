@@ -9,13 +9,15 @@
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue src",
     "release": "cross-env NODE_ENV='release' node build/build.js",
-    "prod": "cross-env NODE_ENV='production' node build/build.js"
+    "release:server": "cross-env NODE_ENV='release' node config/dist.server.js",
+    "prod": "cross-env NODE_ENV='production' node build/build.js",
+    "prod:server": "cross-env NODE_ENV='prod' node config/dist.server.js"
   },
   "dependencies": {
     "element-ui": "^2.4.11",
     "flyio": "^0.6.5",
-    "js-cookie": "^2.2.0",
     "image-compressor.js": "^1.1.4",
+    "js-cookie": "^2.2.0",
     "vue": "^2.5.2",
     "vue-lodash": "^2.0.0",
     "vue-router": "^3.0.1",
