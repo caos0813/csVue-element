@@ -55,7 +55,6 @@ export default {
       this.$emit('pagination', { page: this.currentPage, limit: e })
     },
     currentChange (e) {
-      // this.$emit('currentChange', e)
       this.$emit('pagination', { page: e, limit: this.pageSize })
     }
   }
