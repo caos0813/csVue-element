@@ -60,3 +60,16 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.page-wrap {
+  text-align: center; // padding: 25px 15px;
+  padding: 20px 15px;
+  position: fixed;
+  bottom: 0;
+  left: 200px;
+  right: 0;
+  background-color: #fff;
+  border-top: 1px solid #eee;
+  z-index: 999;
+}
+</style>

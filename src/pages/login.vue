@@ -41,6 +41,7 @@ export default {
             Authorization: `Bearer ${data.token}`
           }
         })
+        console.log(uploadConfig)
         Cookies.set('user', {
           userName: this.params.userName,
           token: data.token,

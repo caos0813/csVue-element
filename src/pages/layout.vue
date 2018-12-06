@@ -21,45 +21,27 @@
     <el-container> -->
     <!-- :collapse-transition="false" -->
     <div class="sidebar-container">
-      <el-menu default-active="0" :show-timeout="200" :collapse="isCollapse" router @open="handleOpen" @close="handleClose">
-        <el-menu-item index="0" class="logo" popper-class="logo-popper">
-          <!-- <div></div> -->
+      <el-menu :default-active="$route.path" :default-openeds="defaultOpeneds" :show-timeout="200" :collapse="isCollapse" router @open="handleOpen" @close="handleClose">
+        <el-menu-item index="" class="logo" popper-class="logo-popper">
           <i :class="{'hide':!isCollapse}">Jun</i>
           <span slot="title">JunYang Admin</span>
         </el-menu-item>
-        <el-menu-item index="0">
+        <el-menu-item index="0" :route="{name:'index'}">
           <i class="el-icon-tickets"></i>
           <span slot="title">首页</span>
         </el-menu-item>
-        <el-submenu index="1">
+        <el-submenu :index="(index+1).toString()" v-for="(item,index) in navData" :key="index">
           <template slot="title">
             <i class="el-icon-tickets"></i>
-            <span>知涯志愿</span>
+            <span>{{item.name}}{{index+1}}</span>
           </template>
-          <el-submenu index="1-1">
+          <el-submenu :index="`${index+1}-${lIndex+1}`" v-for="(lItem,lIndex) in item.list" :key="lIndex">
             <template slot="title">
               <i class="el-icon-menu"></i>
-              <span>专题</span>
+              <span>{{lItem.name}}</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="1-1-1">大学</el-menu-item>
-              <el-menu-item index="1-1-2">专业</el-menu-item>
-              <el-menu-item index="1-1-3">职业</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-        </el-submenu>
-        <el-submenu index="2">
-          <template slot="title">
-            <i class="el-icon-tickets"></i>
-            <span slot="title">知涯选科</span>
-          </template>
-          <el-submenu index="2-1">
-            <template slot="title">
-              <i class="el-icon-menu"></i>
-              <span>文章</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="2-1-1" :route="{name:'xuanke/article-list'}">大学</el-menu-item>
+              <el-menu-item :index="`${index+1}-${lIndex+1}-${sIndex+1}`" v-for="(sItem,sIndex) in lItem.subNav" :key="sIndex" :route="{name:`${sItem.url}`}">{{sItem.name}}</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
         </el-submenu>
@@ -69,9 +51,11 @@
       <div class="bar">
         <div class="breadcrumb-wrap">
           <i :class="isCollapse?'el-icon-d-arrow-right':'el-icon-d-arrow-left'" @click="collapse"></i>
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item>首页</el-breadcrumb-item>
-          </el-breadcrumb>
+          <el-menu :default-active="horizontalActiveIndex" class="el-menu-demo" mode="horizontal" text-color="#000" active-text-color="#fff" background-color="#409EFF">
+            <el-menu-item index="0" :route="{name:'index'}">首页</el-menu-item>
+            <!-- <el-menu-item index="1">知涯志愿</el-menu-item>
+            <el-menu-item index="2" :route="{name:'xuanke/article-list'}">知涯选科</el-menu-item> -->
+          </el-menu>
         </div>
         <el-dropdown>
           <span>
@@ -95,7 +79,86 @@ import Cookies from 'js-cookie'
 export default {
   data () {
     return {
-      isCollapse: false
+      defaultOpeneds: ['2'],
+      isCollapse: false,
+      horizontalActiveIndex: '0',
+      navData: [{
+        name: '知涯志愿',
+        list: [{
+          name: '专题管理',
+          subNav: [{
+            name: '大学'
+          }, {
+            name: '专业'
+          }, {
+            name: '职业'
+          }, {
+            name: '生涯规划'
+          }]
+        }, {
+          name: '文章管理',
+          subNav: [{
+            name: '大学'
+          }, {
+            name: '专业'
+          }, {
+            name: '职业'
+          }, {
+            name: '生涯规划'
+          }, {
+            name: '志愿问答'
+          }]
+        }, {
+          name: 'banner管理',
+          subNav: [{
+            name: '首页'
+          }, {
+            name: '生涯规划'
+          }]
+        }, {
+          name: '志愿卡管理',
+          subNav: [{
+            name: '开卡管理'
+          }]
+        }]
+      }, {
+        name: '知涯选科',
+        list: [{
+          name: '内容管理',
+          subNav: [{
+            name: '专题',
+            url: 'xuanke/special-list'
+          }, {
+            name: '文章',
+            url: 'xuanke/article-list'
+          }, {
+            name: '话题',
+            url: 'xuanke/topic-list'
+          }]
+        }, {
+          name: '志愿卡管理',
+          subNav: [{
+            name: '开卡管理'
+          }, {
+            name: '使用管理'
+          }]
+        }, {
+          name: '个人中心',
+          subNav: [{
+            name: '反馈'
+          }]
+        }, {
+          name: '交易管理',
+          subNav: [{
+            name: '订单'
+          }]
+        }, {
+          name: 'banner图管理',
+          subNav: [{
+            name: 'banner图'
+          }]
+        }]
+      }]
     }
   },
   computed: {
@@ -104,12 +167,14 @@ export default {
     }
   },
   methods: {
+    // 退出登录
     signOut () {
       Cookies.remove('user')
       this.$router.replace({
         name: 'login'
       })
     },
+    // 展开/收缩
     collapse () {
       this.isCollapse = !this.isCollapse
     },
@@ -180,6 +245,10 @@ $width: 200px;
         padding: 0 20px;
         line-height: $height;
         font-size: $font-size-18;
+      }
+      .el-menu--horizontal > .el-menu-item.is-active,
+      .el-menu--horizontal > .el-menu-item {
+        border-bottom-width: 0;
       }
     }
   }

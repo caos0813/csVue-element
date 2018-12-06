@@ -49,6 +49,9 @@ img {
   padding: 70px 0;
   box-sizing: border-box;
 }
+.full {
+  width: 100% !important;
+}
 .tools-bar {
   display: flex;
   border-bottom: 1px solid $gray;

@@ -53,8 +53,31 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination ref="pageInfo" :total="pageInfo.totalElements" :page.sync="pageInfo.currentPage" @sizeChange="getData" @currentChange="getData"></pagination>
-    <!-- <drawer v-model="visible" @on-close="handleClose"></drawer> -->
+    <pagination ref="pageInfo" :total="pageInfo.totalElements" :page.sync="pageInfo.currentPage" @pagination="pagination"></pagination>
+    <drawer class="drawer-components" v-model="visible" title="推送" width="60" placement="right" @bodyClick="handleBodyClick">
+      <el-form :model="form" inline-message ref="form" :rules="sendRules" label-suffix=":" label-width="100px">
+        <el-form-item label='被推送的标题'>
+          <label v-for="(item,index) in checkData" :key="index">{{item.title}}</label>
+        </el-form-item>
+        <el-form-item label="推送时间" prop="sendTime">
+          <el-radio v-model="form.radio" label="1">直接推送</el-radio>
+          <br />
+          <el-radio v-model="form.radio" label="2">定时推送</el-radio>
+          <el-date-picker v-model="form.sendTime" type="datetime" size="small" :picker-options="pickerOptions2" value-format="timestamp" placeholder="请选择发布时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="推送范围" prop="sendRange">
+          <el-checkbox :indeterminate="form.isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全国</el-checkbox>
+          <el-checkbox-group v-model="form.provincesIds" @change="handleCheckedCitiesChange">
+            <el-checkbox v-for="(item,index) in provincesData" :key="index" :label="item.name" :disabled="item.disabled" :min="1">{{item.name}}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+      </el-form>
+      <template slot="footer">
+        <el-button @click="cancel" size="small">取消</el-button>
+        <el-button type="primary" size="small" @click="sendFn('send')">确定</el-button>
+      </template>
+    </drawer>
   </div>
 </template>
 <script>
@@ -85,7 +108,10 @@ export default {
       },
       checkData: [],
       pickerVal: [],
-      pageInfo: {},
+      pageInfo: {
+        totalElements: 0,
+        currentPage: 1
+      },
       tableData: [],
       loading: false,
       sendDialog: false,
@@ -109,9 +135,6 @@ export default {
       provincesData: [],
       povincesDataById: [],
       bannerId: '',
-      popoverIsClose: false,
-      startAnimate: false,
-      closeAnimate: false,
       visible: false
     }
   },
@@ -130,12 +153,10 @@ export default {
       // this.checkIds = this.lodash.map(e, 'id')
       // console.log(this.checkIds)
     },
-    currentChange (e) {
-      this.params.page = e
-      this.getData(this.params)
-    },
-    sizeChange (e) {
-      this.params.size = e
+    // 分页
+    pagination (e) {
+      this.params.page = e.page
+      this.params.size = e.limit
       this.getData(this.params)
     },
     reset () {
@@ -162,10 +183,12 @@ export default {
       params.specialTopicId = this.pickerVal[1]
       this.loading = true
       this.$fly.get(api.articleList, params).then(data => {
-        this.loading = false
+        setTimeout(() => {
+          this.loading = false
+        }, 1000)
         this.tableData = data.content
         this.pageInfo = {
-          totalElements: data.totalElements,
+          totalElements: parseInt(data.totalElements),
           currentPage: params.page + 1
         }
       })
@@ -174,19 +197,13 @@ export default {
       this.visible = true
       this.sendDialog = true
       this.bannerId = id
-      this.popoverIsClose = true
-      this.startAnimate = true
-      this.closeAnimate = false
       this.form = {
         radio: '1',
         sendTime: '',
         isIndeterminate: true,
         provincesIds: []
       }
-      // this.$refs['form'].resetFields()
-    },
-    handleClose () {
-      this.visible = false
+      this.$refs['form'].resetFields()
     },
     // 全选
     handleCheckAllChange (val) {
@@ -211,12 +228,12 @@ export default {
       this.checkAll = checkedCount === this.provincesData.length
       this.form.isIndeterminate = checkedCount > 0 && checkedCount < this.provincesData.length
     },
+    // 取消
     cancel () {
       this.$refs['form'].resetFields()
-      this.popoverIsClose = true
-      this.closeAnimate = true
-      this.startAnimate = false
+      this.visible = false
     },
+    // 推送
     sendFn (type) {
       this.$refs['form'].validate((valid) => {
         if (valid) {
@@ -224,17 +241,6 @@ export default {
           let list = []
           let provincesIds = this.form.provincesIds
           let provincesData = this.provincesData
-          /* if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'release' || process.env.NODE_ENV === 'beta') {
-            for (let x in provincesData) {
-              provincesIds.map((item) => {
-                if (provincesData[x].name === item) {
-                  list.push('dev_' + provincesData[x].code)
-                  // list.push('pro_' + provincesData[x].code)
-                }
-                return list
-              })
-            }
-          } */
           if (process.env.NODE_ENV === 'production') {
             for (let x in provincesData) {
               provincesIds.map((item) => {
@@ -249,7 +255,6 @@ export default {
               provincesIds.map((item) => {
                 if (provincesData[x].name === item) {
                   list.push('dev_' + provincesData[x].code)
-                  // list.push('pro_' + provincesData[x].code)
                 }
                 return list
               })
@@ -266,7 +271,6 @@ export default {
             provinceIds: `${list}`,
             area: area
           }
-          console.log(params)
           if (this.form.radio === '1') {
             url = api[`bannerSend`]
           } else if (this.form.radio === '2') {
@@ -288,36 +292,19 @@ export default {
                 duration: 2000,
                 type: 'error'
               })
-              this.popoverIsClose = true
-              this.closeAnimate = false
-              this.startAnimate = false
+              this.visible = false
             })
           }).catch(() => {
-            this.popoverIsClose = true
-            this.closeAnimate = false
-            this.startAnimate = false
+            this.visible = false
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
     },
-    close () {
-      this.closeAnimate = true
-      this.popoverIsClose = true
-      this.startAnimate = false
-    },
     handleBodyClick (e) {
       let _this = this
-      let event = e || window.e
-      let comSelect = document.getElementById('dialog-wrap')
-      if (comSelect) {
-        let flag = comSelect.contains(event.target)
-        if (flag) return
-        // _this.popoverIsClose = false
-        _this.closeAnimate = true
-      }
+      _this.visible = e
     }
   },
   created () {
@@ -327,18 +314,6 @@ export default {
       this.provincesData = provinces
       this.$fly.get(api.getProvinceIds).then(data1 => {
         this.povincesDataById = data1
-        console.log(process.env.NODE_ENV)
-        /* if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'release' || process.env.NODE_ENV === 'beta') {
-          provinces.map(item => {
-            item['disabled'] = true
-            for (let i = 0; i < data1.length; i++) {
-              if (data1[i] === 'dev_' + item.code) {
-                item['disabled'] = false
-                break
-              }
-            }
-          })
-        } */
         if (process.env.NODE_ENV === 'production') {
           provinces.map(item => {
             item['disabled'] = true
@@ -366,18 +341,17 @@ export default {
   },
   mounted () {
     let _this = this
-    // _this.params.size = _this.$refs.pageInfo.pageSizes[0]
-    if (!_this.popoverIsClose) {
-      document.addEventListener('click', this.handleBodyClick)
-    }
-  },
-  destroyed () {
-    document.removeEventListener('click', this.handleBodyClick)
+    _this.params.size = _this.$refs.pageInfo.pageSizes[0]
   }
 }
 </script>
 <style lang="scss">
-.checkLabel > .el-checkbox {
-  display: none;
+.drawer-components {
+  .el-checkbox {
+    min-width: 120px;
+    & + .el-checkbox {
+      margin-left: 0px;
+    }
+  }
 }
 </style>
