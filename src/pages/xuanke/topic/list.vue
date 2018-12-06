@@ -54,7 +54,7 @@
     </el-table>
     <!-- <page ref="pageInfo" :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page> -->
     <pagination ref="pageInfo" :total="pageInfo.totalElements" :page.sync="pageInfo.currentPage" @pagination="pagination"></pagination>
-   <!--  <div class="dialog-wrap" id="dialog-wrap" :class="{'start':startAnimate,'close':closeAnimate,'hide':!popoverIsClose}">
+    <!--  <div class="dialog-wrap" id="dialog-wrap" :class="{'start':startAnimate,'close':closeAnimate,'hide':!popoverIsClose}">
       <div class="dialog-header">
         <span class="title">评论</span>
         <el-button type="text" class="btn-close" icon="el-icon-close" @click="close"></el-button>
@@ -86,7 +86,7 @@
 </template>
 <script>
 import { api, confirm } from '@/utils'
-import { picker, listHandle, pagination } from '@/components'
+import { picker, listHandle, pagination, drawer } from '@/components'
 export default {
   data () {
     return {
@@ -119,7 +119,8 @@ export default {
   components: {
     picker,
     listHandle,
-    pagination
+    pagination,
+    drawer
   },
   methods: {
     lookComment (row) {
