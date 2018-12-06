@@ -86,7 +86,7 @@
 </template>
 <script>
 import { api, confirm } from '@/utils'
-import { picker, listHandle, pagination } from '@/components'
+import { picker, listHandle, pagination, drawer } from '@/components'
 export default {
   data () {
     return {
@@ -119,7 +119,8 @@ export default {
   components: {
     picker,
     listHandle,
-    pagination
+    pagination,
+    drawer
   },
   methods: {
     lookComment (row) {
