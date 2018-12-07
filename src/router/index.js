@@ -60,13 +60,13 @@ export default new Router({
         name: 'xuanke/order-list',
         component: () => import('@/pages/xuanke/order/list')
       }, {
-        path: '/xuanke/banner-list',
-        name: 'xuanke/banner-list',
-        component: () => import('@/pages/xuanke/banner/list')
+        path: '/zhiyuan/banner-list',
+        name: 'zhiyuan/banner-list',
+        component: () => import('@/pages/zhiyuan/banner/list')
       }, {
-        path: '/xuanke/banner:type',
-        name: 'xuanke/banner',
-        component: () => import('@/pages/xuanke/banner/add')
+        path: '/zhiyuan/banner:type',
+        name: 'zhiyuan/banner',
+        component: () => import('@/pages/zhiyuan/banner/add')
       }, {
         path: '/system/authority',
         name: 'system/authority',

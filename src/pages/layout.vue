@@ -33,7 +33,7 @@
         <el-submenu :index="(index+1).toString()" v-for="(item,index) in navData" :key="index">
           <template slot="title">
             <i class="el-icon-tickets"></i>
-            <span>{{item.name}}{{index+1}}</span>
+            <span>{{item.name}}</span>
           </template>
           <el-submenu :index="`${index+1}-${lIndex+1}`" v-for="(lItem,lIndex) in item.list" :key="lIndex">
             <template slot="title">
@@ -111,7 +111,8 @@ export default {
         }, {
           name: 'banner管理',
           subNav: [{
-            name: '首页'
+            name: '首页',
+            url: 'zhiyuan/banner-list'
           }, {
             name: '生涯规划'
           }]
@@ -155,12 +156,6 @@ export default {
           subNav: [{
             name: '订单',
             url: 'xuanke/order-list'
-          }]
-        }, {
-          name: 'banner图管理',
-          subNav: [{
-            name: 'banner图',
-            url: 'xuanke/banner-list'
           }]
         }]
       }]
