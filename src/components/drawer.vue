@@ -15,7 +15,7 @@
         <div :class="`${prefixCls}-body`">
           <slot></slot>
         </div>
-        <div :class="`${prefixCls}-footer`">
+        <div :class="`${prefixCls}-footer`" v-if="showFooter">
           <slot name="footer"></slot>
         </div>
       </div>
@@ -51,6 +51,10 @@ export default {
     showHead: {
       type: Boolean,
       default: true
+    },
+    showFooter: {
+      type: Boolean,
+      default: false
     },
     placement: {
       validator (value) {

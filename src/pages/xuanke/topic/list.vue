@@ -54,6 +54,28 @@
     </el-table>
     <!-- <page ref="pageInfo" :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page> -->
     <pagination ref="pageInfo" :total="pageInfo.totalElements" :page.sync="pageInfo.currentPage" @pagination="pagination"></pagination>
+    <drawer class="drawer-components" v-model="visible" title="评论" width="60" placement="right" @bodyClick="handleBodyClick">
+      <el-table class="table" header-cell-class-name="tableHeader" :data="commentTableData" v-loading="loading2" element-loading-text="拼命加载中" border stripe>
+        <el-table-column type="index" width="55" align="center">
+        </el-table-column>
+        <el-table-column prop="useId" label="评论人" align="center">
+        </el-table-column>
+        <el-table-column label="内容" align="center" min-width="180" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <span>{{ scope.row.commentContent }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" width="200" align="center">
+          <template slot-scope="scope">{{ scope.row.commentTime | dateTime('yyyy-MM-dd hh:mm:ss')}}</template>
+        </el-table-column>
+        <el-table-column label="操作" width="100" align="center">
+          <template slot-scope="scope">
+            <el-button type="text " size="mini" @click.stop="handleDelete(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <pagination ref="commentPageInfo" :total="commentPageInfo.totalElements" :page.sync="commentPageInfo.currentPage" @pagination="commentPagination"></pagination>
+    </drawer>
     <!--  <div class="dialog-wrap" id="dialog-wrap" :class="{'start':startAnimate,'close':closeAnimate,'hide':!popoverIsClose}">
       <div class="dialog-header">
         <span class="title">评论</span>
@@ -104,16 +126,17 @@ export default {
       },
       tableData: [],
       loading: false,
-      popoverIsClose: false,
-      startAnimate: false,
-      closeAnimate: false,
+      visible: false,
       loading2: false,
       commentParams: {
         themeInfoId: '',
         page: 1
       },
       commentTableData: [],
-      commentPageInfo: {}
+      commentPageInfo: {
+        totalElements: 0,
+        currentPage: 1
+      }
     }
   },
   components: {
@@ -123,10 +146,9 @@ export default {
     drawer
   },
   methods: {
+    // 查看评论
     lookComment (row) {
-      this.popoverIsClose = true
-      this.startAnimate = true
-      this.closeAnimate = false
+      this.visible = true
       this.commentParams = {
         page: 1,
         themeInfoId: row.id,
@@ -145,6 +167,7 @@ export default {
         this.checkData.push({ id: item.id, status: item.status })
       })
     },
+    // 话题列表分页操作事件
     pagination (e) {
       this.params.page = e.page
       this.params.size = e.limit
@@ -183,6 +206,11 @@ export default {
           currentPage: params.page + 1
         }
       })
+    },
+    commentPagination (e) {
+      this.commentParams.page = e.page
+      this.commentParams.size = e.limit
+      this.getCommentData(this.commentParams)
     },
     // 删除话题
     handleDelete (row) {
@@ -227,7 +255,7 @@ export default {
         this.loading2 = false
         this.commentTableData = data.content
         this.commentPageInfo = {
-          totalElements: data.totalElements,
+          totalElements: parseInt(data.totalElements),
           currentPage: params.page + 1
         }
       })

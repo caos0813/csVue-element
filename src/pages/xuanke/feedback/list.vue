@@ -1,0 +1,175 @@
+<template>
+  <div class="page">
+    <div class="tools-bar">
+      <div class="left-wrap">
+        <el-date-picker v-model="date" class='date-picker-wrap' size="small" type="daterange" unlink-panels range-separator="至 " start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" @change="dateChange" value-format="timestamp">
+        </el-date-picker>
+        <el-input prefix-icon="el-icon-search" placeholder="请输入昵称" v-model="name" size="small"></el-input>
+        <el-input prefix-icon="el-icon-search" placeholder="请输入手机号" v-model="phoneNum" size="small"></el-input>
+        <el-button size="small" type="primary" @click="search">查询</el-button>
+        <el-button size="small" type="warning" @click="reset">重置</el-button>
+      </div>
+    </div>
+    <el-table :data="tableData" :header-cell-style="{background:'#F5F7FA'}" v-loading="loading" element-loading-text="拼命加载中" border stripe>
+      <el-table-column type="index" width="50" align="center">
+      </el-table-column>
+      <el-table-column prop="name" label="昵称" width="180" align="center">
+      </el-table-column>
+      <el-table-column prop="phoneNum" label="手机号" width="120" align="center">
+      </el-table-column>
+      <el-table-column prop="source" label="来源" width="180" align="center" >
+      </el-table-column>
+      <el-table-column prop="time" label="时间" align="center" width="180">
+        <template slot-scope="props">
+          <span>{{props.row.time | dateTime('yyyy-MM-dd hh:mm:ss')}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="content" label="反馈内容" align="center" show-overflow-tooltip>
+      </el-table-column>
+    </el-table>
+    <!-- <div class="page-wrap text-left padding ">
+      <el-pagination background layout="total, prev, pager, next, jumper" :total="pageInfo.totalElements" :current-page="pageInfo.currentPage" :page-sizes="[100, 200, 300, 400]" :page-size="100" @current-change="currentChange">
+      </el-pagination>
+    </div> -->
+    <!-- <page ref="pageInfo" :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page> -->
+    <pagination ref="pageInfo" :total="pageInfo.totalElements" :page.sync="pageInfo.currentPage" @pagination="pagination"></pagination>
+  </div>
+</template>
+<script>
+import { api } from '@/utils'
+import { pagination } from '@/components'
+export default {
+  data () {
+    return {
+      date: null,
+      pickerOptions2: {
+        disabledDate (time) {
+          return time.getTime() > Date.now()
+        },
+        shortcuts: [{
+          text: '今天',
+          onClick (picker) {
+            picker.$emit('pick', [new Date(), new Date()])
+          }
+        }, {
+          text: '最近一周',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近三个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            picker.$emit('pick', [start, end])
+          }
+        }]
+      },
+      name: '',
+      phoneNum: '',
+      tableData: [],
+      pageInfo: {
+        totalElements: 0,
+        currentPage: 1
+      },
+      loading: false,
+      // pageSize: 16,
+      pageSizes: [100, 200, 300, 400]
+    }
+  },
+  computed: {
+    params () {
+      return {
+        page: 1,
+        // size: 10,
+        beginTime: this.date ? this.date[0] : null,
+        endTime: this.date ? this.date[1] : null,
+        phoneNum: this.phoneNum,
+        name: this.name
+      }
+    }
+  },
+  components: {
+    pagination
+  },
+  methods: {
+    dateChange (e) {
+      let beginTime = new Date(e[0])
+      let endTime = new Date(e[1])
+      e[0] = new Date(beginTime.getFullYear() + '-' + (beginTime.getMonth() + 1) + '-' + beginTime.getDate() + ' 00:00:00').getTime()
+      e[1] = new Date(endTime.getFullYear() + '-' + (endTime.getMonth() + 1) + '-' + endTime.getDate() + ' 23:59:59').getTime()
+      this.params.beginTime = e[0]
+      this.params.endTime = e[1]
+      this.getData(this.params)
+    },
+    /* currentChange (e) {
+      this.params.page = e
+      this.getData(this.params)
+    },
+    sizeChange (e) {
+      this.params.size = e
+      this.getData(this.params)
+    }, */
+    // 列表分页操作事件
+    pagination (e) {
+      this.params.page = e.page
+      this.params.size = e.limit
+      this.getData(this.params)
+    },
+    search () {
+      this.params.phoneNum = this.phoneNum
+      this.params.name = this.name
+      this.getData(this.params)
+    },
+    reset () {
+      this.date = null
+      this.phoneNum = ''
+      this.name = ''
+      this.params = {
+        page: 1,
+        size: 15,
+        beginTime: this.date ? this.date[0] : null,
+        endTime: this.date ? this.date[1] : null,
+        phoneNum: '',
+        name: ''
+      }
+      this.getData(this.params)
+    },
+    getData (params) {
+      params.page--
+      this.loading = true
+      this.$fly.get(api.getFeedback, params).then(data => {
+        setTimeout(() => {
+          this.loading = false
+        }, 1000)
+        let { content, totalElements } = data
+        this.pageInfo = {
+          totalElements: parseInt(totalElements),
+          currentPage: params.page + 1
+        }
+        this.tableData = content
+      })
+    }
+  },
+  created () {
+    this.getData(this.params)
+  },
+  mounted () {
+    this.params.size = this.$refs.pageInfo.pageSizes[0]
+  }
+}
+</script>
+<style lang="scss">
+</style>

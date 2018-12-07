@@ -138,24 +138,29 @@ export default {
         }, {
           name: '志愿卡管理',
           subNav: [{
-            name: '开卡管理'
+            name: '开卡管理',
+            url: 'xuanke/volunteer-list'
           }, {
-            name: '使用管理'
+            name: '使用管理',
+            url: 'xuanke/volunteer-use'
           }]
         }, {
           name: '个人中心',
           subNav: [{
-            name: '反馈'
+            name: '反馈',
+            url: 'xuanke/feedback-list'
           }]
         }, {
           name: '交易管理',
           subNav: [{
-            name: '订单'
+            name: '订单',
+            url: 'xuanke/order-list'
           }]
         }, {
           name: 'banner图管理',
           subNav: [{
-            name: 'banner图'
+            name: 'banner图',
+            url: 'xuanke/banner-list'
           }]
         }]
       }]

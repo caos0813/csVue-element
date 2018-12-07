@@ -1,10 +1,49 @@
 <template>
   <div class="page">
-    index
+    <div class="box-wrap">
+      <router-link :to="{name:'xuanke/special-list'}" tag="a" class="ceil">
+        专题
+      </router-link>
+      <router-link :to="{name:'xuanke/article-list'}" tag="a" class="ceil">
+        文章
+      </router-link>
+      <router-link :to="{name:'xuanke/topic-list'}" tag="a" class="ceil">
+        话题
+      </router-link>
+      <router-link :to="{name:'xuanke/volunteer-list'}" tag="a" class="ceil">
+        开卡管理
+      </router-link>
+      <router-link :to="{name:'xuanke/volunteer-use'}" tag="a" class="ceil">
+        志愿卡使用管理
+      </router-link>
+      <router-link :to="{name:'xuanke/feedback-list'}" tag="a" class="ceil">
+        反馈
+      </router-link>
+      <router-link :to="{name:'xuanke/order-list'}" tag="a" class="ceil">
+        订单
+      </router-link>
+      <router-link :to="{name:'xuanke/banner-list'}" tag="a" class="ceil">
+        banner图
+      </router-link>
+    </div>
   </div>
 </template>
-<script>
-export default {
-
+<style lang="scss" scoped>
+.page {
+  padding: 20px;
 }
-</script>
+.box-wrap {
+  display: flex;
+  .ceil {
+    padding: 20px;
+    border-radius: 5px;
+    background: $color-primary;
+    line-height: 40px;
+    color: #fff;
+    width: 120px;
+    margin: 5px;
+    text-align: center;
+    font-size: 16px;
+  }
+}
+</style>

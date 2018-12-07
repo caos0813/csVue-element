@@ -47,6 +47,30 @@ export default new Router({
         path: '/xuanke/topic/:type',
         name: 'xuanke/topic',
         component: () => import('@/pages/xuanke/topic/add')
+      }, {
+        path: '/xuanke/volunteer-list',
+        name: 'xuanke/volunteer-list',
+        component: () => import('@/pages/xuanke/volunteer/list')
+      }, {
+        path: '/xuanke/volunteer-use',
+        name: 'xuanke/volunteer-use',
+        component: () => import('@/pages/xuanke/volunteer/use')
+      }, {
+        path: '/xuanke/order-list',
+        name: 'xuanke/order-list',
+        component: () => import('@/pages/xuanke/order/list')
+      }, {
+        path: '/xuanke/banner-list',
+        name: 'xuanke/banner-list',
+        component: () => import('@/pages/xuanke/banner/list')
+      }, {
+        path: '/xuanke/banner:type',
+        name: 'xuanke/banner',
+        component: () => import('@/pages/xuanke/banner/add')
+      }, {
+        path: '/system/authority',
+        name: 'system/authority',
+        component: () => import('@/pages/system/authority')
       }]
     }
   ]
