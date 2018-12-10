@@ -22,7 +22,6 @@ Vue.use(ElementUI)
 Vue.component('back', back)
 Vue.mixin(filters)
 Vue.mixin(toState)
-/* eslint-disable no-new */
 router.beforeEach((to, from, next) => {
   let { token } = Cookies.getJSON('user') ? Cookies.getJSON('user') : ''
   if (to.meta.requireAuth && !token) {
@@ -33,6 +32,7 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+/* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
