@@ -4,6 +4,7 @@
 
 const path = require('path')
 console.log(process.env.NODE_ENV)
+console.log(process.env.CORS)
 module.exports = {
   dev: {
 
@@ -11,18 +12,17 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/cors': {
+      '/api': {
         target: 'http://' + process.env.CORS,
         changeOrigin: true,
         pathRewrite: {
-          '^/cors': ''
+          '^/api': ''
         }
       }
     },
+
     // Various Dev Server settings
-    // host: 'localhost', // can be overwritten by process.env.HOST
-    // host: 'localhost',
-    host: '0.0.0.0',
+    host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,
@@ -65,7 +65,7 @@ module.exports = {
      * Source Maps
      */
 
-    productionSourceMap: false,
+    productionSourceMap: true,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 

@@ -75,6 +75,7 @@ export default {
     async upload (option) {
       let ret
       let relativePath = this.path
+      console.log(Cookies.getJSON('user'))
       let uploadConfig = Cookies.getJSON('user').uploadConfig
       // 分片上传文件
       let client = new OSS({

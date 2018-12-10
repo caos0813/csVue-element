@@ -42,16 +42,6 @@ export default {
       default: 1
     }
   },
-  /* computed: {
-    pickerIds: {
-      get () {
-        return this.value
-      },
-      set (val) {
-        this.pickerVal = val
-      }
-    }
-  }, */
   watch: {
     value: {
       handler (val, oldVal) {
@@ -84,7 +74,6 @@ export default {
   created () {
     this.$fly.get(api.productAll).then(data => {
       this.firstData = data
-      console.log(data)
       if (!this.lodash.isUndefined(this.pickerVal[0])) {
         this.firstChange(this.pickerVal[0], true)
       }

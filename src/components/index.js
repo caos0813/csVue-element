@@ -1,7 +1,8 @@
-import upload from './upload.vue'
-import back from './back.vue'
-import Tinymce from './Tinymce'
+import upload from './upload'
 import picker from './picker'
 import listHandle from './list-handle'
-import page from './page'
-export { upload, back, Tinymce, picker, listHandle, page }
+import pagination from './pagination'
+import Tinymce from './Tinymce'
+import back from './back'
+import drawer from './drawer'
+export { upload, picker, listHandle, pagination, Tinymce, back, drawer }

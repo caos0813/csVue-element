@@ -18,13 +18,10 @@
 <script>
 import { api } from '@/utils'
 import Cookies from 'js-cookie'
-export default ({
+export default {
   data () {
     return {
-      a: null,
-      params: {
-
-      },
+      params: {},
       rules: {
         name: [
           { required: true, message: '请输入账号', trigger: 'change' }
@@ -44,6 +41,7 @@ export default ({
             Authorization: `Bearer ${data.token}`
           }
         })
+        console.log(uploadConfig)
         Cookies.set('user', {
           userName: this.params.userName,
           token: data.token,
@@ -82,7 +80,7 @@ export default ({
       })
     }
   }
-})
+}
 </script>
 <style lang='scss' scoped>
 .login-wrap {

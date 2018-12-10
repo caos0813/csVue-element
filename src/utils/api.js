@@ -1,79 +1,94 @@
 export default {
   login: '/security/login',
-  /* 获取所有省份 */
-  getProvinces: '/provinces/search/all',
-  /* 生成志愿卡 */
-  generate: '/membershipCard/generate',
-  /* 获取志愿卡 */
-  byCondition: '/membershipCardGenerateRecord/byCondition',
-  /* 获取会员卡 */
-  getMembershipCards: '/membershipCard/byCondition',
-  /* 根据会员卡id导出会员卡数据 的excel */
-  exportByRecordId: '/membershipCard/exportByRecordId',
-  /* 获取导出会员卡excel的token （需要登录） */
-  exportToken: 'membershipCard/exportToken/generate',
-  /* 获取反馈列表 */
-  getFeedback: 'feedback/getFeedback',
-  /* 获取上传图片凭证 */
-  uploadToken: 'secret/token',
   /* 查询所有类型 */
   productAll: '/product/queryAll',
-  /* 删除专题 */
-  specialDelete: '/specialTopic/delete',
-  /* 下架专题 */
-  specialSoldOut: '/specialTopic/soldOut',
-  /* 专题详情 */
-  specialDetail: 'specialTopic/queryById',
-  /* 新增修改专题 */
-  specialHandle: '/specialTopic/saveAndUpdate',
-  /* 查询专题列表 */
-  specialList: 'specialTopic/querySpecialTopic',
-  /* 文章列表 */
-  articleList: '/article/queryArticleByCondition',
-  articleDetail: '/article/queryById',
-  articleDelete: '/article/delete',
-  articleSoldOut: '/article/soldOut',
-  articleHandle: 'article/addAndUpdate',
-  topicList: '/gambit/queryByCondition',
-  topicHandle: '/gambit/addAndUpdate',
-  topicDelete: '/gambit/delete',
-  topicSoldOut: '/gambit/soldOut',
-  topicDetail: '/gambit/queryById',
-  topicHot: '/gambit/setHot',
-  topicDeleteVote: 'gambit/deleteVote',
-  /* 话题定时发布 */
-  gambitPublishDelay: 'gambit/publishDelay',
-  /* 话题立即发布 */
-  gambitPublishNow: 'gambit/publishNow',
-  /* 文章定时发布 */
-  articlePublishDelay: 'article/publishDelay',
-  /* 文章立即发布 */
-  articlePublishNow: 'article/publishNow',
-  /* 订单列表 */
-  getOrderList: '/order/getListByCondition',
-  /* banner图管理列表 */
-  bannerList: '/banner/queryByCondition',
-  /* banner图-保存为草稿 */
-  bannerSave: '/banner/save',
-  /* banner图-直接发布 */
-  bannerPublishNow: '/banner/publishNow',
-  /* banner图-定时发布 */
-  bannerPublishDelay: '/banner/publishDelay',
-  /* banner图-下架 */
-  bannerSoldOut: '/banner/soldOut',
-  /* banner图-删除 */
-  bannerDelete: 'banner/deleteByIds',
-  /* banner图-新增/编辑banner图 /banner/getOne */
-  bannerDetail: '/banner/getOne',
-  /* 直接推送 */
-  bannerSend: '/send/sendTo',
-  /* 定时推送 */
-  bannerSchedule: '/send/schedule',
+  /* 获取所有省份 */
+  getProvinces: '/provinces/search/all',
   /* 获取已有省份 */
   getProvinceIds: '/send/getProvinceIds',
-  /* 话题评论列表 */
+  /* 获取上传图片凭证 */
+  uploadToken: 'secret/token',
+  /* 专题 begin */
+  // 列表
+  specialList: 'specialTopic/querySpecialTopic',
+  // 详情
+  specialDetail: 'specialTopic/queryById',
+  // 下架
+  specialSoldOut: '/specialTopic/soldOut',
+  // 删除
+  specialDelete: '/specialTopic/delete',
+  // 新增修改
+  specialHandle: '/specialTopic/saveAndUpdate',
+  /* 专题 end */
+  /* 文章 begin */
+  // 列表
+  articleList: '/article/queryArticleByCondition',
+  // 详情
+  articleDetail: '/article/queryById',
+  // 删除
+  articleDelete: '/article/delete',
+  // 下架
+  articleSoldOut: '/article/soldOut',
+  // 新增修改
+  articleHandle: 'article/addAndUpdate',
+  // 定时发布
+  articlePublishDelay: 'article/publishDelay',
+  // 直接发布
+  articlePublishNow: 'article/publishNow',
+  /* 文章 end */
+  /* 话题 begin */
+  // 列表
+  topicList: '/gambit/queryByCondition',
+  // 详情
+  topicDetail: '/gambit/queryById',
+  // 删除
+  topicDelete: '/gambit/delete',
+  // 下架
+  topicSoldOut: '/gambit/soldOut',
+  // 新增修改
+  topicHandle: '/gambit/addAndUpdate',
+  // 定时发布
+  gambitPublishDelay: 'gambit/publishDelay',
+  // 直接发布
+  gambitPublishNow: 'gambit/publishNow',
+  // 评论列表
   queryCommentByThemeInfoId: 'comment/queryCommentByThemeInfoId',
-  /* 话题删除评论 */
-  deleteCommentByCommentId: 'comment/deleteCommentByCommentId'
-  // 44
+  // 删除评论
+  deleteCommentByCommentId: 'comment/deleteCommentByCommentId',
+  /* 话题 end */
+  /* 志愿卡开卡管理 begin */
+  // 列表
+  byCondition: '/membershipCardGenerateRecord/byCondition',
+  // 生成志愿卡
+  generate: '/membershipCard/generate',
+  /* 根据会员卡id导出会员卡数据 的excel */
+  exportByRecordId: '/membershipCard/exportByRecordId',
+  /* 志愿卡开卡管理 end */
+  /* 志愿卡使用管理 begin */
+  getMembershipCards: '/membershipCard/byCondition',
+  /* 志愿卡使用管理 end */
+  /* 个人中心 begin */
+  // 反馈列表
+  getFeedback: 'feedback/getFeedback',
+  /* 个人中心 end */
+  /* 交易管理 begin */
+  // 订单
+  getOrderList: '/order/getListByCondition',
+  /* 交易管理 end */
+  /* banner begin */
+  // 列表
+  bannerList: '/banner/queryByCondition',
+  // 详情
+  bannerDetail: '/banner/getOne',
+  // 删除
+  bannerDelete: 'banner/deleteByIds',
+  // 下架
+  bannerSoldOut: '/banner/soldOut',
+  // 直接发布
+  bannerPublishNow: '/banner/publishNow',
+  // 定时发布
+  bannerPublishDelay: '/banner/publishDelay',
+  // 草稿
+  bannerSave: '/banner/save'
+  /* banner end */
 }

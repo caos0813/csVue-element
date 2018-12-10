@@ -1,28 +1,28 @@
 <template>
   <div class="page">
     <div class="box-wrap">
-      <router-link :to="{name:'special-list'}" tag="a" class="ceil">
+      <router-link :to="{name:'xuanke/special-list'}" tag="a" class="ceil">
         专题
       </router-link>
-      <router-link :to="{name:'article-list'}" tag="a" class="ceil">
+      <router-link :to="{name:'xuanke/article-list'}" tag="a" class="ceil">
         文章
       </router-link>
-      <router-link :to="{name:'topic-list'}" tag="a" class="ceil">
+      <router-link :to="{name:'xuanke/topic-list'}" tag="a" class="ceil">
         话题
       </router-link>
-      <router-link :to="{name:'volunteer-list'}" tag="a" class="ceil">
+      <router-link :to="{name:'xuanke/volunteer-list'}" tag="a" class="ceil">
         开卡管理
       </router-link>
-      <router-link :to="{name:'volunteer-use'}" tag="a" class="ceil">
+      <router-link :to="{name:'xuanke/volunteer-use'}" tag="a" class="ceil">
         志愿卡使用管理
       </router-link>
-      <router-link :to="{name:'feedback-list'}" tag="a" class="ceil">
+      <router-link :to="{name:'xuanke/feedback-list'}" tag="a" class="ceil">
         反馈
       </router-link>
-      <router-link :to="{name:'order-list'}" tag="a" class="ceil">
+      <router-link :to="{name:'xuanke/order-list'}" tag="a" class="ceil">
         订单
       </router-link>
-      <router-link :to="{name:'banner-list'}" tag="a" class="ceil">
+      <router-link :to="{name:'xuanke/banner-list'}" tag="a" class="ceil">
         banner图
       </router-link>
     </div>

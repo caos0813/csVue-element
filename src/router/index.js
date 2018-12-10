@@ -1,48 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import View from '@/pages/view'
-import Index from '@/pages/index'
-// import SpecialList from '@/pages/special-list'
-// import ArticleList from '@/pages/article-list'
-// import TopicList from '@/pages/topic-list'
-// import Topic from '@/pages/topic'
-// import Article from '@/pages/article'
-// import Special from '@/pages/special'
-// import VolunteerList from '@/pages/volunteer-list'
-// import VolunteerUse from '@/pages/volunteer-use'
-// import Login from '@/pages/login'
-// import FeedbackList from '@/pages/feedback-list'
-
-/* const Topic = r => require.ensure([], () => r(require('@/pages/topic')), 'topic')
-const ArticleList = r => require.ensure([], () => r(require('@/pages/article-list')), 'article')
-const Article = r => require.ensure([], () => r(require('@/pages/article')), 'article')
-const SpecialList = r => require.ensure([], () => r(require('@/pages/special-list')), 'special')
-const Special = r => require.ensure([], () => r(require('@/pages/special')), 'special')
-const VolunteerList = r => require.ensure([], () => r(require('@/pages/volunteer-list')), 'volunteer')
-const VolunteerUse = r => require.ensure([], () => r(require('@/pages/volunteer-use')), 'volunteer')
-const FeedbackList = r => require.ensure([], () => r(require('@/pages/feedback-list')), 'feedbackList')
-const Login = resolve => { require(['@/pages/login.vue'], resolve) }
-const TopicList = resolve => { require(['@/pages/topic-list.vue'], resolve) } */
-
-const Topic = () => import('@/pages/topic')
-const ArticleList = () => import('@/pages/article-list')
-const Article = () => import('@/pages/article')
-const SpecialList = () => import('@/pages/special-list')
-const Special = () => import('@/pages/special')
-const VolunteerList = () => import('@/pages/volunteer-list')
-const VolunteerUse = () => import('@/pages/volunteer-use')
-const FeedbackList = () => import('@/pages/feedback-list')
-const Login = () => import('@/pages/login')
-const TopicList = () => import('@/pages/topic-list')
-const OrderList = () => import('@/pages/order-list')
-const BannerList = () => import('@/pages/banner-list')
-const Banner = () => import('@/pages/banner')
-const Comment = () => import('@/pages/comment')
-
-// const TopicList = r => require.ensure([], () => r(require('../../common/home.vue')))
-// const TopicList = () => Promise.resolve({ '@/pages/topic-list.vue' })
+// import HelloWorld from '@/components/HelloWorld'
 
 Vue.use(Router)
+
 export default new Router({
   routes: [
     {
@@ -52,114 +13,64 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: () => import('@/pages/login')
     },
     {
-      path: '/view',
-      component: View,
+      path: '/layout',
+      component: () => import('@/pages/layout'),
       redirect: { name: 'index' },
-      meta: {
-        requireAuth: true
-      },
       children: [{
         path: '/index',
         name: 'index',
-        component: Index,
-        meta: {
-          requireAuth: true
-        }
-      },
-      {
-        path: '/special-list',
-        name: 'special-list',
-        component: SpecialList,
-        meta: {
-          requireAuth: true
-        }
+        component: () => import('@/pages/index')
       }, {
-        path: '/special/:type',
-        name: 'special',
-        component: Special,
-        meta: {
-          requireAuth: true
-        }
+        path: '/xuanke/special-list',
+        name: 'xuanke/special-list',
+        component: () => import('@/pages/xuanke/special/list')
       }, {
-        path: '/article-list',
-        name: 'article-list',
-        component: ArticleList,
-        meta: {
-          requireAuth: true
-        }
+        path: '/xuanke/special/:type',
+        name: 'xuanke/special',
+        component: () => import('@/pages/xuanke/special/add')
       }, {
-        path: '/article/:type',
-        name: 'article',
-        component: Article,
-        meta: {
-          requireAuth: true
-        }
+        path: '/xuanke/article-list',
+        name: 'xuanke/article-list',
+        component: () => import('@/pages/xuanke/article/list')
       }, {
-        path: '/topic-list',
-        name: 'topic-list',
-        component: TopicList,
-        meta: {
-          requireAuth: true
-        }
+        path: '/xuanke/article/:type',
+        name: 'xuanke/article',
+        component: () => import('@/pages/xuanke/article/add')
       }, {
-        path: '/topic/:type',
-        name: 'topic',
-        component: Topic,
-        meta: {
-          requireAuth: true
-        }
+        path: '/xuanke/topic-list',
+        name: 'xuanke/topic-list',
+        component: () => import('@/pages/xuanke/topic/list')
       }, {
-        path: '/volunteer-list',
-        name: 'volunteer-list',
-        component: VolunteerList,
-        meta: {
-          requireAuth: true
-        }
+        path: '/xuanke/topic/:type',
+        name: 'xuanke/topic',
+        component: () => import('@/pages/xuanke/topic/add')
       }, {
-        path: '/volunteer-use',
-        name: 'volunteer-use',
-        component: VolunteerUse,
-        meta: {
-          requireAuth: true
-        }
+        path: '/xuanke/volunteer-list',
+        name: 'xuanke/volunteer-list',
+        component: () => import('@/pages/xuanke/volunteer/list')
       }, {
-        path: '/feedback-list',
-        name: 'feedback-list',
-        component: FeedbackList,
-        meta: {
-          requireAuth: true
-        }
+        path: '/xuanke/volunteer-use',
+        name: 'xuanke/volunteer-use',
+        component: () => import('@/pages/xuanke/volunteer/use')
       }, {
-        path: '/order-list',
-        name: 'order-list',
-        component: OrderList,
-        meta: {
-          requireAuth: true
-        }
+        path: '/xuanke/order-list',
+        name: 'xuanke/order-list',
+        component: () => import('@/pages/xuanke/order/list')
       }, {
-        path: '/banner-list',
-        name: 'banner-list',
-        component: BannerList,
-        meta: {
-          requireAuth: true
-        }
+        path: '/zhiyuan/banner-list',
+        name: 'zhiyuan/banner-list',
+        component: () => import('@/pages/zhiyuan/banner/list')
       }, {
-        path: '/banner/:type',
-        name: 'banner',
-        component: Banner,
-        meta: {
-          requireAuth: true
-        }
+        path: '/zhiyuan/banner:type',
+        name: 'zhiyuan/banner',
+        component: () => import('@/pages/zhiyuan/banner/add')
       }, {
-        path: '/comment',
-        name: 'comment',
-        component: Comment,
-        meta: {
-          requireAuth: true
-        }
+        path: '/system/authority',
+        name: 'system/authority',
+        component: () => import('@/pages/system/authority')
       }]
     }
   ]

@@ -1,0 +1,85 @@
+@import './utils';
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* chrome、safari */
+  -moz-osx-font-smoothing: grayscale;
+  /* firefox */
+  font: 12px/1.5 "Microsoft YaHei", tahoma, Arial, Helvetica, sans-serif, "宋体";
+}
+
+#app {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  bottom: 0px;
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
+
+img {
+  border: none;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+.page {
+  padding: 70px 0;
+  box-sizing: border-box;
+}
+.full {
+  width: 100% !important;
+}
+.tools-bar {
+  display: flex;
+  border-bottom: 1px solid $gray;
+  padding: 20px;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  position: fixed;
+  top: 60px;
+  background: $light;
+  left: 200px;
+  right: 0;
+  z-index: 1001;
+  .left-wrap {
+    display: flex;
+    align-items: center;
+    >.el-input {
+      width: 200px;
+      margin-right: 15px;
+    }
+    .picker-wrap {
+      flex: 1;
+      padding-right: 15px;
+    }
+    >.date-picker-wrap {
+      margin-right: 15px;
+    }
+  }
+}
+.tableHeader {
+  background-color: #F5F7FA !important
+}
