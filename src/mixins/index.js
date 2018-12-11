@@ -1,3 +1,4 @@
 import filters from './filters'
 import toState from './state'
-export { filters, toState }
+import authority from './authority'
+export { filters, toState, authority }

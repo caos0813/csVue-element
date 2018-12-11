@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+    {{type}}
     <div class="tools-bar">
       <div class="left-wrap">
         <el-input prefix-icon="el-icon-search" v-model="params.title" placeholder="请输入搜索关键字" size="small"></el-input>
@@ -34,7 +35,7 @@
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope ">
           <el-button type="text " size="mini" v-if="scope.row.status===2||scope.row.status===3">
-            <router-link :to="{name:'banner',params:{type:'edit'},query:{id:scope.row.id}}" tag="span">编辑</router-link>
+            <router-link :to="{name:'zhiyuan/banner',params:{type:'edit'},query:{id:scope.row.id}}" tag="span">编辑</router-link>
           </el-button>
           <el-button type="text" size="mini" v-if=" scope.row.status===1" @click.stop="openSendDialog(scope.row.id)">推送</el-button>
         </template>
@@ -114,10 +115,10 @@ export default {
       }
     }
     return {
+      type: '',
       params: {
         title: null,
         page: 1,
-        // size: 10,
         sortType: 'publishTime|desc'
       },
       checkData: [],
@@ -161,7 +162,6 @@ export default {
       this.params = {
         title: null,
         page: 1,
-        // size: this.$refs.pageInfo.pageSizes[0],
         size: 10,
         sortType: 1
       }
@@ -315,7 +315,15 @@ export default {
       _this.visible = e
     }
   },
+  watch: {
+    '$route' (to, from) {
+      console.log(to.params.type)
+      this.type = to.params.type
+      this.getData(this.params)
+    }
+  },
   created () {
+    this.type = this.$route.params.type
     this.getData(this.params)
     this.$fly.get(api.getProvinces).then(data => {
       const { provinces } = data._embedded

@@ -7,10 +7,11 @@ import fly from '@/utils/fly.config'
 import ElementUI from 'element-ui'
 import VueLodash from 'vue-lodash'
 import Cookies from 'js-cookie'
+import store from '@/store'
 import 'babel-polyfill'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/assets/sass/main.scss'
-import { filters, toState } from '@/mixins'
+import { filters, toState, authority } from '@/mixins'
 import { back } from '@/components'
 
 Vue.config.productionTip = false
@@ -21,6 +22,7 @@ Vue.use(VueLodash, options)
 Vue.component('back', back)
 Vue.mixin(filters)
 Vue.mixin(toState)
+Vue.mixin(authority)
 router.beforeEach((to, from, next) => {
   let { token } = Cookies.getJSON('user') ? Cookies.getJSON('user') : ''
   if (to.meta.requireAuth && !token) {
@@ -35,6 +37,7 @@ router.beforeEach((to, from, next) => {
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

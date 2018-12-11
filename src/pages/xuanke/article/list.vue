@@ -46,7 +46,7 @@
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope ">
           <el-button type="text " size="mini" v-if="scope.row.status===2||scope.row.status===3">
-            <router-link :to="{name:'article',params:{type:'edit'},query:{id:scope.row.id}}" tag="span">编辑</router-link>
+            <router-link :to="{name:'xuanke/article',params:{type:'edit'},query:{id:scope.row.id}}" tag="span">编辑</router-link>
           </el-button>
           <!-- {{scope.row.product.name==='志愿'}} -->
           <el-button type="text" size="mini" v-if="scope.row.product.name==='志愿'&&( scope.row.status===1)" @click.stop="openSendDialog(scope.row.id)">推送</el-button>

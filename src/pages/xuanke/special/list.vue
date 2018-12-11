@@ -30,7 +30,7 @@
       <el-table-column label="操作" width="120" align="center">
         <template slot-scope="scope ">
           <el-button type="text " size="mini">
-            <router-link :to="{name:'special',params:{type:'edit'},query:{id:scope.row.id}}" tag="span">编辑</router-link>
+            <router-link :to="{name:'xuanke/special',params:{type:'edit'},query:{id:scope.row.id}}" tag="span">编辑</router-link>
           </el-button>
         </template>
       </el-table-column>
