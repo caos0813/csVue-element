@@ -3,10 +3,12 @@
     <div class="form-wrap">
       <el-form ref="form" :model="params" :rules="rules">
         <el-form-item prop="userName">
-          <el-input v-model="params.name" placeholder="请输入账号" name="userName"></el-input>
+          <el-input v-model="params.username" placeholder="请输入账号" name="userName"></el-input>
+          <!-- <el-input v-model="params.name" placeholder="请输入账号" name="userName"></el-input> -->
         </el-form-item>
         <el-form-item prop="passWord">
-          <el-input v-model="params.passwords" type="passWord" placeholder="请输入密码" name="passWord"></el-input>
+          <el-input v-model="params.password" type="passWord" placeholder="请输入密码" name="passWord"></el-input>
+          <!-- <el-input v-model="params.passwords" type="passWord" placeholder="请输入密码" name="passWord"></el-input> -->
         </el-form-item>
         <el-form-item class="text-center">
           <el-button class="btn" type="primary" native-type="submit" @click.prevent="submit" round>登录</el-button>
@@ -36,16 +38,28 @@ export default {
   methods: {
     async getConfig (data) {
       try {
+        let { token } = data.token
+        // TODO:let { token } = data
         let uploadConfig = await this.$fly.get(api.uploadToken, {}, {
           headers: {
-            Authorization: `Bearer ${data.token}`
+            Authorization: `Bearer ${token}`
           }
         })
-        console.log(uploadConfig)
+        // console.log(uploadConfig)
+        // this.$store.commit('SET_AUTHORITY', [])
+        let authorityData = data.user.roles[0].authorities
+        let authority = []
+        authorityData.map(item => {
+          authority.push(item.name)
+        })
+        // this.$store.commit('SET_AUTHORITY', authority)
+        // console.log(this.$store.state.authority)
+        // console.log(authority)
         Cookies.set('user', {
           userName: this.params.userName,
-          token: data.token,
-          uploadConfig: uploadConfig
+          token: token,
+          uploadConfig: uploadConfig,
+          authority: authority
         }, { expires: 7 })
         this.$message({
           message: '登录成功!',
@@ -67,7 +81,15 @@ export default {
           Cookies.remove('user')
           this.$fly.post(api.login, this.params).then(data => {
             /* 获取阿里上传配置参数 */
-            this.getConfig(data)
+            // TODO:this.getConfig(data)
+            if (data.status === 100000) {
+              this.getConfig(data.data.body)
+            } else {
+              this.$message({
+                message: '请求失败',
+                type: 'error'
+              })
+            }
           }).catch(() => {
             this.$message({
               message: '登录失败',

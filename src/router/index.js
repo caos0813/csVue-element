@@ -24,10 +24,10 @@ export default new Router({
         name: 'index',
         component: () => import('@/pages/index'),
         meta: {
-          requireAuth: true
+          // requireAuth: true
         }
       }, {
-        path: '/xuanke/special-list/:type',
+        path: '/xuanke/special-list/',
         name: 'xuanke/special-list',
         component: () => import('@/pages/xuanke/special/list'),
         meta: {
@@ -41,11 +41,11 @@ export default new Router({
           requireAuth: true
         }
       }, {
-        path: '/xuanke/article-list/:type',
+        path: '/xuanke/article-list/',
         name: 'xuanke/article-list',
         component: () => import('@/pages/xuanke/article/list'),
         meta: {
-          requireAuth: true
+          // requireAuth: true
         }
       }, {
         path: '/xuanke/article/:type',
@@ -55,7 +55,7 @@ export default new Router({
           requireAuth: true
         }
       }, {
-        path: '/xuanke/topic-list/:type',
+        path: '/xuanke/topic-list/',
         name: 'xuanke/topic-list',
         component: () => import('@/pages/xuanke/topic/list'),
         meta: {
@@ -146,7 +146,14 @@ export default new Router({
           requireAuth: true
         }
       }, {
-        path: '/system/user',
+        path: '/system/user-list',
+        name: 'system/user-list',
+        component: () => import('@/pages/system/user-list'),
+        meta: {
+          requireAuth: true
+        }
+      }, {
+        path: '/system/user/:type',
         name: 'system/user',
         component: () => import('@/pages/system/user'),
         meta: {

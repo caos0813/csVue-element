@@ -1,14 +1,16 @@
 import Cookies from 'js-cookie'
 import router from '@/router'
-import { message } from 'element-ui'
+import { Message } from 'element-ui'
 let fly = require('flyio')
 // 添加请求拦截器
 fly.interceptors.request.use((config) => {
   // 给所有请求添加自定义header
   // request.headers['X-Tag'] = 'flyio'
   let { token } = Cookies.getJSON('user') ? Cookies.getJSON('user') : ''
+  // console.debug(token)
+  // console.log(token)
   if (token) {
-    config.headers['Authorization'] = `Bearee ${token}`
+    config.headers['Authorization'] = `Bearer ${token}`
   }
   let { body } = config
   for (let x in body) {
@@ -23,7 +25,19 @@ fly.interceptors.request.use((config) => {
 fly.interceptors.response.use(
   (response) => {
     // 只将请求结果的data字段返回
+    // console.log(router.app._route.name)
+    // if (response.data.status !== 100000) {
+    //   if (response.status === 200) {
+    //     return response.data
+    //   } else {
+    //     Message({
+    //       message: '接口调用失败',
+    //       type: 'error'
+    //     })
+    //   }
+    // } else {
     return response.data
+    // }
   },
   (err) => {
     console.log(err)
@@ -32,7 +46,7 @@ fly.interceptors.response.use(
       router.replace({
         name: 'login'
       })
-      message({
+      Message({
         message: '接口调用失败',
         type: 'error'
       })
@@ -46,8 +60,9 @@ fly.interceptors.response.use(
 fly.config.baseURL = (function () {
   let baseURL
   if (process.env.NODE_ENV === 'development') {
-    // baseURL = 'http://192.168.1.40:8082'
-    baseURL = 'http://testomsapi.junyanginfo.com'
+    // baseURL = 'http://192.168.1.117:8083'
+    baseURL = 'http://192.168.1.84:8083'
+    // baseURL = 'http://testomsapi.junyanginfo.com'
   } else if (process.env.NODE_ENV === 'release') {
     baseURL = 'http://testomsapi.junyanginfo.com'
   } else if (process.env.NODE_ENV === 'production') {

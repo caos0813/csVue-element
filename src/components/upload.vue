@@ -1,9 +1,10 @@
 <template>
   <div class="upload">
-    <el-upload class="avatar-uploader" :accept="accept" :action="uploadUrl" :show-file-list="false" :on-success="handleAvatarSuccess" :http-request="upload" v-loading="loading" element-loading-text="正在上传" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
+    <el-upload class="avatar-uploader" :accept="accept" :action="uploadUrl" :show-file-list="true" :on-success="handleAvatarSuccess" :http-request="upload" v-loading="loading" element-loading-text="正在上传" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
       <div class="uploaded-wrap" v-if="imageUrl">
         <img :src="imageUrl" class="avatar" v-if="type=='image'">
         <span class="el-icon-service" v-if="type=='audio'"></span>
+        <span class="el-icon-caret-right" v-if="type=='video'"></span>
         <div class="btn-wrap">
           <el-button icon="el-icon-zoom-in" size="mini" circle @click.stop="preview"></el-button>
         </div>
@@ -13,6 +14,7 @@
     <el-dialog :visible.sync="dialogVisible" title="预览">
       <img width="100%" :src="imageUrl" alt="" v-if="type=='image'">
       <audio :src="imageUrl" v-if="type=='audio'" controls></audio>
+      <video v-if="type==='video'" :src="imageUrl" controls></video>
     </el-dialog>
   </div>
 </template>
@@ -149,7 +151,8 @@ export default {
       justify-content: center;
       height: 100%;
       .el-icon-upload,
-      .el-icon-service {
+      .el-icon-service,
+      .el-icon-caret-right {
         font-size: 40px;
       }
       .btn-wrap {
@@ -160,11 +163,20 @@ export default {
         line-height: 1;
       }
       &:hover {
-        border-color: #409eff;
+        border-color: $color-primary;
       }
     }
-    .el-icon-service {
-      color: #409eff;
+    .el-icon-service,
+    .el-icon-caret-right {
+      color: $color-primary;
+    }
+    .el-icon-caret-right {
+      border: 1px solid $color-primary;
+      perspective: 3d;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      overflow: hidden;
     }
     .avatar-uploader-icon {
       font-size: 28px;

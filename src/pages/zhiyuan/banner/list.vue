@@ -92,6 +92,10 @@
           </el-checkbox-group>
         </el-form-item>
       </el-form>
+      <template slot="footer">
+        <el-button @click="cancel" size="small">取消</el-button>
+        <el-button type="primary" size="small" @click="sendFn('send')">确定</el-button>
+      </template>
     </drawer>
   </div>
 </template>
@@ -202,6 +206,7 @@ export default {
       })
     },
     openSendDialog (id) {
+      this.visible = true
       this.sendDialog = true
       this.bannerId = id
       this.popoverIsClose = true
@@ -240,6 +245,7 @@ export default {
     },
     cancel () {
       this.$refs['form'].resetFields()
+      this.visible = false
     },
     sendFn (type) {
       this.$refs['form'].validate((valid) => {

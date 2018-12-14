@@ -10,25 +10,33 @@ export default {
   uploadToken: 'secret/token',
   /* 专题 begin */
   // 列表
+  querySpecialTopicInfo: 'SpecialTopicInfo/querySpecialTopicInfo',
   specialList: 'specialTopic/querySpecialTopic',
   // 详情
   specialDetail: 'specialTopic/queryById',
+  queryOneSpecialTopicInfo: 'SpecialTopicInfo/queryOneSpecialTopicInfo',
   // 下架
-  specialSoldOut: '/specialTopic/soldOut',
+  'xuanke/specialSoldOut': '/specialTopic/soldOut',
+  'zhiyuan/specialSoldOut': 'SpecialTopicInfo/soldOutSpecialTopicInfo',
   // 删除
   specialDelete: '/specialTopic/delete',
+  'zhiyuan/specialDelete': 'SpecialTopicInfo/deleteSpecialTopicInfo',
   // 新增修改
   specialHandle: '/specialTopic/saveAndUpdate',
+  saveSpecialTopicInfo: 'SpecialTopicInfo/saveSpecialTopicInfo',
   /* 专题 end */
   /* 文章 begin */
+  // 模块下的专题
+  queryArticleInfoCondition: 'ArticleInfo/queryArticleInfoCondition',
   // 列表
   articleList: '/article/queryArticleByCondition',
+  queryArticleInfoByCondition: 'ArticleInfo/queryArticleInfoByCondition',
   // 详情
   articleDetail: '/article/queryById',
   // 删除
-  articleDelete: '/article/delete',
+  'xuanke/articleDelete': '/article/delete',
   // 下架
-  articleSoldOut: '/article/soldOut',
+  'xuanke/articleSoldOut': '/article/soldOut',
   // 新增修改
   articleHandle: 'article/addAndUpdate',
   // 定时发布
@@ -42,9 +50,9 @@ export default {
   // 详情
   topicDetail: '/gambit/queryById',
   // 删除
-  topicDelete: '/gambit/delete',
+  'xuanke/topicDelete': '/gambit/delete',
   // 下架
-  topicSoldOut: '/gambit/soldOut',
+  'xuanke/topicSoldOut': '/gambit/soldOut',
   // 新增修改
   topicHandle: '/gambit/addAndUpdate',
   // 定时发布
@@ -81,14 +89,36 @@ export default {
   // 详情
   bannerDetail: '/banner/getOne',
   // 删除
-  bannerDelete: 'banner/deleteByIds',
+  'xuanke/bannerDelete': 'banner/deleteByIds',
   // 下架
-  bannerSoldOut: '/banner/soldOut',
+  'xuanke/bannerSoldOut': '/banner/soldOut',
   // 直接发布
   bannerPublishNow: '/banner/publishNow',
   // 定时发布
   bannerPublishDelay: '/banner/publishDelay',
   // 草稿
-  bannerSave: '/banner/save'
+  bannerSave: '/banner/save',
   /* banner end */
+  /* 系统管理 begin */
+  // 用户列表
+  getUsers: '/user/getUsers',
+  // 用户账号是否存在
+  nameIsExits: '/user/isExist/',
+  // 重置密码
+  resetPassword: '/user/resetPassword',
+  // 详情
+  userGetOne: '/user/getOne',
+  // 删除
+  'system/userDelete': '/user/delete',
+  // 新增
+  userSave: '/user/saveOrUpdate',
+  // 角色列表
+  getRoles: '/role/getRoles',
+  // 新增
+  roleSave: '/role/saveOrUpdate',
+  // 删除
+  roleDelete: '/role/delete/',
+  // 详情
+  roleGetOne: '/role/getOne'
+  /* 系统管理 end */
 }

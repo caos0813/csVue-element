@@ -25,18 +25,21 @@
             <span slot="title">首页</span>
           </el-menu-item>
           <el-submenu :index="(index+1).toString()" v-for="(item,index) in navData" :key="index" v-if="`${item.auth()}`==='true'?true:false">
+            <!-- {{item.auth()}} -->
             <template slot="title">
               <i class="el-icon-tickets"></i>
               <span>{{item.name}}</span>
             </template>
-            <el-menu-item :index="`${index+1}-${lIndex+1}`" v-for="(lItem,lIndex) in item.subNav" :key="lIndex" :route="{name:`${lItem.url}`}" v-if="`${lItem.subNav}` === 'undefined'">{{lItem.name}}</el-menu-item>
+            <el-menu-item :index="`${index+1}-${lIndex+1}`" v-for="(lItem,lIndex) in item.subNav" :key="lIndex" :route="{name:`${lItem.url}`}" v-if="`${lItem.subNav}` === 'undefined'&&hasAuth(`${lItem.auth()}`)">{{lItem.name}}</el-menu-item>
             <el-submenu :index="`${index+1}-${lIndex+1}`" v-for="(lItem,lIndex) in item.subNav" :key="lIndex" v-if="`${lItem.subNav}` !== 'undefined'&&`${lItem.auth()}`==='true'?true:false">
               <template slot="title">
                 <i class="el-icon-menu"></i>
                 <span>{{lItem.name}}</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item :index="`${index+1}-${lIndex+1}-${sIndex+1}`" v-for="(sItem,sIndex) in lItem.subNav" :key="sIndex" :route="{name:`${sItem.url}`,params:{type:`${sItem.type}`}}" v-if="hasAuth(`${sItem.auth}`)">{{sItem.name}}</el-menu-item>
+                <el-menu-item :index="`${index+1}-${lIndex+1}-${sIndex+1}`" v-for="(sItem,sIndex) in lItem.subNav" :key="sIndex" :route="{name:`${sItem.url}`,params:{type:`${sItem.type}`}}" v-if="hasAuth(`${sItem.auth}`)">
+                  {{sItem.name}}
+                </el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-submenu>

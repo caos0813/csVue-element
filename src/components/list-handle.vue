@@ -31,12 +31,10 @@ export default {
         return []
       }
     },
-    // checkIds: {
-    //   type: Array,
-    //   default () {
-    //     return []
-    //   }
-    // },
+    module: {
+      type: Number,
+      default: null
+    },
     showSoldout: {
       type: Boolean,
       default: true
@@ -46,14 +44,14 @@ export default {
     handleFn (type) {
       let { name } = this.$route
       let path = name.split('-')[0]
-      console.log(path)
       if (type === 'add') {
-        this.toState({ name: path, params: { type: 'add' } })
+        this.toState({ name: path, params: { type: 'add' }, query: { moduleId: this.module } })
       } else {
         let url
         let txt
         if (type === 'delete') {
           url = api[`${path}Delete`]
+          console.log(url)
           txt = '删除'
         } else if (type === 'soldOut') {
           url = api[`${path}SoldOut`]
@@ -61,12 +59,13 @@ export default {
         } else if (type === 'hot') {
           url = api[`${path}Hot`]
           txt = '设为热门'
-        } 
+        }
         // console.log(this.checkData)
         confirm(`您确定将选择的内容${txt}吗？`, '提示').then(() => {
           this.checkIds = []
           // this.lodash.map(this.checkData, (item) => {
           for (let item = 0; item < this.checkData.length; item++) {
+            console.log(this.checkData)
             if (txt === '下架') {
               if (this.checkData[item].status === 2 || this.checkData[item].status === 3) {
                 this.$message.error(`已下架或草稿状态的内容不能${txt}`)

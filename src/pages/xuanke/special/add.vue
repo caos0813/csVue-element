@@ -6,7 +6,6 @@
       </div>
       <div class="button-wrap">
         <el-button type="warning" size="small" @click="submit">保存</el-button>
-        <!-- <el-button type="warning" size="small">下架</el-button> -->
       </div>
     </div>
     <el-form ref="form" :model="params" :rules="rules" label-width="80px">
@@ -17,13 +16,6 @@
         <el-col :span='12'>
           <el-input v-model="params.title"></el-input>
         </el-col>
-        <!-- <el-col :span='4'>
-          <el-form-item label-width="20px">
-            <template>
-              <el-checkbox v-model="params.isHomePageShow" :true-label='1' :false-label='0'>首页显示</el-checkbox>
-            </template>
-          </el-form-item>
-        </el-col> -->
       </el-form-item>
       <el-form-item label="简介" prop="introduction">
         <el-input type="textarea" :rows="3" placeholder="请输入简介" v-model="params.introduction"></el-input>
@@ -113,5 +105,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-</style>

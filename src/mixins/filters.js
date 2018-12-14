@@ -36,5 +36,31 @@ export default {
       }
       return txt
     }
+  },
+  methods: {
+    moduleId: function (type) {
+      let modelId
+      switch (type) {
+        case 'college':
+          modelId = 1
+          break
+        case 'major':
+          modelId = 2
+          break
+        case 'profession':
+          modelId = 3
+          break
+        case 'index':
+          modelId = 4
+          break
+        case 'career-plan':
+          modelId = 5
+          break
+        case 'volunteer-questions':
+          modelId = 6
+          break
+      }
+      return modelId
+    }
   }
 }

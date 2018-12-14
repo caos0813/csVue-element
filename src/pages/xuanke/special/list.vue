@@ -67,8 +67,6 @@ export default {
     listHandle,
     pagination
   },
-  computed: {
-  },
   methods: {
     refresh () {
       this.getData(this.params)
@@ -180,8 +178,3 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.checkLabel > .el-checkbox {
-  display: none;
-}
-</style>

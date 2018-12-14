@@ -45,13 +45,16 @@ img {
 .text-right {
   text-align: right;
 }
+
 .page {
   padding: 70px 0;
   box-sizing: border-box;
 }
+
 .full {
   width: 100% !important;
 }
+
 .tools-bar {
   display: flex;
   border-bottom: 1px solid $gray;
@@ -79,6 +82,11 @@ img {
     }
   }
 }
+
 .tableHeader {
   background-color: #F5F7FA !important
+}
+
+.checkLabel>.el-checkbox {
+  display: none;
 }
