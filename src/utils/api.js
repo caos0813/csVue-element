@@ -3,46 +3,53 @@ export default {
   /* 查询所有类型 */
   productAll: '/product/queryAll',
   /* 获取所有省份 */
-  getProvinces: '/provinces/search/all',
+  // getProvinces: '/provinces/search/all',
+  getProvinces: '/province/getAll',
   /* 获取已有省份 */
   getProvinceIds: '/send/getProvinceIds',
   /* 获取上传图片凭证 */
   uploadToken: 'secret/token',
   /* 专题 begin */
   // 列表
-  querySpecialTopicInfo: 'SpecialTopicInfo/querySpecialTopicInfo',
+  querySpecialTopicInfo: 'specialTopicInfo/querySpecialTopicInfo',
   specialList: 'specialTopic/querySpecialTopic',
   // 详情
   specialDetail: 'specialTopic/queryById',
-  queryOneSpecialTopicInfo: 'SpecialTopicInfo/queryOneSpecialTopicInfo',
+  queryOneSpecialTopicInfo: 'specialTopicInfo/queryOneSpecialTopicInfo',
   // 下架
   'xuanke/specialSoldOut': '/specialTopic/soldOut',
-  'zhiyuan/specialSoldOut': 'SpecialTopicInfo/soldOutSpecialTopicInfo',
+  'zhiyuan/specialSoldOut': 'specialTopicInfo/soldOutSpecialTopicInfo',
   // 删除
-  specialDelete: '/specialTopic/delete',
-  'zhiyuan/specialDelete': 'SpecialTopicInfo/deleteSpecialTopicInfo',
+  'xuanke/specialDelete': '/specialTopic/delete',
+  'zhiyuan/specialDelete': 'specialTopicInfo/deleteSpecialTopicInfo',
   // 新增修改
   specialHandle: '/specialTopic/saveAndUpdate',
-  saveSpecialTopicInfo: 'SpecialTopicInfo/saveSpecialTopicInfo',
+  saveSpecialTopicInfo: 'specialTopicInfo/saveSpecialTopicInfo',
   /* 专题 end */
   /* 文章 begin */
   // 模块下的专题
-  queryArticleInfoCondition: 'ArticleInfo/queryArticleInfoCondition',
+  queryArticleInfoCondition: 'articleInfo/queryArticleInfoCondition',
   // 列表
   articleList: '/article/queryArticleByCondition',
-  queryArticleInfoByCondition: 'ArticleInfo/queryArticleInfoByCondition',
+  queryArticleInfoByCondition: 'articleInfo/queryArticleInfoByCondition',
   // 详情
   articleDetail: '/article/queryById',
+  zhiyuan_articleDetail: 'articleInfo/queryById',
   // 删除
   'xuanke/articleDelete': '/article/delete',
+  'zhiyuan/articleDelete': 'articleInfo/deleteArticleInfo',
   // 下架
   'xuanke/articleSoldOut': '/article/soldOut',
+  'zhiyuan/articleSoldOut': 'articleInfo/soldOutArticleInfo',
   // 新增修改
   articleHandle: 'article/addAndUpdate',
+  zhiyuan_articleHandle: 'articleInfo/addAndUpdate',
   // 定时发布
   articlePublishDelay: 'article/publishDelay',
+  zhiyuan_articlePublishDelay: 'articleInfo/publishDelay',
   // 直接发布
   articlePublishNow: 'article/publishNow',
+  zhiyuan_articlePublishNow: 'articleInfo/publishNow',
   /* 文章 end */
   /* 话题 begin */
   // 列表
@@ -86,24 +93,34 @@ export default {
   /* banner begin */
   // 列表
   bannerList: '/banner/queryByCondition',
+  zhiyuan_bannerList: 'bannerInfo/queryBannerInfo',
   // 详情
   bannerDetail: '/banner/getOne',
+  zhiyuan_bannerDetail: 'bannerInfo/queryOneBannerInfo',
+  // 模块-专题-文章
+  bannerQueryCondition: 'bannerInfo/queryCondition',
   // 删除
   'xuanke/bannerDelete': 'banner/deleteByIds',
+  'zhiyuan/bannerDelete': 'bannerInfo/deleteBannerInfo',
   // 下架
   'xuanke/bannerSoldOut': '/banner/soldOut',
+  'zhiyuan/bannerSoldOut': 'bannerInfo/soldOutBannerInfo',
   // 直接发布
   bannerPublishNow: '/banner/publishNow',
+  zhiyuan_bannerPublishNow: 'bannerInfo/directBannerInfo',
   // 定时发布
   bannerPublishDelay: '/banner/publishDelay',
+  zhiyuan_bannerPublishDelay: 'bannerInfo/timingBannerInfo',
   // 草稿
   bannerSave: '/banner/save',
+  zhiyuan_bannerSave: 'bannerInfo/draftBannerInfo',
   /* banner end */
   /* 系统管理 begin */
   // 用户列表
   getUsers: '/user/getUsers',
   // 用户账号是否存在
   nameIsExits: '/user/isExist/',
+  existPassword: '/user/existPassword',
   // 重置密码
   resetPassword: '/user/resetPassword',
   // 详情
@@ -119,6 +136,24 @@ export default {
   // 删除
   roleDelete: '/role/delete/',
   // 详情
-  roleGetOne: '/role/getOne'
+  roleGetOne: '/role/getOne',
+  // 角色名是否已存在
+  roleIsExist: 'role/existName',
+  // 超级用户列表
+  getSuperUsers: '/superUser/getSuperUsers',
+  // 新增
+  superUserSave: '/superUser/save',
+  // 删除
+  superUserDelete: '/superUser/delete',
+  // app自动化升级
+  appList: '/appVersion/getAppVersions',
+  // 新增
+  appSave: '/appVersion/save',
+  // 版本号是否存在
+  VersionIsExit: '/appVersion/isExist',
   /* 系统管理 end */
+  /* 直接推送 */
+  bannerSend: '/send/sendTo',
+  /* 定时推送 */
+  bannerSchedule: '/send/schedule'
 }

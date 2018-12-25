@@ -5,7 +5,8 @@
         <img :src="imageUrl" class="avatar" v-if="type=='image'">
         <span class="el-icon-service" v-if="type=='audio'"></span>
         <span class="el-icon-caret-right" v-if="type=='video'"></span>
-        <div class="btn-wrap">
+        <span class="el-icon-goods" v-if="type=='apk'"></span>
+        <div class="btn-wrap" v-if="type!=='apk'">
           <el-button icon="el-icon-zoom-in" size="mini" circle @click.stop="preview"></el-button>
         </div>
       </div>
@@ -108,6 +109,26 @@ export default {
         } catch (err) {
           console.log(err)
         }
+      } else if (this.type === 'apk') {
+        let { name } = option.file
+        name = name.split('.')[1]
+        if (name !== 'apk') {
+          this.$message({
+            message: '只能上传apk类型的文件',
+            duration: 2000,
+            type: 'error'
+          })
+          this.loading = false
+        } else {
+          client.options.bucket = 'fdapprelease'
+          ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), option.file, {
+            progress: async function (p) {
+              let e = {}
+              e.percent = p * 100
+              option.onProgress(e)
+            }
+          })
+        }
       } else {
         ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), option.file, {
           progress: async function (p) {
@@ -152,6 +173,7 @@ export default {
       height: 100%;
       .el-icon-upload,
       .el-icon-service,
+      .el-icon-goods,
       .el-icon-caret-right {
         font-size: 40px;
       }
@@ -167,6 +189,7 @@ export default {
       }
     }
     .el-icon-service,
+    .el-icon-goods,
     .el-icon-caret-right {
       color: $color-primary;
     }

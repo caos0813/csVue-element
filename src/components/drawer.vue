@@ -44,6 +44,10 @@ export default {
       type: [Number, String],
       default: 256
     },
+    right: {
+      type: [Number, String],
+      default: 0
+    },
     closable: {
       type: Boolean,
       default: true
@@ -73,8 +77,10 @@ export default {
     mainStyles () {
       let style = {}
       const width = parseInt(this.width)
+      const right = parseInt(this.right)
       const styleWidth = {
-        width: width <= 100 ? `${width}%` : `${width}px`
+        width: width <= 100 ? `${width}%` : `${width}px`,
+        right: `${right}px`
       }
       Object.assign(style, styleWidth)
       return style
@@ -119,16 +125,15 @@ export default {
   position: fixed;
   overflow: auto;
   top: 0;
-  right: 0;
+  // right: 0;
   bottom: 0;
   left: 0;
-  z-index: 3000;
+  z-index: 1002;
   -webkit-overflow-scrolling: touch;
   outline: 0;
   pointer-events: none;
   .drawer {
     position: fixed;
-    // height: 100%;
     top: 60px;
     pointer-events: auto;
     background-color: #fff;
@@ -164,7 +169,7 @@ export default {
       }
     }
     &-body {
-      width: 100%;
+      // width: 100%;
       padding: 16px;
       font-size: $font-size-12;
       line-height: 1.5;

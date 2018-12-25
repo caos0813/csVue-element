@@ -12,10 +12,7 @@
     <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" v-loading="loading" element-loading-text="拼命加载中" border stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" label-class-name="checkLabel">
       </el-table-column>
-      <el-table-column label="标题" align="center" min-width="180" show-overflow-tooltip>
-        <template slot-scope="scope">
-          <span>{{ scope.row.title }}</span>
-        </template>
+      <el-table-column prop="title" label="标题" align="center" min-width="180" show-overflow-tooltip>
       </el-table-column>
       <el-table-column label="推荐" align="center" width="80">
         <template slot-scope="scope">
@@ -54,7 +51,7 @@
       </el-table-column>
     </el-table>
     <pagination ref="pageInfo" :total="pageInfo.totalElements" :page.sync="pageInfo.currentPage" @pagination="pagination"></pagination>
-    <drawer class="drawer-components" v-model="visible" title="推送" width="60" placement="right" @bodyClick="handleBodyClick" showFooter>
+    <drawer class="drawer-components" v-model="visible" title="推送" width="60" right="120" placement="right" @bodyClick="handleBodyClick" showFooter>
       <el-form :model="form" inline-message ref="form" :rules="sendRules" label-suffix=":" label-width="100px">
         <el-form-item label='被推送的标题'>
           <label v-for="(item,index) in checkData" :key="index">{{item.title}}</label>
@@ -310,33 +307,42 @@ export default {
   created () {
     this.getData(this.params)
     this.$fly.get(api.getProvinces).then(data => {
-      const { provinces } = data._embedded
-      this.provincesData = provinces
-      this.$fly.get(api.getProvinceIds).then(data1 => {
-        this.povincesDataById = data1
-        if (process.env.NODE_ENV === 'production') {
-          provinces.map(item => {
-            item['disabled'] = true
-            for (let i = 0; i < data1.length; i++) {
-              if (data1[i] === 'pro_' + item.code) {
-                item['disabled'] = false
-                break
+      // const { provinces } = data._embedded
+      // this.provincesData = provinces
+      if (data.status === 100000) {
+        const provinces = data.data
+        this.provincesData = provinces
+        this.$fly.get(api.getProvinceIds).then(data1 => {
+          this.povincesDataById = data1
+          if (process.env.NODE_ENV === 'production') {
+            provinces.map(item => {
+              item['disabled'] = true
+              for (let i = 0; i < data1.length; i++) {
+                if (data1[i] === 'pro_' + item.code) {
+                  item['disabled'] = false
+                  break
+                }
               }
-            }
-          })
-        } else {
-          provinces.map(item => {
-            item['disabled'] = true
-            for (let i = 0; i < data1.length; i++) {
-              if (data1[i] === 'dev_' + item.code) {
-                item['disabled'] = false
-                break
+            })
+          } else {
+            provinces.map(item => {
+              item['disabled'] = true
+              for (let i = 0; i < data1.length; i++) {
+                if (data1[i] === 'dev_' + item.code) {
+                  item['disabled'] = false
+                  break
+                }
               }
-            }
-          })
-        }
-        this.$set(this, 'provincesData', provinces)
-      })
+            })
+          }
+          this.$set(this, 'provincesData', provinces)
+        })
+      } else {
+        this.$message({
+          message: '请求失败',
+          type: 'error'
+        })
+      }
     })
   },
   mounted () {
@@ -345,13 +351,3 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.drawer-components {
-  .el-checkbox {
-    min-width: 120px;
-    & + .el-checkbox {
-      margin-left: 0px;
-    }
-  }
-}
-</style>

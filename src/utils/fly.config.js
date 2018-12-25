@@ -27,16 +27,16 @@ fly.interceptors.response.use(
     // 只将请求结果的data字段返回
     // console.log(router.app._route.name)
     // if (response.data.status !== 100000) {
-    //   if (response.status === 200) {
-    //     return response.data
-    //   } else {
-    //     Message({
-    //       message: '接口调用失败',
-    //       type: 'error'
-    //     })
-    //   }
+    if (response.status === 200) {
+      return response.data
+    } else {
+      Message({
+        message: '接口调用失败',
+        type: 'error'
+      })
+    }
     // } else {
-    return response.data
+    // return response.data
     // }
   },
   (err) => {
@@ -47,7 +47,7 @@ fly.interceptors.response.use(
         name: 'login'
       })
       Message({
-        message: '接口调用失败',
+        message: '请求失败',
         type: 'error'
       })
     }
@@ -60,11 +60,13 @@ fly.interceptors.response.use(
 fly.config.baseURL = (function () {
   let baseURL
   if (process.env.NODE_ENV === 'development') {
-    // baseURL = 'http://192.168.1.117:8083'
-    baseURL = 'http://192.168.1.84:8083'
+    // baseURL = 'http://192.168.1.142:8083'
+    baseURL = 'http://192.168.1.84:8082'
+    // baseURL = 'http://192.168.1.142:8082'
     // baseURL = 'http://testomsapi.junyanginfo.com'
   } else if (process.env.NODE_ENV === 'release') {
-    baseURL = 'http://testomsapi.junyanginfo.com'
+    // baseURL = 'http://testomsapi.junyanginfo.com'
+    baseURL = 'http://192.168.1.142:8082'
   } else if (process.env.NODE_ENV === 'production') {
     baseURL = 'http://omsapi.junyanginfo.com'
   }

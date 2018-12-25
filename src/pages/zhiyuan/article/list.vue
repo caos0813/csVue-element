@@ -2,24 +2,28 @@
   <div class="page">
     <div class="tools-bar">
       <div class="left-wrap">
-        <el-input prefix-icon="el-icon-search" v-model="params.title" placeholder="请输入搜索关键字" size="small"></el-input>
+        <el-input prefix-icon="el-icon-search" v-model="params.articleInfoTitle" placeholder="请输入搜索关键字" size="small"></el-input>
         <!-- <picker v-model="pickerVal" size="small" :span="-1" :column="2" :isXuanke="false"></picker> -->
         <el-col :span='11'>
-          <el-select v-model="pickerVal" size="small" placeholder="请选择专题">
-            <el-option :label="ceil.name" :value="ceil.id" v-for="(ceil,$index) in specialData" :key="$index"></el-option>
+          <el-select v-model="params.specialTopicInfoId" size="small" placeholder="请选择专题" @change="pickerChange">
+            <el-option :label="ceil.title" :value="ceil.id" v-for="(ceil,$index) in specialData" :key="$index"></el-option>
           </el-select>
         </el-col>
         <el-button size="small" type="primary" @click="search">查询</el-button>
         <el-button size="small" type="warning" @click="reset">重置</el-button>
       </div>
-      <!-- <listHandle :checkData="checkData" @refresh="refresh"></listHandle> -->
+      <listHandle :checkData="checkData" :module="params.moduleId" @refresh="refresh" :showDelete="false">
+        <el-button type="danger" size="small" @click="handleDelete">删除</el-button>
+      </listHandle>
     </div>
     <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" v-loading="loading" element-loading-text="拼命加载中" border stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" label-class-name="checkLabel">
       </el-table-column>
       <el-table-column prop="title" label="标题" align="center" min-width="180" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column prop="specialTopicInfoTitle" label="所属专题" min-width="160" show-overflow-tooltip align="center">
+      <el-table-column prop="specialTopicInfoTitle" label="所属专题" width="160" align="center">
+      </el-table-column>
+      <el-table-column prop="articleInfoLabelName" label="文章标签" width="160" align="center">
       </el-table-column>
       <el-table-column label="状态" width="100" align="center">
         <template slot-scope="scope">
@@ -56,7 +60,7 @@
       </el-table-column>
     </el-table>
     <pagination ref="pageInfo" :total="pageInfo.totalElements" :page.sync="pageInfo.currentPage" @pagination="pagination"></pagination>
-    <drawer class="drawer-components" v-model="visible" title="推送" width="60" placement="right" @bodyClick="handleBodyClick" showFooter>
+    <drawer class="drawer-components" v-model="visible" title="推送" width="60" right="120" placement="right" @bodyClick="handleBodyClick" showFooter>
       <el-form :model="form" inline-message ref="form" :rules="sendRules" label-suffix=":" label-width="100px">
         <el-form-item label='被推送的标题'>
           <label v-for="(item,index) in checkData" :key="index">{{item.title}}</label>
@@ -105,6 +109,7 @@ export default {
       params: {
         articleInfoTitle: null,
         moduleId: '',
+        specialTopicInfoId: null,
         page: 1,
         sortType: 1
       },
@@ -151,15 +156,59 @@ export default {
     '$route' (to, from) {
       console.log(to.params.type)
       this.params.page = 1
-      // this.params.specialTopicInfoId = ''
-      console.log(this.pickerVal[0])
-      this.pickerVal = []
+      this.params.specialTopicInfoId = null
+      this.params.articleInfoTitle = null
       this.type = to.params.type
       this.getArticleMajor()
       this.getData(this.params)
     }
   },
   methods: {
+    pickerChange (e) {
+      this.params.specialTopicInfoId = e
+      this.getData(this.params)
+      console.log(e)
+    },
+
+    handleDelete () {
+      let txt = '删除'
+      this.checkIds = []
+      confirm(`您确定将选择的文章${txt}吗？`, '提示').then(() => {
+        for (let item = 0; item < this.checkData.length; item++) {
+          if (this.checkData[item].status === 1) {
+            this.$message.error(`已发布的内容不能${txt}`)
+            this.checkIds = []
+            return
+          } else {
+            this.checkIds.push(this.checkData[item].id)
+          }
+        }
+        if (this.checkIds.length > 0) {
+          this.$fly.post(api['zhiyuan/articleDelete'], this.checkIds).then(data => {
+            if (!data.data) {
+              return this.$message({
+                message: `${data.message}`,
+                duration: 2000,
+                type: 'error'
+              })
+            } else {
+              this.$message({
+                message: `${txt}成功`,
+                duration: 2000,
+                type: 'success'
+              })
+              this.refresh()
+            }
+          }).catch(() => {
+            this.$message({
+              message: `${txt}失败`,
+              duration: 2000,
+              type: 'error'
+            })
+          })
+        }
+      })
+    },
     handleSelectionChange (e) {
       this.checkData = []
       this.lodash.map(e, (item) => {
@@ -185,16 +234,18 @@ export default {
     search () {
       console.log(this.pickerVal[0])
       this.params.page = 1
-      this.params.specialTopicInfoId = this.pickerVal[0]
+      // this.params.specialTopicInfoId = this.pickerVal[0]
+      // this.params.articleInfoTitle =
       this.getData(this.params)
     },
     refresh () {
+      this.params.page = 1
       this.getData(this.params)
     },
     getData (params) {
       params.moduleId = this.moduleId(this.type)
       params.page--
-      console.log(this.pickerVal[0])
+      // console.log(this.pickerVal[0])
       // params.productId = this.pickerVal[0]
       // params.specialTopicId = this.pickerVal[1]
       this.loading = true
@@ -203,7 +254,7 @@ export default {
           this.loading = false
         }, 1000)
         let { content, totalElements } = data.data
-        console.log(content)
+        // console.log(content)
         this.tableData = content
         this.pageInfo = {
           totalElements: parseInt(totalElements),
@@ -326,7 +377,7 @@ export default {
     },
     getArticleMajor () {
       this.$fly.get(api.queryArticleInfoCondition, { moduleId: this.moduleId(this.type) }).then(data => {
-        this.specialData = data.label
+        this.specialData = data.specialTopicInfoBean
       })
     }
   },
@@ -334,35 +385,42 @@ export default {
     this.type = this.$route.params.type
     this.getData(this.params)
     this.getArticleMajor()
-    /* this.$fly.get(api.getProvinces).then(data => {
-      const { provinces } = data._embedded
-      this.provincesData = provinces
-      this.$fly.get(api.getProvinceIds).then(data1 => {
-        this.povincesDataById = data1
-        if (process.env.NODE_ENV === 'production') {
-          provinces.map(item => {
-            item['disabled'] = true
-            for (let i = 0; i < data1.length; i++) {
-              if (data1[i] === 'pro_' + item.code) {
-                item['disabled'] = false
-                break
+    this.$fly.get(api.getProvinces).then(data => {
+      if (data.status === 100000) {
+        const provinces = data.data
+        this.provincesData = provinces
+        this.$fly.get(api.getProvinceIds).then(data1 => {
+          this.povincesDataById = data1
+          if (process.env.NODE_ENV === 'production') {
+            provinces.map(item => {
+              item['disabled'] = true
+              for (let i = 0; i < data1.length; i++) {
+                if (data1[i] === 'pro_' + item.code) {
+                  item['disabled'] = false
+                  break
+                }
               }
-            }
-          })
-        } else {
-          provinces.map(item => {
-            item['disabled'] = true
-            for (let i = 0; i < data1.length; i++) {
-              if (data1[i] === 'dev_' + item.code) {
-                item['disabled'] = false
-                break
+            })
+          } else {
+            provinces.map(item => {
+              item['disabled'] = true
+              for (let i = 0; i < data1.length; i++) {
+                if (data1[i] === 'dev_' + item.code) {
+                  item['disabled'] = false
+                  break
+                }
               }
-            }
-          })
-        }
-        this.$set(this, 'provincesData', provinces)
-      })
-    }) */
+            })
+          }
+          this.$set(this, 'provincesData', provinces)
+        })
+      } else {
+        this.$message({
+          message: '请求失败',
+          type: 'error'
+        })
+      }
+    })
   },
   mounted () {
     let _this = this
@@ -370,13 +428,3 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-/* .drawer-components {
-  .el-checkbox {
-    min-width: 120px;
-    & + .el-checkbox {
-      margin-left: 0px;
-    }
-  }
-} */
-</style>

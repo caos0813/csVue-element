@@ -7,16 +7,12 @@
         <el-button size="small" type="warning" @click="reset">重置</el-button>
         <!-- {{moduleId(type)}} -->
       </div>
-      <listHandle :checkData="checkData" :module="params.moduleId" @refresh="refresh"></listHandle>
-      <!-- <div class="button-wrap">
-        <el-button type="primary" size="small" @click="handleFn('add')">新增</el-button>
-        <el-button type="danger" size="small" @click="handleFn('delete')" :disabled="checkData.length<1">删除</el-button>
-      </div> -->
+      <listHandle :checkData="checkData" :module="params.moduleId" @refresh="refresh" :showDelete="false">
+        <el-button type="danger" size="small" @click="handleDelete">删除</el-button>
+      </listHandle>
     </div>
     <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" v-loading="loading" element-loading-text="拼命加载中" border stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" label-class-name="checkLabel">
-      </el-table-column>
-      <el-table-column prop="id" label="编号" align="center" min-width="60" show-overflow-tooltip>
       </el-table-column>
       <el-table-column prop="title" label="专题" align="center" min-width="180" show-overflow-tooltip>
       </el-table-column>
@@ -25,8 +21,6 @@
           <el-tag size="small" :type="scope.row.status | publicStatus('style')">{{ scope.row.status | publicStatus }}</el-tag>
         </template>
       </el-table-column>
-      <!-- <el-table-column prop="introduction" label="简介" min-width="200" show-overflow-tooltip align="center">
-      </el-table-column> -->
       <el-table-column prop="countReadNum" label="浏览量" width="200" align="center">
         <template slot-scope="scope">
           {{scope.row.countReadNum===null?0:scope.row.countReadNum}}
@@ -67,7 +61,8 @@ export default {
         currentPage: 1
       },
       tableData: [],
-      loading: false
+      loading: false,
+      checkIds: []
     }
   },
   components: {
@@ -76,8 +71,9 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      console.log(to.params.type)
+      // console.log(to.params.type)
       this.params.page = 1
+      this.params.title = null
       this.type = to.params.type
       this.getData(this.params)
     }
@@ -85,61 +81,6 @@ export default {
   methods: {
     refresh () {
       this.getData(this.params)
-    },
-    handleFn (type) {
-      let { name } = this.$route
-      let path = name.split('-')[0]
-      if (type === 'add') {
-        this.toState({ name: path, params: { type: 'add' } })
-      } else {
-        let url
-        let txt
-        if (type === 'delete') {
-          url = api[`${path}Delete`]
-          txt = '删除'
-        }
-        confirm(`您确定将选择的内容${txt}吗？`, '提示').then(() => {
-          this.checkIds = []
-          for (let item = 0; item < this.checkData.length; item++) {
-            this.checkIds.push(this.checkData[item].id)
-          }
-          if (this.checkIds.length > 0) {
-            this.$fly.post(url, this.checkIds).then(data => {
-              let { allowIds, notallowIds } = data
-              if (allowIds.length > 0 && notallowIds.length > 0) {
-                this.$message({
-                  message: `已删除的编号：${allowIds}\n未删除的编号：${notallowIds}`,
-                  duration: 2000,
-                  type: 'success'
-                })
-              } else {
-                if (allowIds.length > 0) {
-                  this.$message({
-                    message: `已删除的编号：${allowIds}`,
-                    duration: 2000,
-                    type: 'success'
-                  })
-                } else if (notallowIds.length > 0) {
-                  console.log('notallowIds')
-                  this.$message({
-                    message: `未删除的编号：${notallowIds}`,
-                    duration: 2000,
-                    type: 'info'
-                  })
-                }
-              }
-              this.getData(this.params)
-            }).catch((err) => {
-              console.log(err)
-              this.$message({
-                message: `${txt}失败`,
-                duration: 2000,
-                type: 'error'
-              })
-            })
-          }
-        })
-      }
     },
     handleSelectionChange (e) {
       this.checkData = []
@@ -171,7 +112,7 @@ export default {
     },
     // 获取数据
     getData (params) {
-      console.log(this.moduleId())
+      // console.log(this.moduleId())
       params.moduleId = this.moduleId(this.type)
       params.page--
       this.loading = true
@@ -184,6 +125,45 @@ export default {
         this.pageInfo = {
           totalElements: parseInt(totalElements),
           currentPage: params.page + 1
+        }
+      })
+    },
+    handleDelete () {
+      let txt = '删除'
+      this.checkIds = []
+      confirm(`您确定将选择的专题${txt}吗？`, '提示').then(() => {
+        for (let item = 0; item < this.checkData.length; item++) {
+          if (this.checkData[item].status === 1) {
+            this.$message.error(`已发布的内容不能${txt}`)
+            this.checkIds = []
+            return
+          } else {
+            this.checkIds.push(this.checkData[item].id)
+          }
+        }
+        if (this.checkIds.length > 0) {
+          this.$fly.post(api['zhiyuan/specialDelete'], this.checkIds).then(data => {
+            if (!data.data) {
+              return this.$message({
+                message: `${data.message}`,
+                duration: 2000,
+                type: 'error'
+              })
+            } else {
+              this.$message({
+                message: `${txt}成功`,
+                duration: 2000,
+                type: 'success'
+              })
+              this.refresh()
+            }
+          }).catch(() => {
+            this.$message({
+              message: `${txt}失败`,
+              duration: 2000,
+              type: 'error'
+            })
+          })
         }
       })
     }

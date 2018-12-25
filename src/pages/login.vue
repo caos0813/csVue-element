@@ -47,7 +47,8 @@ export default {
         })
         // console.log(uploadConfig)
         // this.$store.commit('SET_AUTHORITY', [])
-        let authorityData = data.user.roles[0].authorities
+        // console.log(data.user.roles[0])
+        let authorityData = !this.lodash.isUndefined(data.user.roles[0]) ? data.user.roles[0].authorities : []
         let authority = []
         authorityData.map(item => {
           authority.push(item.name)
@@ -55,11 +56,14 @@ export default {
         // this.$store.commit('SET_AUTHORITY', authority)
         // console.log(this.$store.state.authority)
         // console.log(authority)
+        // console.log(data.user.roles[0].id)
         Cookies.set('user', {
-          userName: this.params.userName,
+          userName: data.user.username,
           token: token,
           uploadConfig: uploadConfig,
-          authority: authority
+          authority: authority,
+          rolesId: !this.lodash.isUndefined(data.user.roles[0]) ? data.user.roles[0].id : '',
+          rolesName: !this.lodash.isUndefined(data.user.roles[0]) ? data.user.roles[0].name : ''
         }, { expires: 7 })
         this.$message({
           message: '登录成功!',
@@ -69,6 +73,7 @@ export default {
           name: 'index'
         })
       } catch (err) {
+        console.log(err)
         this.$message({
           message: '登录失败',
           type: 'error'
@@ -84,9 +89,14 @@ export default {
             // TODO:this.getConfig(data)
             if (data.status === 100000) {
               this.getConfig(data.data.body)
+            } else if (data.status === 100003) {
+              this.$message({
+                message: `${data.message}`,
+                type: 'error'
+              })
             } else {
               this.$message({
-                message: '请求失败',
+                message: '登录失败，账号或密码错误',
                 type: 'error'
               })
             }

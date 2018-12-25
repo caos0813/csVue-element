@@ -1,21 +1,30 @@
 <template>
   <div class="page">
     <div class="tools-bar">
-      <listHandle :showSoldout="false" :checkData="checkData" @refresh="refresh"></listHandle>
+      <listHandle :showSoldout="false" :checkData="checkData" @refresh="refresh" :showDelete="false">
+        <el-button type="danger" size="small" @click="handleDelete">禁用</el-button>
+      </listHandle>
     </div>
     <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" v-loading="loading" element-loading-text="拼命加载中" border stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" label-class-name="checkLabel">
       </el-table-column>
-      <el-table-column prop="id" label="编号" align="center" min-width="60" show-overflow-tooltip>
+      <el-table-column type="index" width="50" align="center">
       </el-table-column>
-      <el-table-column prop="nickname" label="昵称" align="center" min-width="180" show-overflow-tooltip>
+      <el-table-column prop="nickname" label="昵称" align="center" min-width="150" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column prop="username" label="账号" align="center" min-width="180" show-overflow-tooltip>
+      <el-table-column prop="username" label="账号" align="center" min-width="150" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column prop="phoneNumber" label="手机号" align="center" width="180">
+      <el-table-column prop="phoneNumber" label="手机号" align="center" width="150">
       </el-table-column>
       <el-table-column prop="department" label="部门" align="center">
-        <template slot-scope="scope">{{ scope.row.department.name }}</template>
+        <template slot-scope="scope" v-if="scope.row.department">{{ scope.row.department.name }}</template>
+      </el-table-column>
+      <el-table-column prop="status" label="状态" width="100" align="center" :filters="[{ text: '禁用', value: 'DISABLED' }, { text: '可用', value: 'ENABLED' }]" :filter-method="filterTag" filter-placement="right">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.status === 'DISABLED' ? 'danger' : 'success'" disable-transitions>
+            {{scope.row.status === 'DISABLED'?'禁用':'可用'}}
+          </el-tag>
+        </template>
       </el-table-column>
       <el-table-column label="角色" align="center">
         <template slot-scope="scope" v-if="scope.row.roles.length===1">{{ scope.row.roles[0].name }}</template>
@@ -35,7 +44,7 @@
       </el-table-column>
     </el-table>
     <pagination ref="pageInfo" :total="pageInfo.totalElements" :page.sync="pageInfo.currentPage" @pagination="pagination"></pagination>
-    <el-dialog title="重置密码" :visible.sync="dialogResetPassword">
+    <el-dialog title="重置密码" :visible.sync="dialogResetPassword" :close-on-click-modal="false">
       <el-form :model="form" :rules="rules" ref="form" label-width="100px" label-suffix=":">
         <el-form-item label="旧密码" prop="oldPassword">
           <el-input type="password" v-model="form.oldPassword"></el-input>
@@ -55,23 +64,28 @@
   </div>
 </template>
 <script>
-import { api } from '@/utils'
+import { api, confirm } from '@/utils'
 import { listHandle, pagination } from '@/components'
+import Cookies from 'js-cookie'
 export default {
   data () {
     let validateOldPassword = (rule, value, callback) => {
       if (!value) {
         callback(new Error('请输入旧密码'))
       } else {
-        this.resetPassword_post().then(data => {
-          console.log(data)
-          if (data.status !== 100000) {
-            return this.$message({
-              message: '旧密码不正确',
+        this.$fly.post(api.existPassword, { id: this.userId, oldPassword: value }).then(data => {
+          if (data.status === 100000) {
+            if (!data.data) {
+              callback(new Error('旧密码错误'))
+            } else {
+              callback()
+            }
+          } else {
+            this.$message({
+              message: '请求错误',
               type: 'error'
             })
           }
-          callback()
         })
       }
     }
@@ -82,13 +96,17 @@ export default {
         if (!(/^[0-9a-zA_Z]+$/).test(value)) {
           callback(new Error('密码只能是英文字母或数字'))
         } else {
-          callback()
+          if (this.form.oldPassword === value) {
+            callback(new Error('两次密码不能一致'))
+          } else {
+            callback()
+          }
         }
       }
     }
     let validateSurePassword = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入旧密码'))
+        callback(new Error('请输入确认密码'))
       } else {
         if (value !== this.form.newPassword) {
           callback(new Error('密码不一致'))
@@ -119,7 +137,9 @@ export default {
         newPassword: [{ required: true, validator: validateNewPassword, trigger: 'blur' }],
         surePassword: [{ required: true, validator: validateSurePassword, trigger: 'blur' }]
       },
-      userId: ''
+      userId: '',
+      username: '',
+      isDeleteShelf: false
     }
   },
   components: {
@@ -127,14 +147,56 @@ export default {
     pagination
   },
   methods: {
+    handleDelete () {
+      let txt = '禁用'
+      this.checkIds = []
+      confirm(`您确定将选择的用户${txt}吗？`, '提示').then(() => {
+        for (let item = 0; item < this.checkData.length; item++) {
+          if (this.checkData[item].status === 'DISABLED') {
+            this.$message.error(`已禁用的用户不能${txt}`)
+            this.checkIds = []
+            return
+          } else {
+            this.checkIds.push(this.checkData[item].id)
+          }
+        }
+        if (this.checkIds.length > 0) {
+          this.$fly.post(api['system/userDelete'], { ids: this.checkIds, status: 'disabled' }).then(data => {
+            if (data.status !== 100000) {
+              return this.$message({
+                message: `${txt}失败`,
+                duration: 2000,
+                type: 'error'
+              })
+            } else {
+              this.$message({
+                message: `${txt}成功`,
+                duration: 2000,
+                type: 'success'
+              })
+              this.refresh()
+            }
+          }).catch(() => {
+            this.$message({
+              message: `${txt}失败`,
+              duration: 2000,
+              type: 'error'
+            })
+          })
+        }
+      })
+    },
+    filterTag (value, row) {
+      return row.status === value
+    },
     resetPassword (row) {
       console.log(row)
       this.userId = row.id
+      this.username = row.username
       this.dialogResetPassword = true
-    },
-    resetPassword_post () {
-      let { oldPassword, newPassword } = this.form
-      return this.$fly.post(api.resetPassword, { id: this.userId, oldPassword, newPassword })
+      this.$nextTick(() => {
+        this.$refs['form'].resetFields()
+      })
     },
     cancel () {
       this.$refs['form'].resetFields()
@@ -143,20 +205,56 @@ export default {
     save () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          this.$refs['form'].resetFields()
-          this.dialogResetPassword = false
+          let { oldPassword, newPassword } = this.form
+          this.$fly.post(api.resetPassword, { id: this.userId, oldPassword, newPassword }).then(data => {
+            if (data.status === 100000) {
+              this.$refs['form'].resetFields()
+              this.dialogResetPassword = false
+              this.$message({
+                message: '重置密码成功',
+                type: 'success'
+              })
+              if (this.username === Cookies.getJSON('user').userName) {
+                this.signOut('您重置了当前用户的密码，请重新登录')
+              }
+            } else {
+              this.$message({
+                message: '重置密码失败',
+                type: 'error'
+              })
+            }
+          })
         }
       })
     },
     refresh () {
-      this.getData(this.params)
+      this.params.page = 1
+      if (this.isDeleteShelf) {
+        this.signOut('您删除了当前用户，请重新登录')
+      } else {
+        this.getData(this.params)
+      }
     },
     handleSelectionChange (e) {
       this.checkData = []
       this.lodash.map(e, (item) => {
         this.checkData.push({ id: item.id, status: item.status })
+        if (item.username === Cookies.getJSON('user').userName) {
+          this.isDeleteShelf = true
+        }
       })
-      // this.checkData = this.lodash.map(e, 'id')
+    },
+    signOut (txt) {
+      this.$message({
+        message: `${txt}`,
+        type: 'warning'
+      })
+      setTimeout(() => {
+        Cookies.remove('user')
+        this.$router.replace({
+          name: 'login'
+        })
+      }, 500)
     },
     // 分页
     pagination (e) {

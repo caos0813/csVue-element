@@ -7,7 +7,8 @@
     <el-button type="danger" size="small" @click.stop="handleFn('hot')" v-if="showHot" :disabled="checkData.length<1">设为热门</el-button>
     <el-button type="primary" size="small" @click.stop="handleFn('add')">新增</el-button>
     <el-button type="warning" v-if="showSoldout" size="small" @click.stop="handleFn('soldOut')" :disabled="checkData.length<1">下架</el-button>
-    <el-button type="danger" size="small" @click.stop="handleFn('delete')" :disabled="checkData.length<1">删除</el-button>
+    <el-button type="danger" size="small" @click.stop="handleFn('delete')" v-if="showDelete" :disabled="checkData.length<1">删除</el-button>
+    <slot></slot>
   </div>
 </template>
 
@@ -36,6 +37,10 @@ export default {
       default: null
     },
     showSoldout: {
+      type: Boolean,
+      default: true
+    },
+    showDelete: {
       type: Boolean,
       default: true
     }

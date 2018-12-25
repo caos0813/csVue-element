@@ -16,8 +16,6 @@
     <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" v-loading="loading" element-loading-text="拼命加载中" border stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" label-class-name="checkLabel">
       </el-table-column>
-      <el-table-column prop="id" label="编号" align="center" min-width="60" show-overflow-tooltip>
-      </el-table-column>
       <el-table-column prop="title" label="标题" align="center" min-width="180" show-overflow-tooltip>
       </el-table-column>
       <el-table-column prop="userName" label="操作人" min-width="260" align="center">

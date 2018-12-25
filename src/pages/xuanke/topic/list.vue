@@ -52,10 +52,9 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- <page ref="pageInfo" :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page> -->
     <pagination ref="pageInfo" :total="pageInfo.totalElements" :page.sync="pageInfo.currentPage" @pagination="pagination"></pagination>
-    <drawer class="drawer-components" v-model="visible" title="评论" width="60" placement="right" @bodyClick="handleBodyClick">
-      <el-table class="table" header-cell-class-name="tableHeader" :data="commentTableData" v-loading="loading2" element-loading-text="拼命加载中" border stripe>
+    <drawer class="drawer-components" v-model="visible" title="评论" width="60" right="140" placement="right" @bodyClick="handleBodyClick">
+      <el-table header-cell-class-name="tableHeader" :data="commentTableData" v-loading="loading2" element-loading-text="拼命加载中" border stripe>
         <el-table-column type="index" width="55" align="center">
         </el-table-column>
         <el-table-column prop="useId" label="评论人" align="center">
@@ -76,34 +75,6 @@
       </el-table>
       <pagination ref="commentPageInfo" :total="commentPageInfo.totalElements" :page.sync="commentPageInfo.currentPage" @pagination="commentPagination"></pagination>
     </drawer>
-    <!--  <div class="dialog-wrap" id="dialog-wrap" :class="{'start':startAnimate,'close':closeAnimate,'hide':!popoverIsClose}">
-      <div class="dialog-header">
-        <span class="title">评论</span>
-        <el-button type="text" class="btn-close" icon="el-icon-close" @click="close"></el-button>
-      </div>
-      <div class="dialog-container">
-        <el-table class="table" header-cell-class-name="tableHeader" :data="commentTableData" v-loading="loading2" element-loading-text="拼命加载中" border stripe>
-          <el-table-column type="index" width="55" align="center">
-          </el-table-column>
-          <el-table-column prop="useId" label="评论人" align="center">
-          </el-table-column>
-          <el-table-column label="内容" align="center" min-width="180" show-overflow-tooltip>
-            <template slot-scope="scope">
-              <span>{{ scope.row.commentContent }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="创建时间" width="200" align="center">
-            <template slot-scope="scope">{{ scope.row.commentTime | dateTime('yyyy-MM-dd hh:mm:ss')}}</template>
-          </el-table-column>
-          <el-table-column label="操作" width="100" align="center">
-            <template slot-scope="scope">
-              <el-button type="text " size="mini" @click.stop="handleDelete(scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <page ref="commentPageInfo" :pageInfo="commentPageInfo" @sizeChange="commentSizeChange" @currentChange="commentCurrentChange"></page>
-      </div>
-    </div> -->
   </div>
 </template>
 <script>
@@ -116,7 +87,6 @@ export default {
       params: {
         title: null,
         page: 1,
-        // size: 10,
         sortType: 1
       },
       checkData: [],
@@ -273,7 +243,14 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
+// .drawer-components {
+//   border: 1px solid red;
+//   .el-table {
+//     border: 1px solid red;
+//     width: 100%;
+//   }
+// }
 .checkLabel > .el-checkbox {
   display: none;
 }

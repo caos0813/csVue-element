@@ -5,7 +5,7 @@
         <back></back>
       </div>
       <div class="button-wrap">
-        <el-button type="warning" size="small" @click="submit">保存</el-button>
+        <el-button type="primary" size="small" @click="submit">保存</el-button>
       </div>
     </div>
     <el-form ref="form" :model="params" :rules="rules" label-width="80px">
@@ -21,7 +21,7 @@
         <el-switch v-model="params.isMore" @change="selectChange"></el-switch>
       </el-form-item>
       <el-form-item label="简介" prop="introduction">
-        <el-input type="textarea" :rows="10" placeholder="请输入简介" v-model="params.introduction"></el-input>
+        <el-input type="textarea" :rows="6" placeholder="请输入简介" v-model="params.introduction"></el-input>
       </el-form-item>
     </el-form>
   </div>
@@ -33,8 +33,8 @@ export default {
   data () {
     return {
       rules: {
-        title: [{ required: true, message: '专题名称不能为空，且最多输入20个字符', trigger: 'blur' }],
-        introduction: [{ required: true, message: '请输入简介', trigger: 'blur' }]
+        title: [{ required: true, message: '专题名称不能为空，且最多输入20个字符', trigger: 'blur' }]
+        // introduction: [{ required: true, message: '请输入简介', trigger: 'blur' }]
       },
       params: {
         title: '',
@@ -71,16 +71,23 @@ export default {
             introduction,
             status: 1
           }).then(data => {
-            this.$message({
-              message: '保存成功',
-              duration: 2000,
-              type: 'success'
-            })
-            this.$refs['form'].resetFields()
-            this.goBack()
+            if (data.status === 100000) {
+              this.$message({
+                message: '保存成功',
+                duration: 2000,
+                type: 'success'
+              })
+              this.$refs['form'].resetFields()
+              this.goBack()
+            } else {
+              this.$message({
+                message: '保存失败',
+                type: 'error'
+              })
+            }
           }).catch(() => {
             this.$message({
-              message: '保存失败',
+              message: '请求失败',
               duration: 2000,
               type: 'error'
             })
@@ -99,7 +106,15 @@ export default {
       this.$fly.get(api.queryOneSpecialTopicInfo, {
         id
       }).then(data => {
-        this.params = data.data
+        if (data.status === 100000) {
+          this.params = data.data
+        } else {
+          this.$message({
+            message: '查询失败',
+            duration: 2000,
+            type: 'error'
+          })
+        }
       })
     }
   }

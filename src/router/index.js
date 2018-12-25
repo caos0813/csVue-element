@@ -24,7 +24,7 @@ export default new Router({
         name: 'index',
         component: () => import('@/pages/index'),
         meta: {
-          // requireAuth: true
+          requireAuth: true
         }
       }, {
         path: '/xuanke/special-list/',
@@ -45,7 +45,7 @@ export default new Router({
         name: 'xuanke/article-list',
         component: () => import('@/pages/xuanke/article/list'),
         meta: {
-          // requireAuth: true
+          requireAuth: true
         }
       }, {
         path: '/xuanke/article/:type',
@@ -163,6 +163,20 @@ export default new Router({
         path: '/system/super-user',
         name: 'system/super-user',
         component: () => import('@/pages/system/super-user'),
+        meta: {
+          requireAuth: true
+        }
+      }, {
+        path: '/system/app-list',
+        name: 'system/app-list',
+        component: () => import('@/pages/system/appAutoUpgrade'),
+        meta: {
+          requireAuth: true
+        }
+      }, {
+        path: '/system/app',
+        name: 'system/app',
+        component: () => import('@/pages/system/app'),
         meta: {
           requireAuth: true
         }

@@ -1,57 +1,53 @@
 <template>
   <div class="page">
-    <!-- <div class="first">知涯志愿</div>
-    <div class="second">专题管理</div>
-    <div class="three"></div> -->
-    <!-- <div class="box-wrap">
-      <router-link :to="{name:'xuanke/special-list'}" tag="a" class="ceil">
-        专题
-      </router-link>
-      <router-link :to="{name:'xuanke/article-list'}" tag="a" class="ceil">
-        文章
-      </router-link>
-      <router-link :to="{name:'xuanke/topic-list'}" tag="a" class="ceil">
-        话题
-      </router-link>
-      <router-link :to="{name:'xuanke/volunteer-list'}" tag="a" class="ceil">
-        开卡管理
-      </router-link>
-      <router-link :to="{name:'xuanke/volunteer-use'}" tag="a" class="ceil">
-        志愿卡使用管理
-      </router-link>
-      <router-link :to="{name:'xuanke/feedback-list'}" tag="a" class="ceil">
-        反馈
-      </router-link>
-      <router-link :to="{name:'xuanke/order-list'}" tag="a" class="ceil">
-        订单
-      </router-link>
-      <router-link :to="{name:'xuanke/banner-list'}" tag="a" class="ceil">
-        banner图
-      </router-link>
-    </div> -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item>知涯志愿</el-breadcrumb-item>
-      <el-breadcrumb-item>专题管理</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div v-for="(item,index) in navData" :key="index" v-if="`${item.auth()}`==='true'?true:false">
+      <div v-if="`${item.depth}`==='3'?true:false">
+        <div v-for="(sItem,sIndex) in item.subNav" :key="sIndex" v-if="`${sItem.subNav}` !== 'undefined'&&`${sItem.auth()}`==='true'?true:false">
+          <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item>{{item.name}}</el-breadcrumb-item>
+            <el-breadcrumb-item>{{sItem.name}}</el-breadcrumb-item>
+          </el-breadcrumb>
+          <div class="box-wrap">
+            <router-link :to="{name:`${lItem.url}`,params:{type:`${lItem.type}`}}" tag="a" class="ceil" v-for="(lItem,sIndex) in sItem.subNav" :key="sIndex" v-if="hasAuth(`${lItem.auth}`)">
+              {{lItem.name}}
+            </router-link>
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item>{{item.name}}</el-breadcrumb-item>
+        </el-breadcrumb>
+        <div class="box-wrap">
+          <router-link v-for="(sItem,sIndex) in item.subNav" :key="sIndex" :to="{name:`${sItem.url}`}" tag="a" class="ceil">{{sItem.name}}</router-link>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+<script>
+import { getNavJson } from '@/utils'
+export default {
+  data () {
+    return {
+      navData: getNavJson()
+    }
+  }
+}
+</script>
+
 <style lang="scss" scoped>
 .page {
   padding: 20px;
-  .second {
-    margin-left: 80px;
-  }
-  .three {
-    margin-left: 80px;
-  }
 }
 .box-wrap {
   display: flex;
+  margin: 10px 0;
   .ceil {
     padding: 20px;
     border-radius: 5px;
     background: $color-primary;
-    line-height: 40px;
+    line-height: 30px;
     color: #fff;
     width: 120px;
     margin: 5px;

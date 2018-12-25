@@ -4,6 +4,7 @@ function getNavJson () {
   let data = [{
     id: '1',
     name: '知涯志愿',
+    depth: 3,
     subNav: [{
       id: '1-1',
       name: '专题管理',
@@ -116,6 +117,7 @@ function getNavJson () {
   }, {
     id: '2',
     name: '知涯选科',
+    depth: 3,
     subNav: [{
       id: '2-1',
       name: '内容管理',
@@ -145,6 +147,7 @@ function getNavJson () {
   }, {
     id: '3',
     name: '志愿卡管理',
+    depth: 2,
     subNav: [{
       id: '3-1',
       name: '开卡管理',
@@ -166,6 +169,7 @@ function getNavJson () {
   }, {
     id: '4',
     name: '个人中心',
+    depth: 2,
     subNav: [{
       id: '4-1',
       name: '反馈',
@@ -180,6 +184,7 @@ function getNavJson () {
   }, {
     id: '5',
     name: '交易管理',
+    depth: 2,
     subNav: [{
       id: '5-1',
       name: '订单',
@@ -194,6 +199,7 @@ function getNavJson () {
   }, {
     id: '6',
     name: '系统管理',
+    depth: 2,
     subNav: [{
       id: '6-1',
       name: '权限管理',
@@ -218,7 +224,7 @@ function getNavJson () {
     }, {
       id: '6-4',
       name: 'APP自动升级',
-      url: 'system/super-user',
+      url: 'system/app-list',
       auth: function () {
         return 'system-appUpdate'
       }

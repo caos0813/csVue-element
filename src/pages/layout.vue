@@ -1,7 +1,7 @@
 <template>
   <el-container class="container" :class="{'hideSidebar':isCollapse}">
     <el-header>
-      <div class="logo">JunYang Admin</div>
+      <div class="logo">JunYang System</div>
       <div class="bar">
         <el-breadcrumb separator="/">
           <el-breadcrumb-item to="/index">首页</el-breadcrumb-item>
@@ -25,7 +25,6 @@
             <span slot="title">首页</span>
           </el-menu-item>
           <el-submenu :index="(index+1).toString()" v-for="(item,index) in navData" :key="index" v-if="`${item.auth()}`==='true'?true:false">
-            <!-- {{item.auth()}} -->
             <template slot="title">
               <i class="el-icon-tickets"></i>
               <span>{{item.name}}</span>
@@ -65,7 +64,8 @@ export default {
   },
   computed: {
     userName () {
-      return Cookies.get('user') ? JSON.stringify(Cookies.get('user')).userName : 'Admin'
+      let { userName } = Cookies.getJSON('user') ? Cookies.getJSON('user') : ''
+      return userName
     }
   },
   methods: {

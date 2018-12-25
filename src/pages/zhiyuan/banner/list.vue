@@ -1,13 +1,12 @@
 <template>
   <div class="page">
-    {{type}}
     <div class="tools-bar">
       <div class="left-wrap">
         <el-input prefix-icon="el-icon-search" v-model="params.title" placeholder="请输入搜索关键字" size="small"></el-input>
         <el-button size="small" type="primary" @click="search">查询</el-button>
         <el-button size="small" type="warning" @click="reset">重置</el-button>
       </div>
-      <listHandle :showSend="true" :checkData="checkData" @refresh="refresh"></listHandle>
+      <listHandle :showSend="true" :module="params.moduleId" :checkData="checkData" @refresh="refresh"></listHandle>
     </div>
     <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" v-loading="loading" element-loading-text="拼命加载中" border stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" label-class-name="checkLabel">
@@ -17,20 +16,20 @@
       <el-table-column label="所属产品" min-width="160" show-overflow-tooltip align="center">
         <template slot-scope="scope">{{ scope.row.productName }}</template>
       </el-table-column>
-      <el-table-column prop="userName" label="操作人" min-width="260" align="center">
-      </el-table-column>
       <el-table-column label="状态" width="100" align="center">
         <template slot-scope="scope">
           <el-tag size="small" :type="scope.row.status | publicStatus('style')">{{ scope.row.status | publicStatus }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="totalReadNum" label="阅读量" width="100" align="center">
+      <el-table-column prop="readNumber" label="阅读量" width="100" align="center">
         <template slot-scope="scope">
-          {{scope.row.totalReadNum}}
+          {{scope.row.readNumber}}
         </template>
       </el-table-column>
       <el-table-column label="发布时间" width="180" align="center">
-        <template slot-scope="scope">{{ scope.row.publishTime | dateTime('yyyy-MM-dd hh:mm:ss') }}</template>
+        <template slot-scope="scope">{{ scope.row.releaseTime | dateTime('yyyy-MM-dd hh:mm:ss') }}</template>
+      </el-table-column>
+      <el-table-column prop="useName" label="操作人" min-width="260" align="center">
       </el-table-column>
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope ">
@@ -41,7 +40,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- <page ref="pageInfo" :pageInfo="pageInfo" @sizeChange="sizeChange" @currentChange="currentChange"></page> -->
     <pagination ref="pageInfo" :total="pageInfo.totalElements" :page.sync="pageInfo.currentPage" @pagination="pagination"></pagination>
     <!-- <div class="dialog-wrap" id="dialog-wrap" :class="{'start':startAnimate,'close':closeAnimate,'hide':!popoverIsClose}">
       <div class="dialog-header">
@@ -73,7 +71,7 @@
         <el-button type="primary" size="small" @click="sendFn('send')">确定</el-button>
       </div>
     </div> -->
-    <drawer class="drawer-components" v-model="visible" title="推送" width="60" placement="right" @bodyClick="handleBodyClick" showFooter>
+    <drawer class="drawer-components" v-model="visible" title="推送" width="60" right="120" placement="right" @bodyClick="handleBodyClick" showFooter>
       <el-form :model="form" inline-message ref="form" :rules="sendRules" label-suffix=":" label-width="100px">
         <el-form-item label='被推送的标题'>
           <label v-for="(item,index) in checkData" :key="index">{{item.title}}</label>
@@ -122,8 +120,9 @@ export default {
       type: '',
       params: {
         title: null,
-        page: 1,
-        sortType: 'publishTime|desc'
+        moduleId: '',
+        page: 1
+        // sortType: 'publishTime|desc'
       },
       checkData: [],
       tableData: [],
@@ -166,15 +165,16 @@ export default {
       this.params = {
         title: null,
         page: 1,
-        size: 10,
-        sortType: 1
+        size: 10
       }
       this.getData(this.params)
     },
     search () {
+      this.params.page = 1
       this.getData(this.params)
     },
     refresh () {
+      this.params.page = 1
       this.getData(this.params)
     },
     handleSelectionChange (e) {
@@ -192,17 +192,33 @@ export default {
       this.getData(this.params)
     },
     getData (params) {
+      params.moduleId = this.moduleId(this.type)
       params.page--
       this.loading = true
-      this.$fly.get(api.bannerList, params).then(data => {
-        setTimeout(() => {
-          this.loading = false
-        }, 1000)
-        this.tableData = data.content
-        this.pageInfo = {
-          totalElements: parseInt(data.totalElements),
-          currentPage: params.page + 1
+      this.$fly.get(api.zhiyuan_bannerList, params).then(datas => {
+        if (datas.status === 100000) {
+          setTimeout(() => {
+            this.loading = false
+          }, 1000)
+          let { data } = datas
+          this.tableData = data.content
+          this.pageInfo = {
+            totalElements: parseInt(data.totalElements),
+            currentPage: params.page + 1
+          }
+        } else {
+          this.$message({
+            message: '请求失败',
+            duration: 2000,
+            type: 'error'
+          })
         }
+      }).catch(() => {
+        this.$message({
+          message: '请求失败',
+          duration: 2000,
+          type: 'error'
+        })
       })
     },
     openSendDialog (id) {
@@ -325,6 +341,8 @@ export default {
     '$route' (to, from) {
       console.log(to.params.type)
       this.type = to.params.type
+      this.params.page = 1
+      this.params.title = null
       this.getData(this.params)
     }
   },
@@ -332,35 +350,43 @@ export default {
     this.type = this.$route.params.type
     this.getData(this.params)
     this.$fly.get(api.getProvinces).then(data => {
-      const { provinces } = data._embedded
-      this.provincesData = provinces
-      this.$fly.get(api.getProvinceIds).then(data1 => {
-        this.povincesDataById = data1
-        if (process.env.NODE_ENV === 'production') {
-          provinces.map(item => {
-            item['disabled'] = true
-            for (let i = 0; i < data1.length; i++) {
-              if (data1[i] === 'pro_' + item.code) {
-                item['disabled'] = false
-                break
+      if (data.status === 100000) {
+        // const { provinces } = data._embedded
+        const provinces = data.data
+        this.provincesData = provinces
+        this.$fly.get(api.getProvinceIds).then(data1 => {
+          this.povincesDataById = data1
+          if (process.env.NODE_ENV === 'production') {
+            provinces.map(item => {
+              item['disabled'] = true
+              for (let i = 0; i < data1.length; i++) {
+                if (data1[i] === 'pro_' + item.code) {
+                  item['disabled'] = false
+                  break
+                }
               }
-            }
-          })
-          console.log(provinces)
-        } else {
-          provinces.map(item => {
-            item['disabled'] = true
-            for (let i = 0; i < data1.length; i++) {
-              if (data1[i] === 'dev_' + item.code) {
-                item['disabled'] = false
-                break
+            })
+            console.log(provinces)
+          } else {
+            provinces.map(item => {
+              item['disabled'] = true
+              for (let i = 0; i < data1.length; i++) {
+                if (data1[i] === 'dev_' + item.code) {
+                  item['disabled'] = false
+                  break
+                }
               }
-            }
-          })
-          console.log(provinces)
-        }
-        this.$set(this, 'provincesData', provinces)
-      })
+            })
+            console.log(provinces)
+          }
+          this.$set(this, 'provincesData', provinces)
+        })
+      } else {
+        this.$message({
+          message: '请求失败',
+          type: 'error'
+        })
+      }
     })
   },
   mounted () {

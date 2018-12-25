@@ -5,7 +5,7 @@
         <back></back>
       </div>
       <div class="button-wrap">
-        <el-button type="warning" size="small" @click="submit">保存</el-button>
+        <el-button type="primary" size="small" @click="submit">保存</el-button>
       </div>
     </div>
     <el-form ref="form" :model="params" :rules="rules" label-width="80px">
