@@ -21,36 +21,36 @@
       </el-table-column>
       <el-table-column prop="title" label="标题" align="center" min-width="180" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column prop="specialTopicInfoTitle" label="所属专题" width="160" align="center">
+      <el-table-column prop="specialTopicInfoTitle" label="所属专题" width="120" align="center">
       </el-table-column>
-      <el-table-column prop="articleInfoLabelName" label="文章标签" width="160" align="center">
+      <el-table-column prop="articleInfoLabelName" label="文章标签" width="120" align="center">
       </el-table-column>
-      <el-table-column label="状态" width="100" align="center">
+      <el-table-column label="状态" width="90" align="center">
         <template slot-scope="scope">
           <el-tag size="small" :type="scope.row.status | publicStatus('style')">{{ scope.row.status | publicStatus }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="readNumber" label="阅读量" width="100" align="center">
+      <el-table-column prop="readNumber" label="阅读量" width="80" align="center">
       </el-table-column>
-      <el-table-column prop="commentNumber" label="评论量" width="100" align="center">
+      <el-table-column prop="commentNumber" label="评论量" width="80" align="center">
       </el-table-column>
-      <el-table-column prop="recommendNumber" label="推荐量" width="100" align="center">
+      <el-table-column prop="recommendNumber" label="推荐量" width="80" align="center">
       </el-table-column>
-      <el-table-column prop="playNumber" label="播放量" width="100" align="center">
+      <el-table-column prop="playNumber" label="播放量" width="80" align="center">
       </el-table-column>
-      <el-table-column prop="collectionNumber" label="收藏数" width="100" align="center">
+      <el-table-column prop="collectionNumber" label="收藏数" width="80" align="center">
       </el-table-column>
       <el-table-column prop="jumpOutNumber" label="跳出率" width="100" align="center">
       </el-table-column>
-      <el-table-column prop="createUse" label="操作人" width="160" align="center">
+      <el-table-column prop="createUse" label="操作人" width="120" align="center">
       </el-table-column>
-      <el-table-column label="创建时间" width="180" align="center">
+      <el-table-column label="创建时间" width="170" align="center">
         <template slot-scope="scope">{{ scope.row.createTime | dateTime('yyyy-MM-dd hh:mm:ss') }}</template>
       </el-table-column>
-      <el-table-column label="发布时间" width="180" align="center">
+      <el-table-column label="发布时间" width="170" align="center">
         <template slot-scope="scope">{{ scope.row.releaseTime | dateTime('yyyy-MM-dd hh:mm:ss') }}</template>
       </el-table-column>
-      <el-table-column label="操作" width="100" align="center">
+      <el-table-column label="操作" width="80" align="center">
         <template slot-scope="scope ">
           <el-button type="text " size="mini" v-if="scope.row.status===2||scope.row.status===3">
             <router-link :to="{name:'zhiyuan/article',params:{type:'edit'},query:{id:scope.row.id}}" tag="span">编辑</router-link>

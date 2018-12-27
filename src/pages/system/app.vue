@@ -20,7 +20,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="apk" prop="ossUrl" v-if="form.platform==='android'">
-        <upload v-model="form.ossUrl" type="apk" accept="application/*" :path="path" CDN="http://fdapprelease.oss-cn-huhehaote.aliyuncs.com/"></upload>
+        <upload v-model="form.ossUrl" type="apk" accept="application/*" :path="path.url" CDN="http://fdapprelease.oss-cn-huhehaote.aliyuncs.com/"></upload>
       </el-form-item>
       <el-form-item label="版本号" prop="version">
         <el-col :span='6'>
@@ -48,7 +48,8 @@ export default {
         version: '',
         ossUrl: '',
         product: [1],
-        platform: 'android'
+        platform: 'android',
+        isProduction: true
       },
       productData: [{
         id: 1,
@@ -79,17 +80,20 @@ export default {
   },
   computed: {
     path () {
-      let path
+      let path = {}
       if (process.env.NODE_ENV === 'production') {
-        path = 'official/android/'
+        path.url = 'official/android/'
+        path.isProduction = true
       } else {
-        path = 'test/android/'
+        path.url = 'test/android/'
+        path.isProduction = false
       }
       return path
     }
   },
   methods: {
     save () {
+      console.log(this.path)
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (this.form.version !== '') {
@@ -105,7 +109,8 @@ export default {
                   product: { id: product[0] },
                   version,
                   platform,
-                  ossUrl: platform === 'android' ? ossUrl : null
+                  ossUrl: platform === 'android' ? ossUrl : null,
+                  isProduction: this.path.isProduction
                 }).then(data => {
                   if (data.status === 100000) {
                     this.$message({
@@ -138,7 +143,8 @@ export default {
       return this.$fly.post(api.VersionIsExit, {
         productId: product[0],
         version,
-        platform
+        platform,
+        isProduction: this.path.isProduction
       })
     }
   }

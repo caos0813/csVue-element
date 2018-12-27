@@ -6,12 +6,18 @@
     <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" v-loading="loading" element-loading-text="拼命加载中" border stripe @selection-change="handleSelectionChange">
       <el-table-column type="index" width="50" align="center">
       </el-table-column>
-      <el-table-column label="产品" align="center" width="120">
+      <el-table-column label="产品" align="center" width="100">
         <template slot-scope="scope" v-if="scope.row.product">{{ scope.row.product.name }}</template>
       </el-table-column>
       <el-table-column prop="platform" label="平台" align="center" width="100">
       </el-table-column>
       <el-table-column prop="version" label="版本号" align="center" width="120">
+      </el-table-column>
+      <el-table-column prop="isProduction" label="环境" align="center" width="100">
+        <template slot-scope="scope">
+          <span v-if="scope.row.isProduction">正式环境</span>
+          <span v-else>其他环境</span>
+        </template>
       </el-table-column>
       <el-table-column prop="ossUrl" label="下载地址" align="center" min-width="100">
       </el-table-column>
