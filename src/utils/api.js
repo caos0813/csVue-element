@@ -147,6 +147,8 @@ export default {
   superUserDelete: '/superUser/delete',
   // app自动化升级
   appList: '/appVersion/getAppVersions',
+  // 修改状态 已发布/下架
+  appChangeStatus: '/appVersion/change',
   // 新增
   appSave: '/appVersion/save',
   // 版本号是否存在

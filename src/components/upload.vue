@@ -1,6 +1,6 @@
 <template>
   <div class="upload">
-    <el-upload class="avatar-uploader" :accept="accept" :action="uploadUrl" :show-file-list="true" :on-success="handleAvatarSuccess" :http-request="upload" v-loading="loading" element-loading-text="正在上传" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
+    <el-upload class="avatar-uploader" :accept="accept" :action="uploadUrl" :show-file-list="true" :before-upload="beforeAvatarUpload" :on-success="handleAvatarSuccess" :http-request="upload" v-loading="loading" element-loading-text="正在上传" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
       <div class="uploaded-wrap" v-if="imageUrl">
         <img :src="imageUrl" class="avatar" v-if="type=='image'">
         <span class="el-icon-service" v-if="type=='audio'"></span>
@@ -14,8 +14,8 @@
     </el-upload>
     <el-dialog :visible.sync="dialogVisible" title="预览">
       <img width="100%" :src="imageUrl" alt="" v-if="type=='image'">
-      <audio :src="imageUrl" v-if="type=='audio'" controls></audio>
-      <video v-if="type==='video'" :src="imageUrl" controls></video>
+      <audio width="100%" :src="imageUrl" v-if="type=='audio'" controls></audio>
+      <video width="100%" v-if="type==='video'" :src="imageUrl" controls></video>
     </el-dialog>
   </div>
 </template>
@@ -24,6 +24,7 @@ import { formatDate } from '@/utils'
 import ImageCompressor from 'image-compressor.js'
 import Cookies from 'js-cookie'
 const compress = new ImageCompressor()
+/* eslint-disable */
 export default {
   data () {
     return {
@@ -45,12 +46,24 @@ export default {
       type: Object,
       default () {
         return {
-          size: 1, // the max size in MB, defaults to 2MB
+          size: 20, // the max size in MB, defaults to 2MB
           quality: 0.9, // the quality of the image, max is 1,
           maxWidth: 1920, // the max width of the output image, defaults to 1920px
           maxHeight: 1080, // the max height of the output image, defaults to 1920px
           resize: true // defaults to true, set false if you do not want to resize the image width and height
         }
+      }
+    },
+    width: {
+      type: [Number, String],
+      default () {
+        return null
+      }
+    },
+    height: {
+      type: [Number, String],
+      default () {
+        return null
       }
     },
     CDN: {
@@ -88,6 +101,7 @@ export default {
         endpoint: uploadConfig.endpoint
       })
       this.loading = true
+      console.log(option)
       console.log(option.file)
       if (this.type === 'image') {
         try {
@@ -97,6 +111,8 @@ export default {
             this.imgOptions.maxWidth = Infinity
             this.imgOptions.maxHeight = Infinity
           }
+          this.imgOptions.width = this.width
+          this.imgOptions.height = this.height
           let result = await compress.compress(option.file, this.imgOptions)
           console.log(result)
           ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), result, {
@@ -120,7 +136,23 @@ export default {
           })
           this.loading = false
         } else {
-          client.options.bucket = 'fdapprelease'
+          try {
+            client.options.bucket = 'fdapprelease'
+            ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), option.file, {
+              progress: async function (p) {
+                let e = {}
+                e.percent = p * 100
+                option.onProgress(e)
+              },
+              partSize: 1000 * 1024, // 设置分片大小
+              timeout: 120000 // 设置超时时间
+            })
+          } catch (e) {
+            console.log(e)
+          }
+        }
+      } else {
+        try {
           ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), option.file, {
             progress: async function (p) {
               let e = {}
@@ -128,21 +160,39 @@ export default {
               option.onProgress(e)
             }
           })
+        } catch (e) {
+          console.log(e)
         }
-      } else {
-        ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), option.file, {
-          progress: async function (p) {
-            let e = {}
-            e.percent = p * 100
-            option.onProgress(e)
-          }
-        })
       }
       if (ret.res.statusCode === 200) {
         option.onSuccess(ret)
         return ret
       } else {
         option.onError('上传失败')
+      }
+    },
+    beforeAvatarUpload (file) {
+      let _this = this
+      if (_this.width !== null && _this.height !== null) {
+        const isSize = new Promise((resolve, reject) => {
+          let _URL = window.URL && window.webkitURL
+          let img = new Image()
+          img.onload = function () {
+            let valid = img.width === _this.width && img.height === _this.height
+            valid ? resolve() : reject()
+          }
+          img.src = _URL.createObjectURL(file)
+        }).then(() => {
+          return file
+        }, () => {
+          _this.$message({
+            message: `图片宽高只能为${_this.width}*${_this.height}`,
+            duration: 2000,
+            type: 'error'
+          })
+          return Promise.reject()
+        })
+        return isSize
       }
     },
     handleAvatarSuccess (res, file) {

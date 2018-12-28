@@ -49,7 +49,7 @@
         <upload v-model="params.path" type="video" accept="video/*" path="video/article/" v-if="params.type===2"></upload>
       </el-form-item>
       <el-form-item label="封面" prop="image">
-        <upload v-model="params.image" path="image/article/"></upload>
+        <upload v-model="params.image" path="image/article/" width="1125" height="750"></upload>
       </el-form-item>
       <el-form-item label="简介" prop="introduction">
         <el-input type="textarea" :rows="5" placeholder="请输入简介" v-model="params.introduction"></el-input>

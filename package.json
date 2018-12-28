@@ -11,7 +11,7 @@
     "release": "cross-env NODE_ENV='release' node build/build.js",
     "release:server": "cross-env NODE_ENV='release' node config/dist.server.js",
     "prod": "cross-env NODE_ENV='production' node build/build.js",
-    "prod:server": "cross-env NODE_ENV='prod' node config/dist.server.js"
+    "prod:server": "cross-env NODE_ENV='production' node config/dist.server.js"
   },
   "dependencies": {
     "element-ui": "^2.4.11",

@@ -17,7 +17,7 @@
         </el-col>
       </el-form-item>
       <el-form-item label="封面" prop="image">
-        <upload v-model="params.image" path="image/article/"></upload>
+        <upload v-model="params.image" path="image/article/" width="735" height="450"></upload>
       </el-form-item>
       <el-form-item label="选择文章">
         <el-switch v-model="params.isArticle" @change="selectChange"></el-switch>
@@ -83,7 +83,7 @@ export default {
       rules: {
         title: [{ required: true, message: '标题不能为空，且最多输入20个字符', trigger: 'blur' }],
         content: [{ required: true, message: '请输入内容', trigger: 'blur' }],
-        image: [{ type: 'string', required: true, message: '请上传封面', trigger: 'blur' }],
+        image: [{ type: 'string', required: true, message: '封面不能为空，且大小限制于735*450', trigger: 'blur' }],
         pickerVal: [{ required: true, validator: validatePickerVal, trigger: 'change' }]
       },
       timeDialog: false,

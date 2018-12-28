@@ -19,6 +19,14 @@
           <span v-else>其他环境</span>
         </template>
       </el-table-column>
+      <el-table-column label="状态" width="90" align="center">
+        <template slot-scope="scope">
+          <el-tag size="small" :type="scope.row.isPublish?'success':'warning'">
+            <span v-if="scope.row.isPublish">已发布</span>
+            <span v-else>未发布</span>
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="ossUrl" label="下载地址" align="center" min-width="100">
       </el-table-column>
       <el-table-column label="创建人" align="center" width="120">
@@ -26,6 +34,14 @@
       </el-table-column>
       <el-table-column label="创建时间" width="180" align="center">
         <template slot-scope="scope">{{ scope.row.createTime | dateTime('yyyy-MM-dd hh:mm:ss') }}</template>
+      </el-table-column>
+      <el-table-column label="操作" width="80" align="center">
+        <template slot-scope="scope ">
+          <el-button type="text " size="mini" @click="onPublish(scope.row)">
+            <span v-if="scope.row.isPublish">下架</span>
+            <span v-else>发布</span>
+          </el-button>
+        </template>
       </el-table-column>
     </el-table>
     <pagination ref="pageInfo" :total="pageInfo.totalElements" :page.sync="pageInfo.currentPage" @pagination="pagination"></pagination>
@@ -54,6 +70,29 @@ export default {
     pagination
   },
   methods: {
+    onPublish (row) {
+      let txt = row.isPublish ? '下架' : '发布'
+      this.$fly.post(api.appChangeStatus, { id: row.id }).then((data) => {
+        if (data.status === 100000) {
+          this.$message({
+            message: `${txt}成功`,
+            type: 'success'
+          })
+          this.params.page = 1
+          this.getData(this.params)
+        } else {
+          this.$message({
+            message: `${txt}失败`,
+            type: 'error'
+          })
+        }
+      }).catch(() => {
+        this.$message({
+          message: '请求失败',
+          type: 'error'
+        })
+      })
+    },
     refresh () {
       this.params.page = 1
       this.getData(this.params)

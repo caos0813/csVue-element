@@ -104,9 +104,6 @@ export default {
       }
       this.tableData.push(list)
       this.isAdd = true
-      // this.$nextTick(() => {
-      //   this.$refs.form.focus()
-      // })
     },
     remove () {
       if (this.isAdd) {
@@ -148,14 +145,25 @@ export default {
               })
               this.$refs['form'].resetFields()
               row.isEdit = false
+              this.isAdd = false
               this.params.page = 1
               this.getData(this.params)
+            } else if (data.status === 100004) {
+              this.$message({
+                message: `${data.message}`,
+                type: 'error'
+              })
             } else {
               this.$message({
-                message: '请求失败',
+                message: '保存失败',
                 type: 'error'
               })
             }
+          }).catch(() => {
+            this.$message({
+              message: '请求失败',
+              type: 'error'
+            })
           })
         }
       })

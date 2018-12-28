@@ -15,7 +15,7 @@
         </el-col>
       </el-form-item>
       <el-form-item label="封面" prop="picture">
-        <upload v-model='params.picture'></upload>
+        <upload v-model='params.picture' width="480" height="255"></upload>
       </el-form-item>
       <el-form-item label="显示更多" prop="isMore">
         <el-switch v-model="params.isMore" @change="selectChange"></el-switch>

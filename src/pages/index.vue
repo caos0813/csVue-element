@@ -1,8 +1,8 @@
 <template>
   <div class="page">
-    <div v-for="(item,index) in navData" :key="index" v-if="`${item.auth()}`==='true'?true:false">
+    <div v-for="(item,index) in navData" :key="index" v-if=" item.auth()">
       <div v-if="`${item.depth}`==='3'?true:false">
-        <div v-for="(sItem,sIndex) in item.subNav" :key="sIndex" v-if="`${sItem.subNav}` !== 'undefined'&&`${sItem.auth()}`==='true'?true:false">
+        <div v-for="(sItem,sIndex) in item.subNav" :key="sIndex" v-if="`${sItem.subNav}` !== 'undefined'&&sItem.auth()">
           <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item>{{item.name}}</el-breadcrumb-item>
             <el-breadcrumb-item>{{sItem.name}}</el-breadcrumb-item>
