@@ -13,7 +13,7 @@
         <el-button size="small" type="warning" @click="reset">重置</el-button>
       </div>
       <listHandle :checkData="checkData" :module="params.moduleId" @refresh="refresh" :showDelete="false">
-        <el-button type="danger" size="small" @click="handleDelete">删除</el-button>
+        <el-button type="danger" size="small" @click="handleDelete" :disabled="checkData.length<1">删除</el-button>
       </listHandle>
     </div>
     <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" v-loading="loading" element-loading-text="拼命加载中" border stripe @selection-change="handleSelectionChange">
@@ -253,12 +253,19 @@ export default {
         setTimeout(() => {
           this.loading = false
         }, 1000)
-        let { content, totalElements } = data.data
-        // console.log(content)
-        this.tableData = content
-        this.pageInfo = {
-          totalElements: parseInt(totalElements),
-          currentPage: params.page + 1
+        if (data.status === 100000) {
+          let { content, totalElements } = data.data
+          // console.log(content)
+          this.tableData = content
+          this.pageInfo = {
+            totalElements: parseInt(totalElements),
+            currentPage: params.page + 1
+          }
+        } else {
+          this.$message({
+            message: '请求失败',
+            type: 'error'
+          })
         }
       })
     },

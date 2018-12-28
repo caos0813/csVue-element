@@ -10,7 +10,7 @@
           <li v-for="(item,index) in roleData" :key="index" :class="{'liActive':item.isActive}">
             <div v-show="!item.isEdit" @click.stop.prevent="roleClick(item)">
               <label>{{ item.name }}</label>
-              <label v-if="item.name!=='超级管理员'">
+              <label v-if="item.name!=='管理员'">
                 <el-button type="text" size="mini" icon="el-icon-edit" @click.stop.prevent="edit(item,index)">
                   编辑
                 </el-button>
@@ -22,7 +22,6 @@
             <el-form :model="roleForm" ref="roleForm" :rules="roleRules" v-show="item.isEdit" class="add-role">
               <el-form-item prop="roleName">
                 <el-input v-model="roleForm.roleName" placeholder="请输入角色名" autofocus class="role-name" ref="editRoleName"></el-input>
-                <!-- @blur.stop.prevent="blur(item,index)" @focus.stop.prevent="focus" -->
                 <label class="btn-wrap">
                   <el-button type="text" size="mini" @click.stop.prevent="save(item,index)">保存</el-button>
                   <el-button type="text" size="mini" @click.stop.prevent="cancel(item,index)">取消</el-button>
@@ -33,7 +32,6 @@
         </ul>
         <el-form :model="roleForm" ref="addRoleForm" :rules="roleRules" v-if="isAdd" class="add-role">
           <el-form-item prop="roleName">
-            <!-- @blur.stop.prevent="blur('')" -->
             <el-input v-model="roleForm.roleName" ref="roleName" placeholder="请输入角色名" autofocus class="role-name"></el-input>
             <label class="btn-wrap">
               <el-button type="text" size="mini" @click.stop="save('')">保存</el-button>
@@ -215,7 +213,7 @@ export default {
     },
     // 保存所有
     saveAll () {
-      if (this.liActive.name !== '超级管理员') {
+      if (this.liActive.name !== '管理员') {
         if (this.isAdd) {
           this.$message.error('有角色信息未保存')
         } else {

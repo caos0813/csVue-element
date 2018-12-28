@@ -111,8 +111,8 @@ export default {
             this.imgOptions.maxWidth = Infinity
             this.imgOptions.maxHeight = Infinity
           }
-          this.imgOptions.width = this.width
-          this.imgOptions.height = this.height
+          // this.imgOptions.width = this.width
+          // this.imgOptions.height = this.height
           let result = await compress.compress(option.file, this.imgOptions)
           console.log(result)
           ret = await client.multipartUpload(relativePath + formatDate(new Date(), 'yyyyMMddhhmmss'), result, {
@@ -178,7 +178,7 @@ export default {
           let _URL = window.URL && window.webkitURL
           let img = new Image()
           img.onload = function () {
-            let valid = img.width === _this.width && img.height === _this.height
+            let valid = img.width === parseInt(_this.width) && img.height === parseInt(_this.height)
             valid ? resolve() : reject()
           }
           img.src = _URL.createObjectURL(file)

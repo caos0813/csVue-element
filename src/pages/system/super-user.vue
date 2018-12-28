@@ -4,7 +4,7 @@
       <!-- :checkData="checkData" @refresh="refresh" -->
       <!-- <listHandle :showSoldout="false"></listHandle> -->
       <el-button type="primary" size="small" @click.stop="append">新增</el-button>
-      <el-button type="danger" size="small" @click.stop="remove">删除</el-button>
+      <el-button type="danger" size="small" @click.stop="remove" :disabled="checkData.length<1">删除</el-button>
     </div>
     <el-table ref="multipleTable" header-cell-class-name="tableHeader" :data="tableData" v-loading="loading" element-loading-text="拼命加载中" border stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" label-class-name="checkLabel">
@@ -13,9 +13,9 @@
       </el-table-column>
       <el-table-column prop="phoneNumber" label="手机号" align="center" min-width="180" show-overflow-tooltip>
         <template slot-scope="scope">
-          <el-form :model="form" :rules="rules" ref="form" autofocus v-if="scope.row.isEdit">
+          <el-form :model="form" :rules="rules" ref="form" v-if="scope.row.isEdit">
             <el-form-item prop="phoneNumber">
-              <el-input type="text" v-model="form.phoneNumber" maxlength="11"></el-input>
+              <el-input type="text" ref="phoneNumberRef" v-model="form.phoneNumber" maxlength="11"></el-input>
             </el-form-item>
           </el-form>
           <span v-else>{{scope.row.phoneNumber}}</span>
@@ -93,45 +93,63 @@ export default {
   },
   methods: {
     append () {
-      var list = {
-        id: '',
-        phoneNumber: this.phoneNumber,
-        createTime: null,
-        isEdit: true,
-        createUser: {
-          name: null
+      if (this.isAdd) {
+        this.$message.error('有超级用户未保存')
+      } else {
+        var list = {
+          id: '',
+          phoneNumber: this.phoneNumber,
+          createTime: null,
+          isEdit: true,
+          createUser: {
+            name: null
+          }
         }
+        this.tableData.push(list)
+        this.isAdd = true
+        this.$nextTick(() => {
+          this.$refs.phoneNumberRef.focus()
+        })
       }
-      this.tableData.push(list)
-      this.isAdd = true
     },
     remove () {
       if (this.isAdd) {
         this.$message.error('有超级用户未保存')
       } else {
-        let checkIds = []
-        for (let item = 0; item < this.checkData.length; item++) {
-          checkIds.push(this.checkData[item].id)
-        }
-        confirm(`您确定删除选中的超级用户吗？`, '提示').then(() => {
-          if (checkIds.length > 0) {
-            this.$fly.post(api.superUserDelete, checkIds).then(data => {
-              this.$message({
-                message: '删除成功',
-                duration: 2000,
-                type: 'success'
-              })
-              this.params.page = 1
-              this.getData(this.params)
-            }).catch(() => {
-              this.$message({
-                message: '删除失败',
-                duration: 2000,
-                type: 'error'
-              })
-            })
+        if (this.checkData.length > 0) {
+          let checkIds = []
+          for (let item = 0; item < this.checkData.length; item++) {
+            checkIds.push(this.checkData[item].id)
           }
-        })
+          confirm(`您确定删除选中的超级用户吗？`, '提示').then(() => {
+            if (checkIds.length > 0) {
+              this.$fly.post(api.superUserDelete, checkIds).then(data => {
+                if (data.status === 100000) {
+                  this.$message({
+                    message: '删除成功',
+                    duration: 2000,
+                    type: 'success'
+                  })
+                  this.params.page = 1
+                  this.getData(this.params)
+                } else {
+                  this.$message({
+                    message: '删除失败',
+                    type: 'error'
+                  })
+                }
+              }).catch(() => {
+                this.$message({
+                  message: '删除失败',
+                  duration: 2000,
+                  type: 'error'
+                })
+              })
+            }
+          })
+        } else {
+          this.$message.error('请先选择需要删除的超级用户')
+        }
       }
     },
     save (row, index) {
@@ -171,6 +189,7 @@ export default {
     cancel (row, index) {
       this.$refs['form'].resetFields()
       row.isEdit = false
+      this.isAdd = false
       this.tableData.splice(index, 1)
     },
     // 分页
@@ -194,14 +213,22 @@ export default {
         setTimeout(() => {
           this.loading = false
         }, 1000)
-        let { content, totalElements } = data.data
-        this.tableData = content
-        this.tableData.map(item => {
-          item.isEdit = false
-        })
-        this.pageInfo = {
-          totalElements: parseInt(totalElements),
-          currentPage: params.page + 1
+        if (data.status === 100000) {
+          let { content, totalElements } = data.data
+          this.tableData = content
+          this.tableData.map(item => {
+            item.isEdit = false
+          })
+          this.pageInfo = {
+            totalElements: parseInt(totalElements),
+            currentPage: params.page + 1
+          }
+        } else {
+          this.loading = false
+          this.$message({
+            message: '请求失败',
+            type: 'error'
+          })
         }
       })
     }

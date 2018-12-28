@@ -196,10 +196,10 @@ export default {
       params.page--
       this.loading = true
       this.$fly.get(api.zhiyuan_bannerList, params).then(datas => {
+        setTimeout(() => {
+          this.loading = false
+        }, 1000)
         if (datas.status === 100000) {
-          setTimeout(() => {
-            this.loading = false
-          }, 1000)
           let { data } = datas
           this.tableData = data.content
           this.pageInfo = {

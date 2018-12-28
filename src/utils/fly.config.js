@@ -43,6 +43,7 @@ fly.interceptors.response.use(
     console.log(err)
     const error = err.response ? err.response.data : { err: '网络请求错误', code: '-1000' }
     if (!err.response) {
+      Cookies.remove('user')
       router.replace({
         name: 'login'
       })
@@ -65,6 +66,7 @@ fly.config.baseURL = (function () {
     // baseURL = 'http://testomsapi.junyanginfo.com'
   } else if (process.env.NODE_ENV === 'release') {
     baseURL = 'http://testomsapi.junyanginfo.com'
+    // baseURL = 'http://192.168.1.84:8082'
   } else if (process.env.NODE_ENV === 'production') {
     baseURL = 'http://omsapi.junyanginfo.com'
   }
