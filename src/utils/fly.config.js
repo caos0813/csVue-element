@@ -61,12 +61,12 @@ fly.interceptors.response.use(
 fly.config.baseURL = (function () {
   let baseURL
   if (process.env.NODE_ENV === 'development') {
-    baseURL = 'http://192.168.1.84:8082'
-    // baseURL = 'http://192.168.1.142:8082'
+    // baseURL = 'http://192.168.1.84:8082'
+    baseURL = 'http://192.168.1.142:8082'
     // baseURL = 'http://testomsapi.junyanginfo.com'
   } else if (process.env.NODE_ENV === 'release') {
     baseURL = 'http://testomsapi.junyanginfo.com'
-    // baseURL = 'http://192.168.1.84:8082'
+    // baseURL = 'http://192.168.1.142:8082'
   } else if (process.env.NODE_ENV === 'production') {
     baseURL = 'http://omsapi.junyanginfo.com'
   }

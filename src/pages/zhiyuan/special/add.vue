@@ -11,7 +11,7 @@
     <el-form ref="form" :model="params" :rules="rules" label-width="80px">
       <el-form-item label="专题名称" prop="title">
         <el-col :span='12'>
-          <el-input v-model="params.title" maxlength="20"></el-input>
+          <el-input v-model="params.title" :maxlength="maxlength"></el-input>
         </el-col>
       </el-form-item>
       <el-form-item label="封面" prop="picture">
@@ -31,9 +31,16 @@ import { api } from '@/utils'
 import { upload, picker } from '@/components'
 export default {
   data () {
+    let validateTitleVal = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error(`专题名称不能为空，且最多输入${this.maxlength}个字符`))
+      } else {
+        callback()
+      }
+    }
     return {
       rules: {
-        title: [{ required: true, message: '专题名称不能为空，且最多输入20个字符', trigger: 'blur' }]
+        title: [{ required: true, validator: validateTitleVal, trigger: 'blur' }]
         // introduction: [{ required: true, message: '请输入简介', trigger: 'blur' }]
       },
       params: {
@@ -47,6 +54,18 @@ export default {
   components: {
     upload,
     picker
+  },
+  computed: {
+    maxlength () {
+      let { moduleId } = this.$route.query
+      let maxlength
+      if (moduleId === '6') {
+        maxlength = 6
+      } else {
+        maxlength = 20
+      }
+      return maxlength
+    }
   },
   methods: {
     selectChange (e) {

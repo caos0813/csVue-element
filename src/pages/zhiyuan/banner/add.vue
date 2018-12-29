@@ -83,7 +83,7 @@ export default {
       rules: {
         title: [{ required: true, message: '标题不能为空，且最多输入20个字符', trigger: 'blur' }],
         content: [{ required: true, message: '请输入内容', trigger: 'blur' }],
-        image: [{ type: 'string', required: true, message: '封面不能为空，且大小限制于735*450', trigger: 'blur' }],
+        image: [{ type: 'string', required: true, message: '封面不能为空，且大小限制于735*450', trigger: 'change' }],
         pickerVal: [{ required: true, validator: validatePickerVal, trigger: 'change' }]
       },
       timeDialog: false,

@@ -40,7 +40,11 @@
       </el-table-column>
       <el-table-column prop="collectionNumber" label="收藏数" width="80" align="center">
       </el-table-column>
-      <el-table-column prop="jumpOutNumber" label="跳出率" width="100" align="center">
+      <el-table-column prop="jumpOutRate" label="跳出率" width="100" align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.jumpOutRate==='�'">0%</span>
+          <span v-else>{{scope.row.jumpOutRate}}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="createUse" label="操作人" width="120" align="center">
       </el-table-column>

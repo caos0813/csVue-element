@@ -150,7 +150,7 @@ function getNavJson () {
     depth: 2,
     subNav: [{
       id: '3-1',
-      name: '志愿卡管理',
+      name: '开卡管理',
       url: 'volunteer/card',
       auth: function () {
         return 'volunteer-card'

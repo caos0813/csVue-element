@@ -89,7 +89,6 @@ export default {
         specialVal: [{ required: true, message: '请选择专题', trigger: 'change' }],
         // type: [{ required: true, message: '请选择文件类型', trigger: 'change' }],
         path: [{ type: 'string', required: true, message: '请上传类型文件', trigger: 'blur' }],
-        // image: [{ type: 'string', required: true, message: '请上传封面', trigger: 'blur' }],
         content: [{ required: true, message: '请输入内容', trigger: 'blur' }]
       },
       params: {
