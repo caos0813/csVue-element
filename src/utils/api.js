@@ -84,7 +84,7 @@ export default {
   /* 志愿卡使用管理 end */
   /* 个人中心 begin */
   // 反馈列表
-  getFeedback: 'feedback/getFeedback',
+  getFeedback: 'feedbacks/getFeedback',
   /* 个人中心 end */
   /* 交易管理 begin */
   // 订单
